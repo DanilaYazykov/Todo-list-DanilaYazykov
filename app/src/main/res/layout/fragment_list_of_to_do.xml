@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".presentation.ui.list_of_to_do.ListOfToDoFragment">
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/l_size"
+        android:layout_marginTop="@dimen/xl_size"
+        android:text="@string/my_business"
+        style="@style/MainTitleStyle"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_sum_of_done"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/SumOfDoneStyle"
+        android:layout_marginTop="@dimen/s_size"
+
+        app:layout_constraintStart_toStartOf="@+id/tv_name"
+        app:layout_constraintTop_toBottomOf="@+id/tv_name"
+        tools:text="Выполнено - 5" />
+
+    <ImageView
+        android:id="@+id/iv_eye_visibility"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/m_size"
+        android:src="@drawable/ic_eye_visibility"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/tv_sum_of_done"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/tv_sum_of_done"
+        app:tint="@color/blue" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/addFragmentButton"
+        android:layout_width="@dimen/sl_size"
+        android:layout_height="@dimen/sl_size"
+        android:layout_marginEnd="@dimen/mm_size"
+        android:layout_marginBottom="@dimen/ssl_size"
+        android:clickable="true"
+        android:focusable="true"
+        android:importantForAccessibility="no"
+        android:src="@drawable/ic_plus_add"
+        app:backgroundTint="@color/blue"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:shapeAppearanceOverlay="@style/CircularShapeAppearance"
+        app:tint="@color/white" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rc_view_to_do_list"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="@dimen/s_size"
+        android:layout_marginTop="@dimen/ml_size"
+        android:layout_marginEnd="@dimen/s_size"
+        android:layout_marginBottom="@dimen/mm_size"
+        style="@style/BlankStyle"
+        android:background="@drawable/edit_round_drawable"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_sum_of_done"
+        app:layout_constraintVertical_bias="0.0"
+        tools:itemCount="5" />
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/iv_todo_anim"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_centerInParent="true"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/tv_add_first_task"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_sum_of_done"
+        app:lottie_autoPlay="true"
+        app:lottie_loop="true"
+        app:lottie_rawRes="@raw/todo_anim" />
+
+    <TextView
+        android:id="@+id/tv_add_first_task"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/xxl_size"
+        android:textSize="@dimen/first_task"
+        style="@style/TextViewStyle"
+        android:fontFamily="@font/roboto_regular"
+        android:textStyle="bold"
+        android:visibility="gone"
+        android:text="@string/add_first_task"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

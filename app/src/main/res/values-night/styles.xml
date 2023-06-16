@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="MainTitleStyle" parent="">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/main_title_text_size</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="SumOfDoneStyle" parent="">
+        <item name="android:textColor">@color/night_grey</item>
+        <item name="android:fontFamily">@font/roboto_regular</item>
+    </style>
+    <style name="BlankStyle" parent="">
+        <item name="android:backgroundTint">@color/night_blank</item>
+    </style>
+    <style name="ImageStyle" parent="">
+        <item name="tint">@color/night_grey</item>
+    </style>
+    <style name="BlankStyleRecycler" parent="">
+        <item name="android:background">@color/night_blank</item>
+    </style>
+    <style name="TextViewStyle">
+        <item name="android:textColor">@color/white</item>
+    </style>
+    <style name="TextViewItemAddStyle">
+        <item name="android:textColor">@color/white</item>
+        <item name="fontFamily">@font/roboto_regular</item>
+        <item name="android:textSize">@dimen/item_name</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+    <style name="HintStyle">
+        <item name="android:textColorHint">@color/grey</item>
+        <item name="android:backgroundTint">@color/light_grey</item>
+        <item name="android:textSize">@dimen/item_name</item>
+    </style>
+    <style name="TrashButtonStyle">
+        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:textColor">@color/night_grey</item>
+        <item name="android:textSize">@dimen/item_name</item>
+        <item name="android:textStyle">bold</item>
+        <item name="drawableTint">@color/night_grey</item>
+    </style>
+    <style name="CheckButtonStyle">
+        <item name="tint">@color/white</item>
+    </style>
+
+
+</resources>

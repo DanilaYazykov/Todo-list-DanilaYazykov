@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">Todo list</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="tv_save">Сохранить</string>
+    <string name="something_to_do">Что надо сделать…</string>
+    <string name="text_important">Важность</string>
+    <string name="text_no">Нет</string>
+    <string name="text_time_to">Сделать до</string>
+    <string name="text_delete">Удалить</string>
+    <string name="my_business">Мои дела</string>
+    <string name="done_count">Выполнено - %1$d</string>
+    <string name="add_first_task">Добавьте задачу</string>
 </resources>
