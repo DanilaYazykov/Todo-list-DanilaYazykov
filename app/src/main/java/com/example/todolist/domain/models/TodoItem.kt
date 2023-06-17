@@ -7,7 +7,7 @@ import kotlinx.parcelize.Parcelize
 data class TodoItem(
     var id: String,
     var text: String,
-    var importance: String,
+    var importance: Importance,
     var deadline: String?,
     var done: Boolean,
     var creationDate: String,

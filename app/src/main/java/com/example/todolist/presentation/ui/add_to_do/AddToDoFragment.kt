@@ -6,13 +6,11 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
-import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
-import com.example.todolist.R
 import com.example.todolist.databinding.FragmentAddToDoBinding
+import com.example.todolist.domain.models.Importance
 import com.example.todolist.domain.models.TodoItem
 import com.example.todolist.presentation.presenters.addToDoViewModel.AddTodoViewModel
 import com.example.todolist.presentation.presenters.addToDoViewModel.AddTodoViewModelFactory
@@ -63,9 +61,9 @@ class AddToDoFragment : Fragment() {
                 ListTextWatcher(binding, this).onTextChanged(todoItem.text, 0, 0, todoItem.text.length)
                 todoItem.importance.let {
                     when (it) {
-                        IMPORTANCE_LOW -> binding.radioButtonLow.isChecked = true
-                        IMPORTANCE_BASIC -> binding.radioButtonNone.isChecked = true
-                        IMPORTANCE_HIGH -> binding.radioButtonHigh.isChecked = true
+                        Importance.LOW -> binding.radioButtonLow.isChecked = true
+                        Importance.BASIC -> binding.radioButtonNone.isChecked = true
+                        Importance.HIGH -> binding.radioButtonHigh.isChecked = true
                     }
                 }
                 todoItem.deadline?.let { binding.tvDate.text = it }
@@ -75,10 +73,10 @@ class AddToDoFragment : Fragment() {
 
     private fun currentTodo(): TodoItem {
         val importance = when (binding.radioGroup.checkedRadioButtonId) {
-            binding.radioButtonLow.id -> IMPORTANCE_LOW
-            binding.radioButtonNone.id -> IMPORTANCE_BASIC
-            binding.radioButtonHigh.id -> IMPORTANCE_HIGH
-            else -> NOTHING_STRING
+            binding.radioButtonLow.id -> Importance.LOW
+            binding.radioButtonNone.id -> Importance.BASIC
+            binding.radioButtonHigh.id -> Importance.HIGH
+            else -> Importance.BASIC
         }
         val currentTime = Instant.now().epochSecond
         return TodoItem(
@@ -133,9 +131,6 @@ class AddToDoFragment : Fragment() {
     companion object {
         private const val ID_TEXT = "id"
         private const val NOTHING_STRING = ""
-        const val IMPORTANCE_LOW = "low"
-        const val IMPORTANCE_BASIC = "basic"
-        const val IMPORTANCE_HIGH = "high"
 
         fun createArgs(textId: TodoItem): Bundle =
             bundleOf(ID_TEXT to textId)

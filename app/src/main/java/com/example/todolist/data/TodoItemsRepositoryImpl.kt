@@ -96,7 +96,7 @@ class TodoItemsRepositoryImpl(context: Context) : TodoItemsRepository {
     }
 
     companion object {
-        private const val TODO_PREFS = "todoPreferencesName"
+        private const val TODO_PREFS = "todoPrefsNames"
         private const val TODO_ITEMS = "todoItems"
     }
 }

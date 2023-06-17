@@ -7,8 +7,8 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todolist.R
 import com.example.todolist.databinding.ItemOfToDoBinding
+import com.example.todolist.domain.models.Importance
 import com.example.todolist.domain.models.TodoItem
-import com.example.todolist.presentation.ui.add_to_do.AddToDoFragment
 import com.example.todolist.presentation.ui.api.OnCheckedClickListener
 
 class ListToDoHolder(itemView: View, private val context: Context) :
@@ -34,13 +34,13 @@ class ListToDoHolder(itemView: View, private val context: Context) :
 
     }
 
-    private fun setPriority(itemView: String) {
+    private fun setPriority(itemView: Importance) {
         when (itemView) {
-            AddToDoFragment.IMPORTANCE_LOW -> {
+            Importance.LOW -> {
                 binding.ivPriority.visibility = View.VISIBLE
                 binding.ivPriority.setImageResource(R.drawable.ic_priority_low)
             }
-            AddToDoFragment.IMPORTANCE_HIGH -> {
+            Importance.HIGH -> {
                 binding.ivPriority.visibility = View.VISIBLE
                 binding.ivCheckbox.setImageResource(R.drawable.ic_checkbox_unchecked)
                 binding.ivPriority.setImageResource(R.drawable.ic_priority_high)
@@ -52,13 +52,13 @@ class ListToDoHolder(itemView: View, private val context: Context) :
         }
     }
 
-    private fun setDone(itemView: Boolean, itemViewImportance: String) {
+    private fun setDone(itemView: Boolean, itemViewImportance: Importance) {
         if (itemView) {
             binding.ivCheckbox.setImageResource(R.drawable.ic_checkbox_checked)
             binding.ivPriority.visibility = View.GONE
             binding.tvTodoTitle.paintFlags = binding.tvTodoTitle.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
             binding.tvTodoTitle.setTextColor(ContextCompat.getColor(context, R.color.grey))
-        } else if (itemViewImportance != AddToDoFragment.IMPORTANCE_HIGH) {
+        } else if (itemViewImportance != Importance.HIGH) {
             binding.ivCheckbox.setImageResource(R.drawable.ic_checkbox_empty)
             binding.tvTodoTitle.paintFlags = binding.tvTodoTitle.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
             binding.tvTodoTitle.setTextColor(ContextCompat.getColor(context, R.color.black))

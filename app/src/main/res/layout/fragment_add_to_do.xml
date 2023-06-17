@@ -160,7 +160,6 @@
             style="@style/TrashButtonStyle"
             android:text="@string/text_delete"
             app:drawableStartCompat="@drawable/ic_delete"
-
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/left_border"
             app:layout_constraintTop_toTopOf="@+id/tv_date" />
