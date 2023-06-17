@@ -25,13 +25,12 @@ class ListToDoHolder(itemView: View, private val context: Context) :
         setPriority(itemView.importance)
 
         binding.ivCheckbox.setOnClickListener {
-            itemView.done = !itemView.done
-            setDone(itemView = itemView.done, itemViewImportance = itemView.importance)
-            onCheckedChangeListener.onCheckedChange(itemView.id, itemView.done)
+            val updatedItem = itemView.copy(done = !itemView.done)
+            setDone(itemView = updatedItem.done, itemViewImportance = updatedItem.importance)
+            onCheckedChangeListener.onCheckedChange(updatedItem.id, updatedItem.done)
         }
 
         setDone(itemView = itemView.done, itemViewImportance = itemView.importance)
-
     }
 
     private fun setPriority(itemView: Importance) {

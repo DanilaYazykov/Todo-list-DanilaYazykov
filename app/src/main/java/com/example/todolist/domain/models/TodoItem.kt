@@ -5,11 +5,11 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class TodoItem(
-    var id: String,
-    var text: String,
-    var importance: Importance,
-    var deadline: String?,
-    var done: Boolean,
-    var creationDate: String,
-    var modificationDate: String?
+    val id: String,
+    val text: String,
+    val importance: Importance,
+    val deadline: String?,
+    val done: Boolean,
+    val creationDate: String,
+    val modificationDate: String?
 ) : Parcelable

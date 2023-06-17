@@ -60,12 +60,15 @@ class TodoItemsRepositoryImpl(context: Context) : TodoItemsRepository {
             mutableListOf()
         }
 
-        val existingItem = savedTracks.find { it.id == todoItem.id }
-        if (existingItem != null) {
-            existingItem.text = todoItem.text
-            existingItem.importance = todoItem.importance
-            existingItem.deadline = todoItem.deadline
-            existingItem.modificationDate = todoItem.modificationDate
+        val existingItemIndex = savedTracks.indexOfFirst { it.id == todoItem.id }
+        if (existingItemIndex != -1) {
+            val updatedItem = savedTracks[existingItemIndex].copy(
+                text = todoItem.text,
+                importance = todoItem.importance,
+                deadline = todoItem.deadline,
+                modificationDate = todoItem.modificationDate
+            )
+            savedTracks[existingItemIndex] = updatedItem
         } else {
             savedTracks.add(todoItem)
         }
@@ -84,9 +87,11 @@ class TodoItemsRepositoryImpl(context: Context) : TodoItemsRepository {
             mutableListOf()
         }
 
-        val existingItem = savedTracks.find { it.id == itemId }
-        if (existingItem != null) {
-            existingItem.done = checked
+        val existingItemIndex = savedTracks.indexOfFirst { it.id == itemId }
+        if (existingItemIndex != -1) {
+            val existingItem = savedTracks[existingItemIndex]
+            val updatedItem = existingItem.copy(done = checked)
+            savedTracks[existingItemIndex] = updatedItem
         }
 
         val tracksJson = Gson().toJson(savedTracks)
