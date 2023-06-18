@@ -1,6 +1,7 @@
 package com.example.todolist.presentation.presenters.listOfToDoViewModel
 
 import android.os.Handler
+import android.os.Looper
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.todolist.domain.api.TodoInteractor
@@ -42,8 +43,7 @@ class ListOfTodoViewModel(
 
     fun addDone(itemId: String, isChecked: Boolean) {
         todoInteractor.addDone(itemId, isChecked)
-        @Suppress("DEPRECATION")
-        val handler = Handler()
+        val handler = Handler(Looper.getMainLooper())
         handler.postDelayed({
             loadTodoList()
         }, 1000)

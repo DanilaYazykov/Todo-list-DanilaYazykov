@@ -5,7 +5,7 @@ import com.example.todolist.domain.models.TodoItem
 
 class Comparator : DiffUtil.ItemCallback<TodoItem>() {
     override fun areItemsTheSame(oldItem: TodoItem, newItem: TodoItem): Boolean {
-        return oldItem == newItem
+        return oldItem.id == newItem.id
     }
 
     override fun areContentsTheSame(oldItem: TodoItem, newItem: TodoItem): Boolean {
