@@ -20,6 +20,8 @@ class ListToDoHolder(itemView: View, private val context: Context) :
         if (itemView.deadline!!.isNotEmpty()) {
             tvDate.visibility = View.VISIBLE
             tvDate.text = itemView.deadline
+        } else {
+            tvDate.visibility = View.GONE
         }
 
         setPriority(itemView.importance)
@@ -57,7 +59,7 @@ class ListToDoHolder(itemView: View, private val context: Context) :
             binding.ivPriority.visibility = View.GONE
             binding.tvTodoTitle.paintFlags = binding.tvTodoTitle.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
             binding.tvTodoTitle.setTextColor(ContextCompat.getColor(context, R.color.grey))
-        } else if (itemViewImportance != Importance.HIGH) {
+        } else {
             binding.ivCheckbox.setImageResource(R.drawable.ic_checkbox_empty)
             binding.tvTodoTitle.paintFlags = binding.tvTodoTitle.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
             binding.tvTodoTitle.setTextColor(ContextCompat.getColor(context, R.color.black))
