@@ -15,7 +15,7 @@ class ListTextWatcher(private val binding: FragmentAddToDoBinding, private val a
         if (s.toString().isBlank()) {
             binding.apply {
                 val drawable = tvDeleteToDo.compoundDrawablesRelative[0].mutate().constantState?.newDrawable()
-                DrawableCompat.setTint(drawable!!, ContextCompat.getColor(binding.root.context, R.color.grey))
+                DrawableCompat.setTint(drawable!!, ContextCompat.getColor(binding.root.context, R.color.white))
                 tvDeleteToDo.setCompoundDrawablesRelativeWithIntrinsicBounds(drawable, null, null, null)
                 tvDeleteToDo.setOnClickListener(null)
                 tvDeleteToDo.setTextColor(ContextCompat.getColor(binding.root.context, R.color.grey))
