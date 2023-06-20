@@ -1,7 +1,6 @@
 package com.example.todolist.presentation.ui.list_of_to_do
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,19 +15,18 @@ import com.example.todolist.presentation.presenters.listOfToDoViewModel.ListOfTo
 import com.example.todolist.presentation.ui.add_to_do.AddToDoFragment
 import com.example.todolist.presentation.ui.api.OnCheckedClickListener
 import com.example.todolist.presentation.ui.api.OnItemClickListener
+import com.example.todolist.presentation.ui.util.BindingFragment
 
-class ListOfToDoFragment : Fragment(), OnItemClickListener, OnCheckedClickListener {
+class ListOfToDoFragment : BindingFragment<FragmentListOfToDoBinding>(), OnItemClickListener, OnCheckedClickListener {
 
-    private lateinit var binding: FragmentListOfToDoBinding
     private lateinit var adapter: ListToDoAdapter
     private lateinit var viewModel: ListOfTodoViewModel
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentListOfToDoBinding.inflate(layoutInflater)
-        return binding.root
+    override fun createBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentListOfToDoBinding {
+        return FragmentListOfToDoBinding.inflate(inflater, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -42,9 +40,6 @@ class ListOfToDoFragment : Fragment(), OnItemClickListener, OnCheckedClickListen
         viewModel.loadTodoList()
         viewModel.liveTodoInfo.observe(viewLifecycleOwner) { list ->
             if (list.isEmpty()) {
-                /**
-                 * Если лист пустой, то показываем заглушку = анимацию и текст
-                 */
                 binding.rcViewToDoList.visibility = View.GONE
                 binding.ivTodoAnim.visibility = View.VISIBLE
                 binding.tvAddFirstTask.visibility = View.VISIBLE
@@ -88,11 +83,6 @@ class ListOfToDoFragment : Fragment(), OnItemClickListener, OnCheckedClickListen
     }
 
     override fun onItemClick(todo: TodoItem) {
-        /**
-         * Обрати внимание на анимацию перехода между фрагментами =)))
-         * Также реализовал прокидывание TodoItem и открытия в новом фрагменте нужной тудухи. Так что,
-         * не нужно второй раз ходить в сеть и можно редактировать ранее сохраненные данные.
-         */
         findNavController().navigate(
             R.id.action_listOfToDoFragment_to_addToDoFragment,
             AddToDoFragment.createArgs(todo)
@@ -102,5 +92,4 @@ class ListOfToDoFragment : Fragment(), OnItemClickListener, OnCheckedClickListen
     override fun onCheckedChange(todoItem: String, isChecked: Boolean) {
         viewModel.addDone(todoItem, isChecked)
     }
-
 }

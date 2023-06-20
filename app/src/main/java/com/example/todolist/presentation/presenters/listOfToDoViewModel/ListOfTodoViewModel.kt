@@ -43,9 +43,10 @@ class ListOfTodoViewModel(
 
     fun addDone(itemId: String, isChecked: Boolean) {
         todoInteractor.addDone(itemId, isChecked)
+        //1 handler
         val handler = Handler(Looper.getMainLooper())
         handler.postDelayed({
             loadTodoList()
-        }, 1000)
+        }, 300)
     }
 }

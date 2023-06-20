@@ -1,4 +1,4 @@
-package com.example.todolist.presentation.util
+package com.example.todolist.presentation.ui.add_to_do
 
 import android.app.DatePickerDialog
 import com.example.todolist.databinding.FragmentAddToDoBinding
@@ -6,11 +6,11 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-class ShowDatePickerDialog(private val binding: FragmentAddToDoBinding) {
+class ShowDateCalendar(private val binding: FragmentAddToDoBinding) {
 
-    fun showDialog() = showDatePickerDialog()
+    fun showDialog() = showDateCalendar()
 
-    private fun showDatePickerDialog() {
+    private fun showDateCalendar() {
         val calendar = Calendar.getInstance()
         val year = calendar.get(Calendar.YEAR)
         val month = calendar.get(Calendar.MONTH)

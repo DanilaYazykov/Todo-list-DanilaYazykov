@@ -2,7 +2,6 @@ package com.example.todolist.presentation.ui.add_to_do
 
 import android.os.Build
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,22 +13,20 @@ import com.example.todolist.domain.models.Importance
 import com.example.todolist.domain.models.TodoItem
 import com.example.todolist.presentation.presenters.addToDoViewModel.AddTodoViewModel
 import com.example.todolist.presentation.presenters.addToDoViewModel.AddTodoViewModelFactory
-import com.example.todolist.presentation.util.ShowDatePickerDialog
+import com.example.todolist.presentation.ui.util.BindingFragment
 import java.time.Instant
 import java.util.Calendar
 
-class AddToDoFragment : Fragment() {
+class AddToDoFragment : BindingFragment<FragmentAddToDoBinding>() {
 
-    private lateinit var binding: FragmentAddToDoBinding
     private lateinit var viewModel: AddTodoViewModel
     private var currentId = NOTHING_STRING
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View {
-        binding = FragmentAddToDoBinding.inflate(layoutInflater)
-        return binding.root
+    override fun createBinding(
+        inflater: LayoutInflater,
+        container: ViewGroup?
+    ): FragmentAddToDoBinding {
+        return FragmentAddToDoBinding.inflate(inflater, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -117,7 +114,7 @@ class AddToDoFragment : Fragment() {
 
     private fun putCalendarDate() {
         binding.switchCalendar.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) ShowDatePickerDialog(binding).showDialog()
+            if (isChecked) ShowDateCalendar(binding).showDialog()
             else binding.tvDate.text = NOTHING_STRING
         }
     }
