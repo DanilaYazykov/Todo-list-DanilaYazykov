@@ -56,23 +56,31 @@
         app:shapeAppearanceOverlay="@style/CircularShapeAppearance"
         app:tint="@color/white" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rc_view_to_do_list"
+    <androidx.core.widget.NestedScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="@dimen/s_size"
         android:layout_marginTop="@dimen/ml_size"
         android:layout_marginEnd="@dimen/s_size"
         android:layout_marginBottom="@dimen/mm_size"
-        style="@style/BlankStyle"
-        android:background="@drawable/edit_round_drawable"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_sum_of_done"
-        app:layout_constraintVertical_bias="0.0"
-        tools:itemCount="5" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_sum_of_done">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rc_view_to_do_list"
+            style="@style/BlankStyle"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/edit_round_drawable"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_sum_of_done"
+            tools:itemCount="5" />
+
+    </androidx.core.widget.NestedScrollView>
 
     <com.airbnb.lottie.LottieAnimationView
         android:id="@+id/iv_todo_anim"
@@ -103,6 +111,5 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
