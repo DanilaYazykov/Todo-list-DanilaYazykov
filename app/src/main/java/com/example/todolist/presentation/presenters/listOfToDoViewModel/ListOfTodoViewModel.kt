@@ -12,6 +12,7 @@ class ListOfTodoViewModel(
 ) : ViewModel() {
 
     private var hideDoneItems = true
+    private val handler = Handler(Looper.getMainLooper())
 
     private val _liveTodoInfo = MutableLiveData<List<TodoItem>>()
     val liveTodoInfo = _liveTodoInfo
@@ -43,8 +44,7 @@ class ListOfTodoViewModel(
 
     fun addDone(itemId: String, isChecked: Boolean) {
         todoInteractor.addDone(itemId, isChecked)
-        //1 handler
-        val handler = Handler(Looper.getMainLooper())
+        handler.removeCallbacksAndMessages(null)
         handler.postDelayed({
             loadTodoList()
         }, 300)
