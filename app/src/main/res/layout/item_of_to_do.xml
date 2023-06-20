@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    style="@style/BlankStyleRecycler"
+    >
+
+    <ImageView
+        android:id="@+id/iv_checkbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/ms_size"
+        android:layout_marginTop="@dimen/mmm_size"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_checkbox_empty"
+        style="@style/CheckButtonStyle"
+        />
+
+    <TextView
+        android:id="@+id/tv_todo_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/iv_checkbox"
+        android:layout_marginStart="@dimen/xs_size"
+        android:layout_marginTop="@dimen/ss_size"
+        android:layout_marginEnd="@dimen/mm_size"
+        android:fontFamily="@font/roboto_regular"
+        android:ellipsize="end"
+        android:maxLines="3"
+        style="@style/TextViewStyle"
+        android:textSize="@dimen/item_name"
+        app:layout_constraintBottom_toTopOf="@+id/tv_date"
+        app:layout_constraintEnd_toStartOf="@+id/iv_show_full_information"
+        app:layout_constraintStart_toEndOf="@+id/iv_priority"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_goneMarginBottom="@dimen/s_size"
+        app:layout_goneMarginStart="@dimen/mmm_size"
+        tools:text="TextViews" />
+
+    <ImageView
+        android:id="@+id/iv_show_full_information"
+        style="@style/ImageStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/ms_size"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_checkbox"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/iv_checkbox"
+        app:srcCompat="@drawable/ic_show_info" />
+
+    <ImageView
+        android:id="@+id/iv_priority"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/mm_size"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_checkbox"
+        app:layout_constraintStart_toEndOf="@+id/iv_checkbox"
+        app:layout_constraintTop_toTopOf="@+id/iv_checkbox"
+        app:srcCompat="@drawable/ic_priority_low" />
+
+    <TextView
+        android:id="@+id/tv_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/xs_size"
+        android:layout_marginBottom="@dimen/s_size"
+        tools:text="12 Июня 2023"
+        style="@style/SumOfDoneStyle"
+        android:textSize="@dimen/date_size"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/tv_todo_title"
+        app:layout_constraintTop_toBottomOf="@id/tv_todo_title" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
