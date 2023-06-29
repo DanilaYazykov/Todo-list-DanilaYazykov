@@ -7,9 +7,9 @@ interface TodoStorageInteractor {
 
     fun getTodoList(): Flow<List<TodoItem>>
 
-    fun deleteTodoItem(todoItem: TodoItem)
+    suspend fun deleteTodoItem(todoItem: TodoItem)
 
-    fun addTodoItem(todoItem: TodoItem)
+    suspend fun addTodoItem(todoItem: TodoItem)
 
-    fun addDone(itemId: String, isChecked: Boolean)
+    suspend fun addDone(itemId: String, isChecked: Boolean)
 }

@@ -42,11 +42,18 @@ class ListOfTodoViewModel(
     }
 
     fun addDone(itemId: String, isChecked: Boolean) {
-        todoInteractor.addDone(itemId, isChecked)
+        viewModelScope.launch {
+            todoInteractor.addDone(itemId, isChecked)
+        }
         searchJob?.cancel()
         searchJob = viewModelScope.launch {
             delay(300)
             loadTodoList()
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        searchJob?.cancel()
     }
 }

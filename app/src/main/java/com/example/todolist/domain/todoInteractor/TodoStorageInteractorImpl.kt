@@ -11,15 +11,15 @@ class TodoStorageInteractorImpl(private val todoItemsRepository: TodoStorageMana
         return todoItemsRepository.getTodoItems()
     }
 
-    override fun deleteTodoItem(todoItem: TodoItem) {
+    override suspend fun deleteTodoItem(todoItem: TodoItem) {
         todoItemsRepository.deleteTodoItem(todoItem)
     }
 
-    override fun addTodoItem(todoItem: TodoItem) {
+    override suspend fun addTodoItem(todoItem: TodoItem) {
         todoItemsRepository.addTodoItem(todoItem)
     }
 
-    override fun addDone(itemId: String, isChecked: Boolean) {
+    override suspend fun addDone(itemId: String, isChecked: Boolean) {
         todoItemsRepository.addDone(itemId, isChecked)
     }
 }

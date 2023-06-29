@@ -10,6 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.withContext
 
 class TodoStorageManagerImpl(context: Context) : TodoStorageManager {
 
@@ -26,41 +27,47 @@ class TodoStorageManagerImpl(context: Context) : TodoStorageManager {
         }
     }.flowOn(Dispatchers.IO)
 
-    override fun deleteTodoItem(todoItem: TodoItem) {
-        val savedTodo = getFromJson()
-        val existingItem = savedTodo.find { it.id == todoItem.id }
-        if (existingItem != null) {
-            savedTodo.remove(existingItem)
+    override suspend fun deleteTodoItem(todoItem: TodoItem) {
+        withContext(Dispatchers.IO) {
+            val savedTodo = getFromJson()
+            val existingItem = savedTodo.find { it.id == todoItem.id }
+            if (existingItem != null) {
+                savedTodo.remove(existingItem)
+            }
+            todoJson(savedTodo)
         }
-        todoJson(savedTodo)
     }
 
-    override fun addTodoItem(todoItem: TodoItem) {
-        val savedTodo = getFromJson()
-        val existingItemIndex = savedTodo.indexOfFirst { it.id == todoItem.id }
-        if (existingItemIndex != -1) {
-            val updatedItem = savedTodo[existingItemIndex].copy(
-                text = todoItem.text,
-                importance = todoItem.importance,
-                deadline = todoItem.deadline,
-                modificationDate = todoItem.modificationDate
-            )
-            savedTodo[existingItemIndex] = updatedItem
-        } else {
-            savedTodo.add(todoItem)
+    override suspend fun addTodoItem(todoItem: TodoItem) {
+        withContext(Dispatchers.IO) {
+            val savedTodo = getFromJson()
+            val existingItemIndex = savedTodo.indexOfFirst { it.id == todoItem.id }
+            if (existingItemIndex != -1) {
+                val updatedItem = savedTodo[existingItemIndex].copy(
+                    text = todoItem.text,
+                    importance = todoItem.importance,
+                    deadline = todoItem.deadline,
+                    modificationDate = todoItem.modificationDate
+                )
+                savedTodo[existingItemIndex] = updatedItem
+            } else {
+                savedTodo.add(todoItem)
+            }
+            todoJson(savedTodo)
         }
-        todoJson(savedTodo)
     }
 
-    override fun addDone(itemId: String, checked: Boolean) {
-        val savedTodo = getFromJson()
-        val existingItemIndex = savedTodo.indexOfFirst { it.id == itemId }
-        if (existingItemIndex != -1) {
-            val existingItem = savedTodo[existingItemIndex]
-            val updatedItem = existingItem.copy(done = checked)
-            savedTodo[existingItemIndex] = updatedItem
+    override suspend fun addDone(itemId: String, checked: Boolean) {
+        withContext(Dispatchers.IO) {
+            val savedTodo = getFromJson()
+            val existingItemIndex = savedTodo.indexOfFirst { it.id == itemId }
+            if (existingItemIndex != -1) {
+                val existingItem = savedTodo[existingItemIndex]
+                val updatedItem = existingItem.copy(done = checked)
+                savedTodo[existingItemIndex] = updatedItem
+            }
+            todoJson(savedTodo)
         }
-        todoJson(savedTodo)
     }
 
     private fun todoJson(savedTodo: List<TodoItem>) {
