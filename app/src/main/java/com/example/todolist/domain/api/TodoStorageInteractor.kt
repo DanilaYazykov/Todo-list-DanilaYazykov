@@ -1,18 +1,15 @@
 package com.example.todolist.domain.api
 
 import com.example.todolist.domain.models.TodoItem
+import kotlinx.coroutines.flow.Flow
 
-interface TodoInteractor {
+interface TodoStorageInteractor {
 
-    fun getTodoList(todoInfoConsumer: TodoInfoConsumer)
+    fun getTodoList(): Flow<List<TodoItem>>
 
     fun deleteTodoItem(todoItem: TodoItem)
 
     fun addTodoItem(todoItem: TodoItem)
 
     fun addDone(itemId: String, isChecked: Boolean)
-
-    interface TodoInfoConsumer {
-        fun onTodoInfoReceived(todoInfo: List<TodoItem>)
-    }
 }

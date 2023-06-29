@@ -1,18 +1,20 @@
 package com.example.todolist.presentation.presenters.listOfToDoViewModel
 
-import android.os.Handler
-import android.os.Looper
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.todolist.domain.api.TodoInteractor
+import androidx.lifecycle.viewModelScope
+import com.example.todolist.domain.api.TodoStorageInteractor
 import com.example.todolist.domain.models.TodoItem
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class ListOfTodoViewModel(
-    private val todoInteractor: TodoInteractor,
+    private val todoInteractor: TodoStorageInteractor,
 ) : ViewModel() {
 
     private var hideDoneItems = true
-    private val handler = Handler(Looper.getMainLooper())
+    private var searchJob: Job? = null
 
     private val _liveTodoInfo = MutableLiveData<List<TodoItem>>()
     val liveTodoInfo = _liveTodoInfo
@@ -20,20 +22,17 @@ class ListOfTodoViewModel(
     private val _liveVisibility = MutableLiveData<Boolean>()
     val liveVisibility = _liveVisibility
 
-    private val todoInfoConsumer: TodoInteractor.TodoInfoConsumer =
-        object : TodoInteractor.TodoInfoConsumer {
-            override fun onTodoInfoReceived(todoInfo: List<TodoItem>) {
+    fun loadTodoList() {
+        viewModelScope.launch {
+            todoInteractor.getTodoList().collect { result ->
                 val filteredList = if (hideDoneItems) {
-                    todoInfo.filter { !it.done }
+                    result.filter { !it.done }
                 } else {
-                    todoInfo
+                    result
                 }
                 _liveTodoInfo.postValue(filteredList)
             }
         }
-
-    fun loadTodoList() {
-        todoInteractor.getTodoList(todoInfoConsumer = todoInfoConsumer)
     }
 
     fun changeVisibility() {
@@ -44,9 +43,10 @@ class ListOfTodoViewModel(
 
     fun addDone(itemId: String, isChecked: Boolean) {
         todoInteractor.addDone(itemId, isChecked)
-        handler.removeCallbacksAndMessages(null)
-        handler.postDelayed({
+        searchJob?.cancel()
+        searchJob = viewModelScope.launch {
+            delay(300)
             loadTodoList()
-        }, 300)
+        }
     }
 }

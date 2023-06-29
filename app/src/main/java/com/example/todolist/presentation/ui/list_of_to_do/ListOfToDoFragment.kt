@@ -36,20 +36,9 @@ class ListOfToDoFragment : BindingFragment<FragmentListOfToDoBinding>(), OnItemC
             ViewModelProvider(this, ListOfTodoViewModelFactory())[ListOfTodoViewModel::class.java]
 
         adaptersInit()
-
         viewModel.loadTodoList()
         viewModel.liveTodoInfo.observe(viewLifecycleOwner) { list ->
-            if (list.isEmpty()) {
-                binding.rcViewToDoList.visibility = View.GONE
-                binding.ivTodoAnim.visibility = View.VISIBLE
-                binding.tvAddFirstTask.visibility = View.VISIBLE
-            } else {
-                binding.rcViewToDoList.visibility = View.VISIBLE
-                binding.ivTodoAnim.visibility = View.GONE
-                binding.tvAddFirstTask.visibility = View.GONE
-            }
-            adapter.submitList(list)
-            sumOfDoneTodos(list)
+           showTodoList(list)
         }
 
         binding.addFragmentButton.setOnClickListener {
@@ -61,11 +50,7 @@ class ListOfToDoFragment : BindingFragment<FragmentListOfToDoBinding>(), OnItemC
         }
 
         viewModel.liveVisibility.observe(viewLifecycleOwner) { visibility ->
-            if (visibility) {
-                binding.ivEyeVisibility.setImageResource(R.drawable.ic_eye_visibility)
-            } else {
-                binding.ivEyeVisibility.setImageResource(R.drawable.ic_eye_visibility_gone)
-            }
+            eyeImageVisibility(visibility)
         }
     }
 
@@ -80,6 +65,28 @@ class ListOfToDoFragment : BindingFragment<FragmentListOfToDoBinding>(), OnItemC
         val doneCount = list.count { it.done }
         if (doneCount == 0) binding.tvSumOfDone.text = ""
         else binding.tvSumOfDone.text = getString(R.string.done_count, doneCount)
+    }
+
+    private fun showTodoList(list: List<TodoItem>) {
+        if (list.isEmpty()) {
+            binding.rcViewToDoList.visibility = View.GONE
+            binding.ivTodoAnim.visibility = View.VISIBLE
+            binding.tvAddFirstTask.visibility = View.VISIBLE
+        } else {
+            binding.rcViewToDoList.visibility = View.VISIBLE
+            binding.ivTodoAnim.visibility = View.GONE
+            binding.tvAddFirstTask.visibility = View.GONE
+        }
+        adapter.submitList(list)
+        sumOfDoneTodos(list)
+    }
+
+    private fun eyeImageVisibility(visibility: Boolean) {
+        if (visibility) {
+            binding.ivEyeVisibility.setImageResource(R.drawable.ic_eye_visibility)
+        } else {
+            binding.ivEyeVisibility.setImageResource(R.drawable.ic_eye_visibility_gone)
+        }
     }
 
     override fun onItemClick(todo: TodoItem) {

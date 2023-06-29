@@ -4,20 +4,19 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.example.todolist.data.TodoItemsRepositoryImpl
-import com.example.todolist.domain.todoInteractor.TodoInteractorImpl
+import com.example.todolist.data.sharedPreferences.TodoStorageManagerImpl
+import com.example.todolist.domain.todoInteractor.TodoStorageInteractorImpl
 
 class ListOfTodoViewModelFactory : ViewModelProvider.Factory {
 
     /**
-     * на данный момент нет информации, что будем использовать для di (koin или dagger),
-     * поэтому использую Factory
+     * внедрение di в следующем спринте, временно не трогаю
      */
 
     override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
         val application = checkNotNull(extras[APPLICATION_KEY])
-        val todoInteractor = TodoInteractorImpl(
-            todoItemsRepository = TodoItemsRepositoryImpl(application)
+        val todoInteractor = TodoStorageInteractorImpl(
+            todoItemsRepository = TodoStorageManagerImpl(application)
         )
 
         @Suppress("UNCHECKED_CAST")

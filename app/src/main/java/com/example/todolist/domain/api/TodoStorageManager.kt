@@ -1,10 +1,11 @@
 package com.example.todolist.domain.api
 
 import com.example.todolist.domain.models.TodoItem
+import kotlinx.coroutines.flow.Flow
 
-interface TodoItemsRepository {
+interface TodoStorageManager {
 
-    fun getTodoItems(): List<TodoItem>
+    fun getTodoItems(): Flow<List<TodoItem>>
 
     fun deleteTodoItem(todoItem: TodoItem)
 
