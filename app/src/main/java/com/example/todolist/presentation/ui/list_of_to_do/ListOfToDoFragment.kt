@@ -1,6 +1,7 @@
 package com.example.todolist.presentation.ui.list_of_to_do
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +17,7 @@ import com.example.todolist.presentation.ui.add_to_do.AddToDoFragment
 import com.example.todolist.presentation.ui.api.OnCheckedClickListener
 import com.example.todolist.presentation.ui.api.OnItemClickListener
 import com.example.todolist.presentation.ui.util.BindingFragment
+import com.google.android.material.snackbar.Snackbar
 
 class ListOfToDoFragment : BindingFragment<FragmentListOfToDoBinding>(), OnItemClickListener, OnCheckedClickListener {
 
@@ -41,6 +43,12 @@ class ListOfToDoFragment : BindingFragment<FragmentListOfToDoBinding>(), OnItemC
            showTodoList(list)
         }
 
+        viewModel.getInternetStateLiveData.observe(viewLifecycleOwner) { hasInternet ->
+            if (!hasInternet) {
+                snackBar()
+            }
+        }
+
         binding.addFragmentButton.setOnClickListener {
             findNavController().navigate(R.id.action_listOfToDoFragment_to_addToDoFragment)
         }
@@ -59,6 +67,14 @@ class ListOfToDoFragment : BindingFragment<FragmentListOfToDoBinding>(), OnItemC
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         adapter = ListToDoAdapter(this@ListOfToDoFragment, this@ListOfToDoFragment)
         rcViewToDoList.adapter = adapter
+    }
+
+    private fun snackBar() {
+        Snackbar.make(binding.root, getString(R.string.data_not_sync), Snackbar.LENGTH_LONG)
+            .setAction(getString(R.string.sync)) {
+                viewModel.syncTodoListFromNetwork()
+            }
+            .show()
     }
 
     private fun sumOfDoneTodos(list: List<TodoItem>) {
@@ -98,5 +114,10 @@ class ListOfToDoFragment : BindingFragment<FragmentListOfToDoBinding>(), OnItemC
 
     override fun onCheckedChange(todoItem: String, isChecked: Boolean) {
         viewModel.addDone(todoItem, isChecked)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        viewModel.updateDataServer()
     }
 }

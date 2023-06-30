@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.todolist.data.sharedPreferences.TodoStorageManagerImpl
-import com.example.todolist.domain.todoInteractor.TodoStorageInteractorImpl
+import com.example.todolist.domain.impl.TodoStorageInteractorImpl
 
 class AddTodoViewModelFactory : ViewModelProvider.Factory {
     /**

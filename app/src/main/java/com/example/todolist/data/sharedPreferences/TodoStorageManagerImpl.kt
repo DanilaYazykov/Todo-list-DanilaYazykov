@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
+import java.util.Calendar
 
 class TodoStorageManagerImpl(context: Context) : TodoStorageManager {
 
@@ -46,8 +47,12 @@ class TodoStorageManagerImpl(context: Context) : TodoStorageManager {
                 val updatedItem = savedTodo[existingItemIndex].copy(
                     text = todoItem.text,
                     importance = todoItem.importance,
+                    creationDate = todoItem.creationDate,
                     deadline = todoItem.deadline,
-                    modificationDate = todoItem.modificationDate
+                    done = todoItem.done,
+                    modificationDate = todoItem.modificationDate,
+                    color = todoItem.color,
+                    lastUpdatedBy = todoItem.lastUpdatedBy
                 )
                 savedTodo[existingItemIndex] = updatedItem
             } else {
@@ -58,15 +63,23 @@ class TodoStorageManagerImpl(context: Context) : TodoStorageManager {
     }
 
     override suspend fun addDone(itemId: String, checked: Boolean) {
-        withContext(Dispatchers.IO) {
+         withContext(Dispatchers.IO) {
             val savedTodo = getFromJson()
             val existingItemIndex = savedTodo.indexOfFirst { it.id == itemId }
             if (existingItemIndex != -1) {
                 val existingItem = savedTodo[existingItemIndex]
-                val updatedItem = existingItem.copy(done = checked)
+                val updatedItem = existingItem.copy(done = checked, modificationDate = Calendar.getInstance().timeInMillis)
                 savedTodo[existingItemIndex] = updatedItem
             }
             todoJson(savedTodo)
+        }
+    }
+
+    override suspend fun clearAll() {
+        withContext(Dispatchers.IO) {
+            sharedPrefs.edit()
+                .clear()
+                .apply()
         }
     }
 

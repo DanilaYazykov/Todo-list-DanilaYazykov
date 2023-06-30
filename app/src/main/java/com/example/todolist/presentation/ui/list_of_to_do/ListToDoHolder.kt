@@ -7,7 +7,6 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todolist.R
 import com.example.todolist.databinding.ItemOfToDoBinding
-import com.example.todolist.domain.models.Importance
 import com.example.todolist.domain.models.TodoItem
 import com.example.todolist.presentation.ui.api.OnCheckedClickListener
 import java.text.SimpleDateFormat
@@ -38,13 +37,14 @@ class ListToDoHolder(itemView: View, private val context: Context) :
         if (!itemView.done) setPriority(itemView.importance)
     }
 
-    private fun setPriority(itemView: Importance) {
+    private fun setPriority(itemView: TodoItem.Importance?) {
+        if (itemView == null) return
         when (itemView) {
-            Importance.low -> {
+            TodoItem.Importance.LOW -> {
                 binding.ivPriority.visibility = View.VISIBLE
                 binding.ivPriority.setImageResource(R.drawable.ic_priority_low)
             }
-            Importance.high -> {
+            TodoItem.Importance.IMPORTANT -> {
                 binding.ivPriority.visibility = View.VISIBLE
                 binding.ivCheckbox.setImageResource(R.drawable.ic_checkbox_unchecked)
                 binding.ivPriority.setImageResource(R.drawable.ic_priority_high)

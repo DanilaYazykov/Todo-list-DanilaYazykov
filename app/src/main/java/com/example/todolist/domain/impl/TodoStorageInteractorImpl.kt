@@ -1,4 +1,4 @@
-package com.example.todolist.domain.todoInteractor
+package com.example.todolist.domain.impl
 
 import com.example.todolist.domain.api.TodoStorageInteractor
 import com.example.todolist.domain.api.TodoStorageManager
@@ -21,5 +21,9 @@ class TodoStorageInteractorImpl(private val todoItemsRepository: TodoStorageMana
 
     override suspend fun addDone(itemId: String, isChecked: Boolean) {
         todoItemsRepository.addDone(itemId, isChecked)
+    }
+
+    override suspend fun clearAll() {
+        todoItemsRepository.clearAll()
     }
 }

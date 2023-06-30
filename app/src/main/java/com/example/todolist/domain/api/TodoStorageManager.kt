@@ -13,4 +13,6 @@ interface TodoStorageManager {
 
     suspend fun addDone(itemId: String, checked: Boolean)
 
+    suspend fun clearAll()
+
 }

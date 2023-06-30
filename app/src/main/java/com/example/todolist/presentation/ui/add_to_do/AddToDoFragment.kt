@@ -9,7 +9,6 @@ import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.todolist.databinding.FragmentAddToDoBinding
-import com.example.todolist.domain.models.Importance
 import com.example.todolist.domain.models.TodoItem
 import com.example.todolist.presentation.presenters.addToDoViewModel.AddTodoViewModel
 import com.example.todolist.presentation.presenters.addToDoViewModel.AddTodoViewModelFactory
@@ -61,9 +60,9 @@ class AddToDoFragment : BindingFragment<FragmentAddToDoBinding>() {
                 ListTextWatcher(binding, this).onTextChanged(todoItem.text, 0, 0, todoItem.text.length)
                 todoItem.importance.let {
                     when (it) {
-                        Importance.low -> binding.radioButtonLow.isChecked = true
-                        Importance.basic -> binding.radioButtonNone.isChecked = true
-                        Importance.high -> binding.radioButtonHigh.isChecked = true
+                        TodoItem.Importance.LOW -> binding.radioButtonLow.isChecked = true
+                        TodoItem.Importance.BASIC -> binding.radioButtonNone.isChecked = true
+                        TodoItem.Importance.IMPORTANT -> binding.radioButtonHigh.isChecked = true
                     }
                 }
                 todoItem.deadline?.let {
@@ -75,10 +74,10 @@ class AddToDoFragment : BindingFragment<FragmentAddToDoBinding>() {
 
     private fun currentTodo(): TodoItem {
         val importance = when (binding.radioGroup.checkedRadioButtonId) {
-            binding.radioButtonLow.id -> Importance.low
-            binding.radioButtonNone.id -> Importance.basic
-            binding.radioButtonHigh.id -> Importance.high
-            else -> Importance.basic
+            binding.radioButtonLow.id -> TodoItem.Importance.LOW
+            binding.radioButtonNone.id -> TodoItem.Importance.BASIC
+            binding.radioButtonHigh.id -> TodoItem.Importance.IMPORTANT
+            else -> TodoItem.Importance.BASIC
         }
         val currentTime = Instant.now().epochSecond
         val dateString = binding.tvDate.text.toString()
@@ -89,14 +88,16 @@ class AddToDoFragment : BindingFragment<FragmentAddToDoBinding>() {
         } else {
             null
         }
+        val modificationDate = Calendar.getInstance().timeInMillis
         return TodoItem(
             id = currentId.ifEmpty { currentTime.toString() },
             text = binding.editTextInputText.text.toString(),
             importance = importance,
             deadline = deadline,
             done = false,
-            creationDate = Calendar.DATE.toLong(),
-            modificationDate = currentTime
+            creationDate = currentTime,
+            modificationDate = modificationDate,
+            lastUpdatedBy = Build.MODEL
         )
     }
 

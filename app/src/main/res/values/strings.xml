@@ -10,4 +10,6 @@
     <string name="my_business">Мои дела</string>
     <string name="done_count">Выполнено - %1$d</string>
     <string name="add_first_task">Добавьте задачу</string>
+    <string name="data_not_sync">No internet connection. Data not sync</string>
+    <string name="sync">Sync</string>
 </resources>

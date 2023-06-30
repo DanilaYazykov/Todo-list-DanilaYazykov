@@ -12,4 +12,6 @@ interface TodoStorageInteractor {
     suspend fun addTodoItem(todoItem: TodoItem)
 
     suspend fun addDone(itemId: String, isChecked: Boolean)
+
+    suspend fun clearAll()
 }
