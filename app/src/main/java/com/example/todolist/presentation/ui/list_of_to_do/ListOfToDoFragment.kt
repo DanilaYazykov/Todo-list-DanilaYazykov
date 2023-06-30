@@ -1,7 +1,6 @@
 package com.example.todolist.presentation.ui.list_of_to_do
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,7 +21,7 @@ import com.google.android.material.snackbar.Snackbar
 class ListOfToDoFragment : BindingFragment<FragmentListOfToDoBinding>(), OnItemClickListener, OnCheckedClickListener {
 
     private lateinit var adapter: ListToDoAdapter
-    private lateinit var viewModel: ListOfTodoViewModel
+    lateinit var viewModel: ListOfTodoViewModel
 
     override fun createBinding(
         inflater: LayoutInflater,
