@@ -7,7 +7,6 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.todolist.data.network.NetworkClientImpl
 import com.example.todolist.data.network.TodoItemsRepositoryImpl
 import com.example.todolist.data.sharedPreferences.TodoStorageManagerImpl
-import com.example.todolist.domain.api.TodoNetworkInteractor
 import com.example.todolist.domain.impl.TodoNetworkInteractorImpl
 import com.example.todolist.domain.impl.TodoStorageInteractorImpl
 import com.example.todolist.presentation.ui.util.CheckingInternet

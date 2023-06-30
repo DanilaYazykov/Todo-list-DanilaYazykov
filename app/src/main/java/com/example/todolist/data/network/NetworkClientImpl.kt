@@ -1,6 +1,5 @@
 package com.example.todolist.data.network
 
-import android.util.Log
 import com.example.todolist.data.dto.TodoPostList
 import com.example.todolist.data.dto.TodoResponseList
 import kotlinx.coroutines.Dispatchers
@@ -69,7 +68,7 @@ class NetworkClientImpl : NetworkClient {
 
     override suspend fun placeListToServer(dto: TodoPostList) {
         withContext(Dispatchers.IO) {
-            val response = apiService.placeList(revision = 0, list = dto)
+            apiService.placeList(revision = 0, list = dto)
         }
     }
 }

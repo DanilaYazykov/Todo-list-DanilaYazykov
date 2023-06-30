@@ -1,6 +1,5 @@
 package com.example.todolist.data.network
 
-import android.util.Log
 import com.example.todolist.data.dto.TodoPostList
 import com.example.todolist.data.dto.TodoResponseList
 import com.example.todolist.domain.api.TodoItemsRepository
