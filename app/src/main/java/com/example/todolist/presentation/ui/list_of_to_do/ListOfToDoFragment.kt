@@ -21,7 +21,7 @@ import com.google.android.material.snackbar.Snackbar
 class ListOfToDoFragment : BindingFragment<FragmentListOfToDoBinding>(), OnItemClickListener, OnCheckedClickListener {
 
     private lateinit var adapter: ListToDoAdapter
-    lateinit var viewModel: ListOfTodoViewModel
+    private lateinit var viewModel: ListOfTodoViewModel
 
     override fun createBinding(
         inflater: LayoutInflater,
@@ -69,11 +69,7 @@ class ListOfToDoFragment : BindingFragment<FragmentListOfToDoBinding>(), OnItemC
     }
 
     private fun snackBar() {
-        Snackbar.make(binding.root, getString(R.string.data_not_sync), Snackbar.LENGTH_LONG)
-            .setAction(getString(R.string.sync)) {
-                viewModel.syncTodoListFromNetwork()
-            }
-            .show()
+        Snackbar.make(binding.root, getString(R.string.data_not_sync), Snackbar.LENGTH_LONG).show()
     }
 
     private fun sumOfDoneTodos(list: List<TodoItem>) {
