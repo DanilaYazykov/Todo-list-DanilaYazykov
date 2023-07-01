@@ -1,17 +1,28 @@
 package com.example.todolist.presentation.ui.util
 
+import android.app.Application
 import android.content.Context
-import androidx.work.Worker
+import androidx.lifecycle.ViewModelProvider
+import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
-import com.example.todolist.presentation.ui.list_of_to_do.ListOfToDoFragment
+import com.example.todolist.presentation.presenters.listOfToDoViewModel.ListOfTodoViewModel
 
-class MyWorker(appContext: Context, workerParams: WorkerParameters) : Worker(appContext, workerParams) {
+class MyWorker(
+    appContext: Context,
+    params: WorkerParameters
+) : CoroutineWorker(appContext, params) {
 
-    private val listOfToDoFragment = ListOfToDoFragment()
+    override suspend fun doWork(): Result {
+        return try {
+            val viewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(
+                applicationContext as Application
+            ).create(ListOfTodoViewModel::class.java)
+            viewModel.syncTodoListFromNetwork()
+            viewModel.updateDataServer()
 
-    override fun doWork(): Result {
-        listOfToDoFragment.viewModel.syncTodoListFromNetwork()
-        listOfToDoFragment.viewModel.updateDataServer()
-        return Result.success()
+            Result.success()
+        } catch (e: Exception) {
+            Result.failure()
+        }
     }
 }
