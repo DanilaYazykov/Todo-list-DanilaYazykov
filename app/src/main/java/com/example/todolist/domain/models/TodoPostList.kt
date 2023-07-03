@@ -1,4 +1,4 @@
-package com.example.todolist.data.dto
+package com.example.todolist.domain.models
 
 import com.example.todolist.domain.models.TodoItem
 

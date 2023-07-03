@@ -18,7 +18,16 @@ class AddTodoViewModel(private val todoInteractor: TodoStorageInteractor) : View
         viewModelScope.launch {
             todoItem.let {
                 todoInteractor.deleteTodoItem(todoItem)
+                todoInteractor.addToDeletedList(todoItem)
             }
         }
     }
+
+   fun markAsNotSynced(todoItemId: String) {
+        viewModelScope.launch {
+            todoItemId.let {
+                todoInteractor.markAsNotSynced(todoItemId)
+            }
+        }
+   }
 }

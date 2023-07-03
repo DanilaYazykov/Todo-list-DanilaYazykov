@@ -42,10 +42,10 @@ class ListOfToDoFragment : BindingFragment<FragmentListOfToDoBinding>(), OnItemC
            showTodoList(list)
         }
 
-        viewModel.getInternetStateLiveData.observe(viewLifecycleOwner) { hasInternet ->
-            if (!hasInternet) {
-                snackBar()
-            }
+        viewModel.getStateLiveData.observe(viewLifecycleOwner) { result ->
+            if (!result.internet) { snackBar() }
+            else { viewModel.updateDataServer() }
+            eyeImageVisibility(result.doneVisibility)
         }
 
         binding.addFragmentButton.setOnClickListener {
@@ -54,10 +54,6 @@ class ListOfToDoFragment : BindingFragment<FragmentListOfToDoBinding>(), OnItemC
 
         binding.ivEyeVisibility.setOnClickListener {
             viewModel.changeVisibility()
-        }
-
-        viewModel.liveVisibility.observe(viewLifecycleOwner) { visibility ->
-            eyeImageVisibility(visibility)
         }
     }
 
@@ -69,7 +65,7 @@ class ListOfToDoFragment : BindingFragment<FragmentListOfToDoBinding>(), OnItemC
     }
 
     private fun snackBar() {
-        Snackbar.make(binding.root, getString(R.string.data_not_sync), Snackbar.LENGTH_LONG).show()
+        Snackbar.make(binding.root, getString(R.string.data_not_sync), Snackbar.LENGTH_SHORT).show()
     }
 
     private fun sumOfDoneTodos(list: List<TodoItem>) {
@@ -94,9 +90,9 @@ class ListOfToDoFragment : BindingFragment<FragmentListOfToDoBinding>(), OnItemC
 
     private fun eyeImageVisibility(visibility: Boolean) {
         if (visibility) {
-            binding.ivEyeVisibility.setImageResource(R.drawable.ic_eye_visibility)
-        } else {
             binding.ivEyeVisibility.setImageResource(R.drawable.ic_eye_visibility_gone)
+        } else {
+            binding.ivEyeVisibility.setImageResource(R.drawable.ic_eye_visibility)
         }
     }
 

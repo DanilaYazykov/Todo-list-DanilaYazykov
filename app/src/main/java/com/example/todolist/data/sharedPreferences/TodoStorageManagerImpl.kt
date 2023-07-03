@@ -52,7 +52,8 @@ class TodoStorageManagerImpl(context: Context) : TodoStorageManager {
                     done = todoItem.done,
                     modificationDate = todoItem.modificationDate,
                     color = todoItem.color,
-                    lastUpdatedBy = todoItem.lastUpdatedBy
+                    lastUpdatedBy = todoItem.lastUpdatedBy,
+                    synced = todoItem.synced
                 )
                 savedTodo[existingItemIndex] = updatedItem
             } else {
@@ -83,6 +84,59 @@ class TodoStorageManagerImpl(context: Context) : TodoStorageManager {
         }
     }
 
+    override suspend fun getUnsyncedItems(): List<TodoItem> {
+        val savedTodo = getFromJson()
+        return savedTodo.filter { !it.synced }
+    }
+
+    override suspend fun markAsSynced(id: String) {
+        val savedTodo = getFromJson()
+        val existingItemIndex = savedTodo.indexOfFirst { res -> res.id == id }
+        if (existingItemIndex != -1) {
+            val existingItem = savedTodo[existingItemIndex]
+            val updatedItem = existingItem.copy(synced = true)
+            savedTodo[existingItemIndex] = updatedItem
+            todoJson(savedTodo)
+        }
+    }
+
+    override suspend fun markAsNotSynced(id: String) {
+        withContext(Dispatchers.IO) {
+        val savedTodo = getFromJson()
+        val existingItemIndex = savedTodo.indexOfFirst { res -> res.id == id }
+        if (existingItemIndex != -1) {
+            val existingItem = savedTodo[existingItemIndex]
+            val updatedItem = existingItem.copy(synced = false)
+            savedTodo[existingItemIndex] = updatedItem
+            todoJson(savedTodo)
+        }
+        }
+    }
+
+    override suspend fun addToDeletedList(todoItem: TodoItem) {
+        withContext(Dispatchers.IO) {
+            val deletedItems = getDeletedItems().toMutableList()
+            deletedItems.add(todoItem)
+            setDeletedItems(deletedItems)
+        }
+    }
+
+    override suspend fun getDeletedItems(): List<TodoItem> {
+        val deletedItemsJson = sharedPrefs.getString(DELETED_LIST, null)
+        return if (!deletedItemsJson.isNullOrEmpty()) {
+            Gson().fromJson(deletedItemsJson, Array<TodoItem>::class.java).toList()
+        } else {
+            emptyList()
+        }
+    }
+
+    private fun setDeletedItems(deletedItems: List<TodoItem>) {
+        val deletedItemsJson = Gson().toJson(deletedItems)
+        sharedPrefs.edit()
+            .putString(DELETED_LIST, deletedItemsJson)
+            .apply()
+    }
+
     private fun todoJson(savedTodo: List<TodoItem>) {
         val todoJson = Gson().toJson(savedTodo)
         sharedPrefs.edit()
@@ -103,5 +157,6 @@ class TodoStorageManagerImpl(context: Context) : TodoStorageManager {
     companion object {
         private const val TODO_PREFS = "todoPreferencesNames"
         private const val TODO_ITEMS = "todoItems"
+        private const val DELETED_LIST = "deletedList"
     }
 }

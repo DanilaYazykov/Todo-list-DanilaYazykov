@@ -14,4 +14,15 @@ interface TodoStorageInteractor {
     suspend fun addDone(itemId: String, isChecked: Boolean)
 
     suspend fun clearAll()
+
+    suspend fun getUnsyncedItems(): List<TodoItem>
+
+    suspend fun markAsSynced(id: String)
+
+    suspend fun markAsNotSynced(id: String)
+
+    suspend fun addToDeletedList(todoItem: TodoItem)
+
+    suspend fun getDeletedItems(): List<TodoItem>
+
 }

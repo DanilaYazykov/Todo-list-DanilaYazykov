@@ -26,4 +26,24 @@ class TodoStorageInteractorImpl(private val todoItemsRepository: TodoStorageMana
     override suspend fun clearAll() {
         todoItemsRepository.clearAll()
     }
+
+    override suspend fun getUnsyncedItems(): List<TodoItem> {
+        return todoItemsRepository.getUnsyncedItems()
+    }
+
+    override suspend fun markAsSynced(id: String) {
+        todoItemsRepository.markAsSynced(id)
+    }
+
+    override suspend fun markAsNotSynced(id: String) {
+        todoItemsRepository.markAsNotSynced(id)
+    }
+
+    override suspend fun addToDeletedList(todoItem: TodoItem) {
+        todoItemsRepository.addToDeletedList(todoItem)
+    }
+
+    override suspend fun getDeletedItems(): List<TodoItem> {
+        return todoItemsRepository.getDeletedItems()
+    }
 }

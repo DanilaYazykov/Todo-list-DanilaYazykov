@@ -2,6 +2,7 @@ package com.example.todolist.presentation.ui.add_to_do
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -36,9 +37,9 @@ class AddToDoFragment : BindingFragment<FragmentAddToDoBinding>() {
         viewModel = ViewModelProvider(this, AddTodoViewModelFactory())[AddTodoViewModel::class.java]
         openPreviousSavedTodo()
         putCalendarDate()
-        saveDataTodo()
         deleteDataTodo()
         closeFragment()
+        saveDataTodo()
 
         binding.editTextInputText.addTextChangedListener(ListTextWatcher(binding, this))
     }
@@ -106,6 +107,7 @@ class AddToDoFragment : BindingFragment<FragmentAddToDoBinding>() {
             val result = currentTodo()
             when {
                 result.text.isNotEmpty() -> {
+                    viewModel.markAsNotSynced(result.id)
                     viewModel.addTodoItem(result)
                     findNavController().navigateUp()
                 }
@@ -119,8 +121,7 @@ class AddToDoFragment : BindingFragment<FragmentAddToDoBinding>() {
 
     fun deleteDataTodo() {
         binding.tvDeleteToDo.setOnClickListener {
-            val result = currentTodo()
-            viewModel.deleteTodoItem(result)
+            viewModel.deleteTodoItem(currentTodo())
             findNavController().navigateUp()
         }
     }

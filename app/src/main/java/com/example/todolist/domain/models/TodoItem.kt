@@ -15,6 +15,7 @@ data class TodoItem(
     @SerializedName("created_at") val creationDate: Long? = null,
     @SerializedName("changed_at") val modificationDate: Long? = null,
     @SerializedName("last_updated_by") val lastUpdatedBy: String? = "unknown device",
+    @SerializedName("synced") val synced: Boolean = false
 ) : Parcelable {
     enum class Importance {
         @SerializedName("basic")
