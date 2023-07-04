@@ -1,5 +1,7 @@
 package com.example.todolist.data.network
 
+import com.example.todolist.data.network.network.NetworkClient
+import com.example.todolist.data.network.network.NetworkResult
 import com.example.todolist.domain.models.TodoPostList
 import com.example.todolist.domain.models.TodoResponseList
 import com.example.todolist.domain.api.TodoItemsRepository

@@ -9,7 +9,6 @@
     <string name="text_delete">Удалить</string>
     <string name="my_business">Мои дела</string>
     <string name="done_count">Выполнено - %1$d</string>
-
     <string name="add_first_task">Добавьте задачу</string>
     <string name="data_not_sync">Нет интернет соединения. Загружены локальные данные.</string>
 </resources>

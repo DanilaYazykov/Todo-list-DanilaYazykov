@@ -1,4 +1,4 @@
-package com.example.todolist.data.network
+package com.example.todolist.data.network.network
 
 import okhttp3.Interceptor
 import okhttp3.Response

@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.todolist.domain.models.TodoPostList
-import com.example.todolist.data.network.NetworkResult
+import com.example.todolist.data.network.network.NetworkResult
 import com.example.todolist.domain.api.TodoNetworkInteractor
 import com.example.todolist.domain.api.TodoStorageInteractor
 import com.example.todolist.domain.models.ListState

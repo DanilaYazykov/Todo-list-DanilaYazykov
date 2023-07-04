@@ -1,4 +1,4 @@
-package com.example.todolist.data.network
+package com.example.todolist.data.network.network
 
 import com.example.todolist.domain.models.TodoPostList
 import com.example.todolist.domain.models.TodoResponseList

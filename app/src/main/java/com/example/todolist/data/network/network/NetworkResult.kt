@@ -1,4 +1,4 @@
-package com.example.todolist.data.network
+package com.example.todolist.data.network.network
 
 enum class NetworkResult {
     SUCCESS_200,

@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.example.todolist.data.network.NetworkClientImpl
+import com.example.todolist.data.network.network.NetworkClientImpl
 import com.example.todolist.data.network.TodoItemsRepositoryImpl
 import com.example.todolist.data.sharedPreferences.TodoStorageManagerImpl
 import com.example.todolist.domain.impl.TodoNetworkInteractorImpl
