@@ -1,8 +1,7 @@
-package com.example.todolist.presentation.ui.add_to_do
+package com.example.todolist.presentation.ui.addToDo
 
 import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -128,7 +127,7 @@ class AddToDoFragment : BindingFragment<FragmentAddToDoBinding>() {
 
     private fun putCalendarDate() {
         binding.switchCalendar.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) ShowDateCalendar(binding).showDialog()
+            if (isChecked) DateCalendar(binding).showDialog()
             else binding.tvDate.text = NOTHING_STRING
         }
     }

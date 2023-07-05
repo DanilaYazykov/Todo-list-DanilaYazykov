@@ -1,4 +1,4 @@
-package com.example.todolist.presentation.ui.list_of_to_do
+package com.example.todolist.presentation.ui.listOfToDo
 
 import android.content.Context
 import android.graphics.Paint
@@ -27,45 +27,45 @@ class ListToDoHolder(itemView: View, private val context: Context) :
         } else {
             tvDate.visibility = View.GONE
         }
-        binding.ivCheckbox.setOnClickListener {
+        ivCheckbox.setOnClickListener {
             val updatedItem = itemView.copy(done = !itemView.done)
-            setDone(itemView = updatedItem.done)
+            setDone(checkBoxView = updatedItem.done)
             onCheckedChangeListener.onCheckedChange(updatedItem.id, updatedItem.done)
         }
 
-        setDone(itemView = itemView.done)
+        setDone(checkBoxView = itemView.done)
         if (!itemView.done) setPriority(itemView.importance)
     }
 
-    private fun setPriority(itemView: TodoItem.Importance?) {
+    private fun setPriority(itemView: TodoItem.Importance?) = with(binding) {
         if (itemView == null) return
         when (itemView) {
             TodoItem.Importance.LOW -> {
-                binding.ivPriority.visibility = View.VISIBLE
-                binding.ivPriority.setImageResource(R.drawable.ic_priority_low)
+                ivPriority.visibility = View.VISIBLE
+                ivPriority.setImageResource(R.drawable.ic_priority_low)
             }
             TodoItem.Importance.IMPORTANT -> {
-                binding.ivPriority.visibility = View.VISIBLE
-                binding.ivCheckbox.setImageResource(R.drawable.ic_checkbox_unchecked)
-                binding.ivPriority.setImageResource(R.drawable.ic_priority_high)
+                ivPriority.visibility = View.VISIBLE
+                ivCheckbox.setImageResource(R.drawable.ic_checkbox_unchecked)
+                ivPriority.setImageResource(R.drawable.ic_priority_high)
             }
             else -> {
-                binding.ivPriority.visibility = View.GONE
-                binding.ivCheckbox.setImageResource(R.drawable.ic_checkbox_empty)
+                ivPriority.visibility = View.GONE
+                ivCheckbox.setImageResource(R.drawable.ic_checkbox_empty)
             }
         }
     }
 
-    private fun setDone(itemView: Boolean) {
-        if (itemView) {
-            binding.ivCheckbox.setImageResource(R.drawable.ic_checkbox_checked)
-            binding.ivPriority.visibility = View.GONE
-            binding.tvTodoTitle.paintFlags = binding.tvTodoTitle.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-            binding.tvTodoTitle.setTextColor(ContextCompat.getColor(context, R.color.grey))
+    private fun setDone(checkBoxView: Boolean) = with(binding) {
+        if (checkBoxView) {
+            ivCheckbox.setImageResource(R.drawable.ic_checkbox_checked)
+            ivPriority.visibility = View.GONE
+            tvTodoTitle.paintFlags = binding.tvTodoTitle.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
+            tvTodoTitle.setTextColor(ContextCompat.getColor(context, R.color.grey))
         } else {
-            binding.ivCheckbox.setImageResource(R.drawable.ic_checkbox_empty)
-            binding.tvTodoTitle.paintFlags = binding.tvTodoTitle.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
-            binding.tvTodoTitle.setTextColor(ContextCompat.getColor(context, R.color.black))
+            ivCheckbox.setImageResource(R.drawable.ic_checkbox_empty)
+            tvTodoTitle.paintFlags = binding.tvTodoTitle.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
+            tvTodoTitle.setTextColor(ContextCompat.getColor(context, R.color.black))
         }
     }
 }

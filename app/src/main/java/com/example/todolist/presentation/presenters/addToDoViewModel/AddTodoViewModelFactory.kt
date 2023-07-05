@@ -3,7 +3,7 @@ package com.example.todolist.presentation.presenters.addToDoViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.example.todolist.data.sharedPreferences.TodoStorageManagerImpl
+import com.example.todolist.data.sharedPreferences.TodoLocalStorageImpl
 import com.example.todolist.domain.impl.TodoStorageInteractorImpl
 
 class AddTodoViewModelFactory : ViewModelProvider.Factory {
@@ -14,7 +14,7 @@ class AddTodoViewModelFactory : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
         val application = checkNotNull(extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY])
         val todoInteractor = TodoStorageInteractorImpl(
-            todoItemsRepository = TodoStorageManagerImpl(application)
+            todoItemsRepository = TodoLocalStorageImpl(application)
         )
 
         @Suppress("UNCHECKED_CAST")

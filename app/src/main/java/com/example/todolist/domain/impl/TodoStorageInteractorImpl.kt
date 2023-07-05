@@ -1,14 +1,13 @@
 package com.example.todolist.domain.impl
 
 import com.example.todolist.domain.api.TodoStorageInteractor
-import com.example.todolist.domain.api.TodoStorageManager
 import com.example.todolist.domain.models.TodoItem
 import kotlinx.coroutines.flow.Flow
 
-class TodoStorageInteractorImpl(private val todoItemsRepository: TodoStorageManager) : TodoStorageInteractor {
+class TodoStorageInteractorImpl(private val todoItemsRepository: TodoStorageInteractor) : TodoStorageInteractor {
 
     override fun getTodoList(): Flow<List<TodoItem>> {
-        return todoItemsRepository.getTodoItems()
+        return todoItemsRepository.getTodoList()
     }
 
     override suspend fun deleteTodoItem(todoItem: TodoItem) {

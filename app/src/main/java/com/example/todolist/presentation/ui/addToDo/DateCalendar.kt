@@ -1,4 +1,4 @@
-package com.example.todolist.presentation.ui.add_to_do
+package com.example.todolist.presentation.ui.addToDo
 
 import android.app.DatePickerDialog
 import com.example.todolist.databinding.FragmentAddToDoBinding
@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
-class ShowDateCalendar(private val binding: FragmentAddToDoBinding) {
+class DateCalendar(private val binding: FragmentAddToDoBinding) {
 
     fun showDialog() = showDateCalendar()
 

@@ -1,10 +1,11 @@
-package com.example.todolist.presentation.ui.list_of_to_do
+package com.example.todolist.presentation.ui.listOfToDo
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.todolist.R
@@ -12,16 +13,20 @@ import com.example.todolist.databinding.FragmentListOfToDoBinding
 import com.example.todolist.domain.models.TodoItem
 import com.example.todolist.presentation.presenters.listOfToDoViewModel.ListOfTodoViewModel
 import com.example.todolist.presentation.presenters.listOfToDoViewModel.ListOfTodoViewModelFactory
-import com.example.todolist.presentation.ui.add_to_do.AddToDoFragment
+import com.example.todolist.presentation.ui.addToDo.AddToDoFragment
 import com.example.todolist.presentation.ui.api.OnCheckedClickListener
 import com.example.todolist.presentation.ui.api.OnItemClickListener
 import com.example.todolist.presentation.ui.util.BindingFragment
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 class ListOfToDoFragment : BindingFragment<FragmentListOfToDoBinding>(), OnItemClickListener, OnCheckedClickListener {
 
     private lateinit var adapter: ListToDoAdapter
     private lateinit var viewModel: ListOfTodoViewModel
+    private val renderClass = RenderClass()
 
     override fun createBinding(
         inflater: LayoutInflater,
@@ -32,39 +37,42 @@ class ListOfToDoFragment : BindingFragment<FragmentListOfToDoBinding>(), OnItemC
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        viewModel =
-            ViewModelProvider(this, ListOfTodoViewModelFactory())[ListOfTodoViewModel::class.java]
-
+        viewModel = ViewModelProvider(this, ListOfTodoViewModelFactory())[ListOfTodoViewModel::class.java]
         adaptersInit()
+        swipeToRefresh()
         viewModel.loadTodoList()
-        viewModel.liveTodoInfo.observe(viewLifecycleOwner) { list ->
-           showTodoList(list)
+        viewModel.todoInfo.observe(viewLifecycleOwner) { list ->
+            renderClass.renderList(list, binding)
+            adapter.submitList(list.second)
+            sumOfDoneTodos(list.second)
         }
-
         viewModel.getStateLiveData.observe(viewLifecycleOwner) { result ->
-            if (!result.internet) { snackBar() }
+            if (!result.internet) { showSnackBar() }
             else { viewModel.updateDataServer() }
             eyeImageVisibility(result.doneVisibility)
         }
-
         binding.addFragmentButton.setOnClickListener {
             findNavController().navigate(R.id.action_listOfToDoFragment_to_addToDoFragment)
         }
-
         binding.ivEyeVisibility.setOnClickListener {
             viewModel.changeVisibility()
         }
     }
 
+    private fun swipeToRefresh() {
+        binding.swipeRefreshLayout.setOnRefreshListener {
+            viewModel.resetSyncFlag()
+            viewModel.syncTodoListFromNetwork()
+        }
+    }
+
     private fun adaptersInit() = with(binding) {
-        rcViewToDoList.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        rcViewToDoList.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         adapter = ListToDoAdapter(this@ListOfToDoFragment, this@ListOfToDoFragment)
         rcViewToDoList.adapter = adapter
     }
 
-    private fun snackBar() {
+    private fun showSnackBar() {
         Snackbar.make(binding.root, getString(R.string.data_not_sync), Snackbar.LENGTH_SHORT).show()
     }
 
@@ -72,20 +80,6 @@ class ListOfToDoFragment : BindingFragment<FragmentListOfToDoBinding>(), OnItemC
         val doneCount = list.count { it.done }
         if (doneCount == 0) binding.tvSumOfDone.text = ""
         else binding.tvSumOfDone.text = getString(R.string.done_count, doneCount)
-    }
-
-    private fun showTodoList(list: List<TodoItem>) {
-        if (list.isEmpty()) {
-            binding.rcViewToDoList.visibility = View.GONE
-            binding.ivTodoAnim.visibility = View.VISIBLE
-            binding.tvAddFirstTask.visibility = View.VISIBLE
-        } else {
-            binding.rcViewToDoList.visibility = View.VISIBLE
-            binding.ivTodoAnim.visibility = View.GONE
-            binding.tvAddFirstTask.visibility = View.GONE
-        }
-        adapter.submitList(list)
-        sumOfDoneTodos(list)
     }
 
     private fun eyeImageVisibility(visibility: Boolean) {

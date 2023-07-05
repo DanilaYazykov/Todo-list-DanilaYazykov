@@ -11,4 +11,9 @@
     <string name="done_count">Выполнено - %1$d</string>
     <string name="add_first_task">Добавьте задачу</string>
     <string name="data_not_sync">Нет интернет соединения. Загружены локальные данные.</string>
+    <string name="error_server_message">Ошибка сервера. Загружены локальные данные.</string>
+    <string name="id_not_found_message">Ошибка. Запись с таким ID не найдена.</string>
+    <string name="unauthorized_message">Ошибка авторизации.</string>
+    <string name="unsynchronized_data_message">Ошибка синхронизации данных.</string>
+    <string name="unknown_error_message">Ошибка. Попробуйте ещё раз.</string>
 </resources>

@@ -4,8 +4,8 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.todolist.domain.models.TodoPostList
 import com.example.todolist.data.network.network.NetworkResult
+import com.example.todolist.domain.models.TodoPostList
 import com.example.todolist.domain.api.TodoNetworkInteractor
 import com.example.todolist.domain.api.TodoStorageInteractor
 import com.example.todolist.domain.models.ListState
@@ -30,8 +30,8 @@ class ListOfTodoViewModel(
     private var revision = 0
     private var unfiltredTodo: List<TodoItem> = emptyList()
 
-    private val _liveTodoInfo = MutableLiveData<List<TodoItem>>()
-    val liveTodoInfo = _liveTodoInfo
+    private val _todoInfo = MutableLiveData<Pair<NetworkResult, List<TodoItem>>>()
+    val todoInfo = _todoInfo
 
     private val _internetAndDoneVisibilityLiveData = MutableLiveData(ListState.default())
     val getStateLiveData = _internetAndDoneVisibilityLiveData
@@ -45,7 +45,7 @@ class ListOfTodoViewModel(
                 } else {
                     result
                 }
-                _liveTodoInfo.postValue(filteredList)
+                _todoInfo.postValue(Pair(NetworkResult.SUCCESS_200, filteredList))
                 unfiltredTodo = result
             }
         }
@@ -56,38 +56,17 @@ class ListOfTodoViewModel(
         if (_internetAndDoneVisibilityLiveData.value?.internet == false) return
         viewModelScope.launch {
             todoNetworkInteractor.getListFromServer().collect { result ->
-                when (result.first) {
-                    NetworkResult.SUCCESS_200 -> {
-                        revision = result.second.revision
-                        val deletedList = todoInteractor.getDeletedItems()
-                        val internetList = result.second.list
-                        val localList = unfiltredTodo
-                        val unsyncedItems = todoInteractor.getUnsyncedItems()
-
-                        val updatedItems = localList.filter { changedItem ->
-                            unsyncedItems.find { it.id == changedItem.id } != null
-                        }
-                        val updatedInternetList = internetList.map { internetItem ->
-                            updatedItems.find { it.id == internetItem.id } ?: internetItem
-                        }.filter { updatedItem ->
-                            deletedList.find { it.id == updatedItem.id } == null
-                        }
-                        todoInteractor.clearAll()
-                        updatedInternetList.forEach { todoInteractor.addTodoItem(it) }
-                        updatedItems.forEach { todoInteractor.addTodoItem(it) }
-                        unfiltredTodo = updatedInternetList + unsyncedItems
-                        val filteredList = if (hideDoneItems) {
-                            unfiltredTodo.filter { !it.done }
-                        } else {
-                            unfiltredTodo
-                        }
-                        _liveTodoInfo.postValue(filteredList)
-                        _internetAndDoneVisibilityLiveData.postValue(_internetAndDoneVisibilityLiveData.value?.copy(
-                            doneVisibility = false
-                        ))
-                        changeVisibility()
-                    }
-                    else -> Unit
+                revision = result.second.revision
+                if (result.first == NetworkResult.SUCCESS_200) {
+                    val currentList = DataParser().parseData(result, todoInteractor, unfiltredTodo, hideDoneItems)
+                    unfiltredTodo = currentList.second
+                    _todoInfo.postValue(currentList)
+                    _internetAndDoneVisibilityLiveData.postValue(
+                        _internetAndDoneVisibilityLiveData.value?.copy(doneVisibility = false)
+                    )
+                    changeVisibility()
+                } else {
+                    _todoInfo.postValue(Pair(result.first, result.second.list))
                 }
             }
             sync = true
@@ -104,7 +83,7 @@ class ListOfTodoViewModel(
                 todoNetworkInteractor.placeListToServer(TodoPostList("ok", unfiltredTodo), revision)
                 unsyncedItems.forEach { todoInteractor.markAsSynced(it.id) }
             } catch (e: Exception) {
-                Log.e("Exception", "updateDataServer: ${e.message}")
+                Log.e(TAG, "updateDataServer: ${e.message}")
             }
         }
     }
@@ -142,10 +121,18 @@ class ListOfTodoViewModel(
         }
     }
 
+    fun resetSyncFlag() {
+        sync = false
+    }
+
     override fun onCleared() {
         super.onCleared()
         searchJob?.cancel()
         networkCheckJob?.cancel()
         replaceJob?.cancel()
+    }
+
+    companion object {
+        private const val TAG = "Exception"
     }
 }

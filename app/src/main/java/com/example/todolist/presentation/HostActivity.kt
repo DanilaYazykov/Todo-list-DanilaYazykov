@@ -2,29 +2,32 @@ package com.example.todolist.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import androidx.work.Constraints
+import androidx.work.ListenableWorker
 import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.todolist.databinding.ActivityHostBinding
-import com.example.todolist.presentation.ui.util.MyWorker
+import com.example.todolist.presentation.ui.util.SyncWorkerManager
 import java.util.concurrent.TimeUnit
 
 class HostActivity : AppCompatActivity() {
 
-    private lateinit var binding: ActivityHostBinding
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityHostBinding.inflate(layoutInflater)
+        val binding = ActivityHostBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        settingsOfWorkerManager()
+    }
 
+    private fun settingsOfWorkerManager() {
         val repeatInterval = 8L
         val repeatIntervalTimeUnit = TimeUnit.HOURS
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)
             .build()
-        val periodicWorkRequest = PeriodicWorkRequestBuilder<MyWorker>(repeatInterval, repeatIntervalTimeUnit)
+        val periodicWorkRequest = PeriodicWorkRequestBuilder<SyncWorkerManager>(repeatInterval, repeatIntervalTimeUnit)
             .setConstraints(constraints)
             .build()
         WorkManager.getInstance(this).enqueue(periodicWorkRequest)

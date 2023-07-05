@@ -3,7 +3,7 @@ package com.example.todolist.data.sharedPreferences
 import android.content.Context
 import android.content.Context.MODE_PRIVATE
 import android.content.SharedPreferences
-import com.example.todolist.domain.api.TodoStorageManager
+import com.example.todolist.domain.api.TodoStorageInteractor
 import com.example.todolist.domain.models.TodoItem
 import com.google.gson.Gson
 import kotlinx.coroutines.Dispatchers
@@ -13,12 +13,12 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 import java.util.Calendar
 
-class TodoStorageManagerImpl(context: Context) : TodoStorageManager {
+class TodoLocalStorageImpl(context: Context) : TodoStorageInteractor {
 
     private val sharedPrefs: SharedPreferences =
         context.getSharedPreferences(TODO_PREFS, MODE_PRIVATE)
 
-    override fun getTodoItems(): Flow<List<TodoItem>> = flow {
+    override fun getTodoList(): Flow<List<TodoItem>> = flow {
         val savedTodoJson = sharedPrefs.getString(TODO_ITEMS, null)
         if (!savedTodoJson.isNullOrEmpty()) {
             val savedTodo = Gson().fromJson(savedTodoJson, Array<TodoItem>::class.java)
@@ -44,18 +44,7 @@ class TodoStorageManagerImpl(context: Context) : TodoStorageManager {
             val savedTodo = getFromJson()
             val existingItemIndex = savedTodo.indexOfFirst { it.id == todoItem.id }
             if (existingItemIndex != -1) {
-                val updatedItem = savedTodo[existingItemIndex].copy(
-                    text = todoItem.text,
-                    importance = todoItem.importance,
-                    creationDate = todoItem.creationDate,
-                    deadline = todoItem.deadline,
-                    done = todoItem.done,
-                    modificationDate = todoItem.modificationDate,
-                    color = todoItem.color,
-                    lastUpdatedBy = todoItem.lastUpdatedBy,
-                    synced = todoItem.synced
-                )
-                savedTodo[existingItemIndex] = updatedItem
+                savedTodo[existingItemIndex] = todoItem
             } else {
                 savedTodo.add(todoItem)
             }
@@ -63,13 +52,13 @@ class TodoStorageManagerImpl(context: Context) : TodoStorageManager {
         }
     }
 
-    override suspend fun addDone(itemId: String, checked: Boolean) {
+    override suspend fun addDone(itemId: String, isChecked: Boolean) {
          withContext(Dispatchers.IO) {
             val savedTodo = getFromJson()
             val existingItemIndex = savedTodo.indexOfFirst { it.id == itemId }
             if (existingItemIndex != -1) {
                 val existingItem = savedTodo[existingItemIndex]
-                val updatedItem = existingItem.copy(done = checked, modificationDate = Calendar.getInstance().timeInMillis)
+                val updatedItem = existingItem.copy(done = isChecked, modificationDate = Calendar.getInstance().timeInMillis)
                 savedTodo[existingItemIndex] = updatedItem
             }
             todoJson(savedTodo)

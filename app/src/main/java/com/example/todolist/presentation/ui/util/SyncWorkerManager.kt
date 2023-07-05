@@ -7,7 +7,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.example.todolist.presentation.presenters.listOfToDoViewModel.ListOfTodoViewModel
 
-class MyWorker(
+class SyncWorkerManager(
     appContext: Context,
     params: WorkerParameters
 ) : CoroutineWorker(appContext, params) {
@@ -15,14 +15,14 @@ class MyWorker(
     override suspend fun doWork(): Result {
         return try {
             val viewModel = ViewModelProvider.AndroidViewModelFactory.getInstance(
-                applicationContext as Application
+                application = applicationContext as Application
             ).create(ListOfTodoViewModel::class.java)
+            viewModel.resetSyncFlag()
             viewModel.syncTodoListFromNetwork()
-            viewModel.updateDataServer()
 
             Result.success()
         } catch (e: Exception) {
-            Result.failure()
+            Result.retry()
         }
     }
 }

@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.AP
 import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.todolist.data.network.network.NetworkClientImpl
 import com.example.todolist.data.network.TodoItemsRepositoryImpl
-import com.example.todolist.data.sharedPreferences.TodoStorageManagerImpl
+import com.example.todolist.data.sharedPreferences.TodoLocalStorageImpl
 import com.example.todolist.domain.impl.TodoNetworkInteractorImpl
 import com.example.todolist.domain.impl.TodoStorageInteractorImpl
 import com.example.todolist.presentation.ui.util.CheckingInternet
@@ -20,7 +20,7 @@ class ListOfTodoViewModelFactory : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
         val application = checkNotNull(extras[APPLICATION_KEY])
         val todoInteractor = TodoStorageInteractorImpl(
-            todoItemsRepository = TodoStorageManagerImpl(application)
+            todoItemsRepository = TodoLocalStorageImpl(application)
         )
 
         val todoNetworkInteractor = TodoNetworkInteractorImpl(
