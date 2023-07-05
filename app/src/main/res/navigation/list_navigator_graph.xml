@@ -7,12 +7,12 @@
 
     <fragment
         android:id="@+id/addToDoFragment"
-        android:name="com.example.todolist.presentation.ui.add_to_do.AddToDoFragment"
+        android:name="com.example.todolist.presentation.ui.addToDo.AddToDoFragment"
         android:label="fragment_add_to_do"
         tools:layout="@layout/fragment_add_to_do" />
     <fragment
         android:id="@+id/listOfToDoFragment"
-        android:name="com.example.todolist.presentation.ui.list_of_to_do.ListOfToDoFragment"
+        android:name="com.example.todolist.presentation.ui.listOfToDo.ListOfToDoFragment"
         android:label="fragment_list_of_to_do"
         tools:layout="@layout/fragment_list_of_to_do" >
         <action

@@ -1,4 +1,4 @@
-package com.example.todolist.presentation.ui.add_to_do
+package com.example.todolist.presentation.ui.addToDo
 
 import android.text.Editable
 import android.text.TextWatcher
@@ -15,7 +15,9 @@ class ListTextWatcher(private val binding: FragmentAddToDoBinding, private val a
         if (s.toString().isBlank()) {
             binding.apply {
                 val drawable = tvDeleteToDo.compoundDrawablesRelative[0].mutate().constantState?.newDrawable()
-                DrawableCompat.setTint(drawable!!, ContextCompat.getColor(binding.root.context, R.color.white))
+                if (drawable != null) {
+                    DrawableCompat.setTint(drawable, ContextCompat.getColor(binding.root.context, R.color.white))
+                }
                 tvDeleteToDo.setCompoundDrawablesRelativeWithIntrinsicBounds(drawable, null, null, null)
                 tvDeleteToDo.setOnClickListener(null)
                 tvDeleteToDo.setTextColor(ContextCompat.getColor(binding.root.context, R.color.grey))
@@ -23,7 +25,9 @@ class ListTextWatcher(private val binding: FragmentAddToDoBinding, private val a
         } else {
             binding.apply {
                 val drawable = tvDeleteToDo.compoundDrawablesRelative[0].mutate().constantState?.newDrawable()
-                DrawableCompat.setTint(drawable!!, ContextCompat.getColor(binding.root.context, R.color.red))
+                if (drawable != null) {
+                    DrawableCompat.setTint(drawable, ContextCompat.getColor(binding.root.context, R.color.red))
+                }
                 tvDeleteToDo.setCompoundDrawablesRelativeWithIntrinsicBounds(drawable, null, null, null)
                 tvDeleteToDo.setTextColor(ContextCompat.getColor(binding.root.context, R.color.red))
                 if (s.toString().isNotEmpty()) {

@@ -1,4 +1,4 @@
-package com.example.todolist.presentation.ui.add_to_do
+package com.example.todolist.presentation.ui.addToDo
 
 import android.os.Build
 import android.os.Bundle
@@ -9,13 +9,15 @@ import androidx.core.os.bundleOf
 import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.findNavController
 import com.example.todolist.databinding.FragmentAddToDoBinding
-import com.example.todolist.domain.models.Importance
 import com.example.todolist.domain.models.TodoItem
 import com.example.todolist.presentation.presenters.addToDoViewModel.AddTodoViewModel
 import com.example.todolist.presentation.presenters.addToDoViewModel.AddTodoViewModelFactory
 import com.example.todolist.presentation.ui.util.BindingFragment
+import java.text.SimpleDateFormat
 import java.time.Instant
 import java.util.Calendar
+import java.util.Date
+import java.util.Locale
 
 class AddToDoFragment : BindingFragment<FragmentAddToDoBinding>() {
 
@@ -34,9 +36,9 @@ class AddToDoFragment : BindingFragment<FragmentAddToDoBinding>() {
         viewModel = ViewModelProvider(this, AddTodoViewModelFactory())[AddTodoViewModel::class.java]
         openPreviousSavedTodo()
         putCalendarDate()
-        saveDataTodo()
         deleteDataTodo()
         closeFragment()
+        saveDataTodo()
 
         binding.editTextInputText.addTextChangedListener(ListTextWatcher(binding, this))
     }
@@ -58,32 +60,44 @@ class AddToDoFragment : BindingFragment<FragmentAddToDoBinding>() {
                 ListTextWatcher(binding, this).onTextChanged(todoItem.text, 0, 0, todoItem.text.length)
                 todoItem.importance.let {
                     when (it) {
-                        Importance.LOW -> binding.radioButtonLow.isChecked = true
-                        Importance.BASIC -> binding.radioButtonNone.isChecked = true
-                        Importance.HIGH -> binding.radioButtonHigh.isChecked = true
+                        TodoItem.Importance.LOW -> binding.radioButtonLow.isChecked = true
+                        TodoItem.Importance.BASIC -> binding.radioButtonNone.isChecked = true
+                        TodoItem.Importance.IMPORTANT -> binding.radioButtonHigh.isChecked = true
                     }
                 }
-                todoItem.deadline?.let { binding.tvDate.text = it }
+                todoItem.deadline?.let {
+                    binding.tvDate.text = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(Date(it))
+                }
             }
         }
     }
 
     private fun currentTodo(): TodoItem {
         val importance = when (binding.radioGroup.checkedRadioButtonId) {
-            binding.radioButtonLow.id -> Importance.LOW
-            binding.radioButtonNone.id -> Importance.BASIC
-            binding.radioButtonHigh.id -> Importance.HIGH
-            else -> Importance.BASIC
+            binding.radioButtonLow.id -> TodoItem.Importance.LOW
+            binding.radioButtonNone.id -> TodoItem.Importance.BASIC
+            binding.radioButtonHigh.id -> TodoItem.Importance.IMPORTANT
+            else -> TodoItem.Importance.BASIC
         }
         val currentTime = Instant.now().epochSecond
+        val dateString = binding.tvDate.text.toString()
+        val dateFormat = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
+        val deadline = if (dateString.isNotEmpty()) {
+            val date = dateFormat.parse(dateString)
+            date?.time
+        } else {
+            null
+        }
+        val modificationDate = Calendar.getInstance().timeInMillis
         return TodoItem(
             id = currentId.ifEmpty { currentTime.toString() },
             text = binding.editTextInputText.text.toString(),
             importance = importance,
-            deadline = binding.tvDate.text.toString(),
+            deadline = deadline,
             done = false,
-            creationDate = Calendar.DATE.toString(),
-            modificationDate = currentTime.toString()
+            creationDate = currentTime,
+            modificationDate = modificationDate,
+            lastUpdatedBy = Build.MODEL
         )
     }
 
@@ -92,6 +106,7 @@ class AddToDoFragment : BindingFragment<FragmentAddToDoBinding>() {
             val result = currentTodo()
             when {
                 result.text.isNotEmpty() -> {
+                    viewModel.markAsNotSynced(result.id)
                     viewModel.addTodoItem(result)
                     findNavController().navigateUp()
                 }
@@ -105,16 +120,14 @@ class AddToDoFragment : BindingFragment<FragmentAddToDoBinding>() {
 
     fun deleteDataTodo() {
         binding.tvDeleteToDo.setOnClickListener {
-            val result = currentTodo()
-            viewModel.deleteTodoItem(result)
+            viewModel.deleteTodoItem(currentTodo())
             findNavController().navigateUp()
         }
     }
 
-
     private fun putCalendarDate() {
         binding.switchCalendar.setOnCheckedChangeListener { _, isChecked ->
-            if (isChecked) ShowDateCalendar(binding).showDialog()
+            if (isChecked) DateCalendar(binding).showDialog()
             else binding.tvDate.text = NOTHING_STRING
         }
     }
