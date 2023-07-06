@@ -7,6 +7,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
 
+/**
+ * BindingFragment - класс, который отвечает за создание ViewBinding для фрагментов
+ * и следит за его жизненным циклом.
+ */
 abstract class BindingFragment<T : ViewBinding> : Fragment() {
 
     private var _binding: T? = null

@@ -7,6 +7,9 @@ import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.example.todolist.presentation.presenters.listOfToDoViewModel.ListOfTodoViewModel
 
+/**
+ * SyncWorkerManager - класс, который отвечает за синхронизацию данных с сервером в офлайне.
+ */
 class SyncWorkerManager(
     appContext: Context,
     params: WorkerParameters

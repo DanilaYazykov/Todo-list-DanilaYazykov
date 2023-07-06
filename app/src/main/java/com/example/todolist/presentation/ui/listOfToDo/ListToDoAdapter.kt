@@ -8,6 +8,9 @@ import com.example.todolist.domain.models.TodoItem
 import com.example.todolist.presentation.ui.api.OnCheckedClickListener
 import com.example.todolist.presentation.ui.api.OnItemClickListener
 
+/**
+ * ListToDoAdapter - класс, который отвечает за создание, управление и переиспользование ViewHolder'ов.
+ */
 class ListToDoAdapter(
     private val listener: OnItemClickListener,
     private val onCheckedClickListener: OnCheckedClickListener

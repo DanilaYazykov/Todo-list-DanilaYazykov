@@ -2,9 +2,7 @@ package com.example.todolist.presentation
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.work.Constraints
-import androidx.work.ListenableWorker
 import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
@@ -12,6 +10,9 @@ import com.example.todolist.databinding.ActivityHostBinding
 import com.example.todolist.presentation.ui.util.SyncWorkerManager
 import java.util.concurrent.TimeUnit
 
+/**
+ * HostActivity - главная(root) Activity приложения.
+ */
 class HostActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -22,7 +23,7 @@ class HostActivity : AppCompatActivity() {
     }
 
     private fun settingsOfWorkerManager() {
-        val repeatInterval = 8L
+        val repeatInterval = TIME_OF_REPEAT
         val repeatIntervalTimeUnit = TimeUnit.HOURS
         val constraints = Constraints.Builder()
             .setRequiredNetworkType(NetworkType.CONNECTED)
@@ -31,5 +32,9 @@ class HostActivity : AppCompatActivity() {
             .setConstraints(constraints)
             .build()
         WorkManager.getInstance(this).enqueue(periodicWorkRequest)
+    }
+
+    companion object {
+        const val TIME_OF_REPEAT = 8L
     }
 }

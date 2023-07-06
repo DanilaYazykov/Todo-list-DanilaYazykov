@@ -4,6 +4,9 @@ import com.example.todolist.domain.api.TodoStorageInteractor
 import com.example.todolist.domain.models.TodoItem
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * Domain класс. Содержит в себе бизнес-логику приложения.
+ */
 class TodoStorageInteractorImpl(private val todoItemsRepository: TodoStorageInteractor) : TodoStorageInteractor {
 
     override fun getTodoList(): Flow<List<TodoItem>> {

@@ -13,6 +13,10 @@ import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.withContext
 import java.util.Calendar
 
+/**
+ * Слой Data.
+ * Класс который отвечает за работу с локальным хранилищем.
+ */
 class TodoLocalStorageImpl(context: Context) : TodoStorageInteractor {
 
     private val sharedPrefs: SharedPreferences =
@@ -58,7 +62,8 @@ class TodoLocalStorageImpl(context: Context) : TodoStorageInteractor {
             val existingItemIndex = savedTodo.indexOfFirst { it.id == itemId }
             if (existingItemIndex != -1) {
                 val existingItem = savedTodo[existingItemIndex]
-                val updatedItem = existingItem.copy(done = isChecked, modificationDate = Calendar.getInstance().timeInMillis)
+                val updatedItem = existingItem
+                    .copy(done = isChecked, modificationDate = Calendar.getInstance().timeInMillis)
                 savedTodo[existingItemIndex] = updatedItem
             }
             todoJson(savedTodo)

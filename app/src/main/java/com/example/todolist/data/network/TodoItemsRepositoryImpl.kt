@@ -8,6 +8,10 @@ import com.example.todolist.domain.api.TodoNetworkInteractor
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 
+/**
+ * Класс для взаимодействия с сервером.
+ * С сервером общается через интерфейс NetworkClient.
+ */
 class TodoItemsRepositoryImpl(private val networkClient: NetworkClient) : TodoNetworkInteractor {
 
     override suspend fun getListFromServer(): Flow<Pair<NetworkResult, TodoResponseList>> = flow {

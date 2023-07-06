@@ -19,6 +19,9 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 
+/**
+ * AddToDoFragment - UI класс, который отвечает за добавление нового элемента в список.
+ */
 class AddToDoFragment : BindingFragment<FragmentAddToDoBinding>() {
 
     private lateinit var viewModel: AddTodoViewModel
@@ -44,32 +47,39 @@ class AddToDoFragment : BindingFragment<FragmentAddToDoBinding>() {
     }
 
     private fun openPreviousSavedTodo() {
+        val todoItem = getParcelable()
+        if (todoItem != null) {
+            currentId = todoItem.id
+            todoItem.text.let {
+                binding.editTextInputText.setText(it)
+            }
+            ListTextWatcher(binding, this).onTextChanged(todoItem.text, 0, 0, todoItem.text.length)
+            todoItem.importance.let {
+                when (it) {
+                    TodoItem.Importance.LOW -> binding.radioButtonLow.isChecked = true
+                    TodoItem.Importance.BASIC -> binding.radioButtonNone.isChecked = true
+                    TodoItem.Importance.IMPORTANT -> binding.radioButtonHigh.isChecked = true
+                }
+            }
+            todoItem.deadline?.let {
+                binding.tvDate.text =
+                    SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(Date(it))
+            }
+        }
+    }
+
+    private fun getParcelable(): TodoItem? {
         val args = arguments
+        var todoItem: TodoItem? = null
         if (args != null) {
-            val todoItem = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            todoItem = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 args.getParcelable(ID_TEXT, TodoItem::class.java)
             } else {
                 @Suppress("DEPRECATION")
                 args.getParcelable(ID_TEXT)
             }
-            if (todoItem != null) {
-                currentId = todoItem.id
-                todoItem.text.let {
-                    binding.editTextInputText.setText(it)
-                }
-                ListTextWatcher(binding, this).onTextChanged(todoItem.text, 0, 0, todoItem.text.length)
-                todoItem.importance.let {
-                    when (it) {
-                        TodoItem.Importance.LOW -> binding.radioButtonLow.isChecked = true
-                        TodoItem.Importance.BASIC -> binding.radioButtonNone.isChecked = true
-                        TodoItem.Importance.IMPORTANT -> binding.radioButtonHigh.isChecked = true
-                    }
-                }
-                todoItem.deadline?.let {
-                    binding.tvDate.text = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(Date(it))
-                }
-            }
         }
+        return todoItem
     }
 
     private fun currentTodo(): TodoItem {

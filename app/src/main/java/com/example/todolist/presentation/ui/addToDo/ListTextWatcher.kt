@@ -7,7 +7,11 @@ import androidx.core.graphics.drawable.DrawableCompat
 import com.example.todolist.R
 import com.example.todolist.databinding.FragmentAddToDoBinding
 
-class ListTextWatcher(private val binding: FragmentAddToDoBinding, private val addTodoFragment: AddToDoFragment) : TextWatcher {
+/**
+ * ListTextWatcher - класс, который отвечает за обработку ввода текста.
+ */
+class ListTextWatcher(private val binding: FragmentAddToDoBinding,
+                      private val addTodoFragment: AddToDoFragment) : TextWatcher {
 
     override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) = Unit
 

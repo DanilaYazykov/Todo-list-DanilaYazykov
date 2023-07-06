@@ -5,6 +5,9 @@ import com.example.todolist.domain.api.TodoStorageInteractor
 import com.example.todolist.domain.models.TodoItem
 import com.example.todolist.domain.models.TodoResponseList
 
+/**
+ * DataParser - класс, который отвечает за синхронизацию полученных данных и выдачу результата.
+ */
 class DataParser {
 
     suspend fun parseData(

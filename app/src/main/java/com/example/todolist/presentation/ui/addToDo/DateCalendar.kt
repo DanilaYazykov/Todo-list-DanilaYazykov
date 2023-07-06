@@ -6,6 +6,9 @@ import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Locale
 
+/**
+ * DateCalendar - класс, который отвечает за отображение календаря.
+ */
 class DateCalendar(private val binding: FragmentAddToDoBinding) {
 
     fun showDialog() = showDateCalendar()

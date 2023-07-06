@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.todolist.R
@@ -18,10 +17,10 @@ import com.example.todolist.presentation.ui.api.OnCheckedClickListener
 import com.example.todolist.presentation.ui.api.OnItemClickListener
 import com.example.todolist.presentation.ui.util.BindingFragment
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 
+/**
+ * ListOfToDoFragment - UI класс одного из фрагментов, который отвечает за отображение списка задач.
+ */
 class ListOfToDoFragment : BindingFragment<FragmentListOfToDoBinding>(), OnItemClickListener, OnCheckedClickListener {
 
     private lateinit var adapter: ListToDoAdapter

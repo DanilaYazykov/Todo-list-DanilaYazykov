@@ -16,6 +16,9 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+/**
+ * ListOfTodoViewModel - viewModel UI класса ListOfToDoFragment. Связывает слои Presentation и Domain.
+ */
 class ListOfTodoViewModel(
     private val todoInteractor: TodoStorageInteractor,
     private val todoNetworkInteractor: TodoNetworkInteractor,
@@ -33,8 +36,8 @@ class ListOfTodoViewModel(
     private val _todoInfo = MutableLiveData<Pair<NetworkResult, List<TodoItem>>>()
     val todoInfo = _todoInfo
 
-    private val _internetAndDoneVisibilityLiveData = MutableLiveData(ListState.default())
-    val getStateLiveData = _internetAndDoneVisibilityLiveData
+    private val _internetAndDoneVisibility = MutableLiveData(ListState.default())
+    val getStateLiveData = _internetAndDoneVisibility
 
     fun loadTodoList() {
         viewModelScope.launch {
@@ -53,7 +56,7 @@ class ListOfTodoViewModel(
 
     fun syncTodoListFromNetwork() {
         if (sync) return
-        if (_internetAndDoneVisibilityLiveData.value?.internet == false) return
+        if (_internetAndDoneVisibility.value?.internet == false) return
         viewModelScope.launch {
             todoNetworkInteractor.getListFromServer().collect { result ->
                 revision = result.second.revision
@@ -61,8 +64,8 @@ class ListOfTodoViewModel(
                     val currentList = DataParser().parseData(result, todoInteractor, unfiltredTodo, hideDoneItems)
                     unfiltredTodo = currentList.second
                     _todoInfo.postValue(currentList)
-                    _internetAndDoneVisibilityLiveData.postValue(
-                        _internetAndDoneVisibilityLiveData.value?.copy(doneVisibility = false)
+                    _internetAndDoneVisibility.postValue(
+                        _internetAndDoneVisibility.value?.copy(doneVisibility = false)
                     )
                     changeVisibility()
                 } else {
@@ -74,10 +77,10 @@ class ListOfTodoViewModel(
     }
 
     fun updateDataServer() {
-        if (_internetAndDoneVisibilityLiveData.value?.internet == false) return
+        if (_internetAndDoneVisibility.value?.internet == false) return
         replaceJob?.cancel()
         replaceJob = viewModelScope.launch {
-            delay(1000)
+            delay(DELAY_1000)
             try {
                 val unsyncedItems = todoInteractor.getUnsyncedItems()
                 todoNetworkInteractor.placeListToServer(TodoPostList("ok", unfiltredTodo), revision)
@@ -91,7 +94,7 @@ class ListOfTodoViewModel(
     fun changeVisibility() {
         viewModelScope.launch {
             hideDoneItems = !hideDoneItems
-            _internetAndDoneVisibilityLiveData.value = _internetAndDoneVisibilityLiveData.value?.copy(doneVisibility = hideDoneItems)
+            _internetAndDoneVisibility.value = _internetAndDoneVisibility.value?.copy(doneVisibility = hideDoneItems)
             loadTodoList()
         }
     }
@@ -103,7 +106,7 @@ class ListOfTodoViewModel(
         }
         searchJob?.cancel()
         searchJob = viewModelScope.launch {
-            delay(300)
+            delay(DELAY_300)
             loadTodoList()
         }
     }
@@ -115,7 +118,7 @@ class ListOfTodoViewModel(
             if (result) {
                 syncTodoListFromNetwork()
             }
-            _internetAndDoneVisibilityLiveData.postValue(_internetAndDoneVisibilityLiveData.value?.copy(
+            _internetAndDoneVisibility.postValue(_internetAndDoneVisibility.value?.copy(
                 internet = result
             ))
         }
@@ -134,5 +137,7 @@ class ListOfTodoViewModel(
 
     companion object {
         private const val TAG = "Exception"
+        private const val DELAY_300 = 300L
+        private const val DELAY_1000 = 1000L
     }
 }

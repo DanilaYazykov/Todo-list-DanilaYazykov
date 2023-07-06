@@ -6,6 +6,9 @@ import com.example.todolist.domain.api.TodoStorageInteractor
 import com.example.todolist.domain.models.TodoItem
 import kotlinx.coroutines.launch
 
+/**
+ * AddTodoViewModel - viewModel UI класса AddTodoFragment. Связывает слои Presentation и Domain.
+ */
 class AddTodoViewModel(private val todoInteractor: TodoStorageInteractor) : ViewModel() {
 
     fun addTodoItem(todoItem: TodoItem) {

@@ -10,6 +10,9 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+/**
+ * Класс для взаимодействия с сервером. Непосредственно отправляет запросы.
+ */
 class NetworkClientImpl : NetworkClient {
 
     private var loggingInterceptor = Interceptor { chain ->

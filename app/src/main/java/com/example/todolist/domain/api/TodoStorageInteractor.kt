@@ -3,6 +3,11 @@ package com.example.todolist.domain.api
 import com.example.todolist.domain.models.TodoItem
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * Интерфейс, который связывает слои Presentation и Domain.
+ * Ввиду того, что имеет одинаковые методы, то также является интерфейсом для слоя Data.
+ */
+
 interface TodoStorageInteractor {
 
     fun getTodoList(): Flow<List<TodoItem>>

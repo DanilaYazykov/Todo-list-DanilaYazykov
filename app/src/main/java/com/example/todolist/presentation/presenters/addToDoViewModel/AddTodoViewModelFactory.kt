@@ -6,10 +6,10 @@ import androidx.lifecycle.viewmodel.CreationExtras
 import com.example.todolist.data.sharedPreferences.TodoLocalStorageImpl
 import com.example.todolist.domain.impl.TodoStorageInteractorImpl
 
+/**
+ * AddTodoViewModelFactory - класс(фабрика), который отвечает за создание ViewModel для AddTodoFragment.
+ */
 class AddTodoViewModelFactory : ViewModelProvider.Factory {
-    /**
-     * внедрение di в следующем спринте, временно не трогаю
-     */
 
     override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
         val application = checkNotNull(extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY])

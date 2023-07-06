@@ -11,11 +11,10 @@ import com.example.todolist.domain.impl.TodoNetworkInteractorImpl
 import com.example.todolist.domain.impl.TodoStorageInteractorImpl
 import com.example.todolist.presentation.ui.util.CheckingInternet
 
+/**
+ * ListOfTodoViewModelFactory - класс(фабрика), который отвечает за создание ViewModel для ListOfToDoFragment.
+ */
 class ListOfTodoViewModelFactory : ViewModelProvider.Factory {
-
-    /**
-     * внедрение di в следующем спринте, временно не трогаю
-     */
 
     override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
         val application = checkNotNull(extras[APPLICATION_KEY])

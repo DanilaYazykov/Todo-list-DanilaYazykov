@@ -11,6 +11,9 @@ import retrofit2.http.Header
 import retrofit2.http.PATCH
 import retrofit2.http.Path
 
+/**
+ * Интерфейс, который описывает запросы к серверу.
+ */
 interface TodoApi {
 
     @GET("list")
