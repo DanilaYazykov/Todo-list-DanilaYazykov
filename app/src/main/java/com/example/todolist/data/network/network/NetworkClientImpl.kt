@@ -4,36 +4,15 @@ import com.example.todolist.domain.models.TodoPostList
 import com.example.todolist.domain.models.TodoResponseList
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import okhttp3.Interceptor
-import okhttp3.OkHttpClient
 import retrofit2.Response
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
+import javax.inject.Inject
 
 /**
- * Класс для взаимодействия с сервером. Непосредственно отправляет запросы.
+ * Класс для взаимодействия с сервером. Непосредственно отправляет и принимает запросы.
  */
-class NetworkClientImpl : NetworkClient {
-
-    private var loggingInterceptor = Interceptor { chain ->
-        val request = chain.request()
-        chain.proceed(request)
-    }
-
-    private val apiService = createApiService()
-
-    private fun createApiService(): TodoApi {
-        val okHttpClient = OkHttpClient.Builder()
-            .addInterceptor(AuthInterceptor())
-            .addInterceptor(loggingInterceptor)
-            .build()
-        return Retrofit.Builder()
-            .baseUrl("https://beta.mrdekk.ru/todobackend/")
-            .addConverterFactory(GsonConverterFactory.create())
-            .client(okHttpClient)
-            .build()
-            .create(TodoApi::class.java)
-    }
+class NetworkClientImpl @Inject constructor(
+    private val apiService: TodoApi
+) : NetworkClient {
 
     override suspend fun getListFromServer(): Pair<NetworkResult, TodoResponseList> =
         withContext(Dispatchers.IO) {
@@ -46,36 +25,28 @@ class NetworkClientImpl : NetworkClient {
         }
 
     private fun showResult(response: Response<TodoResponseList>): Pair<NetworkResult, TodoResponseList> {
-        return when {
-            response.code() == CODE_200 && response.body() != null && response.body()!!.list.isNotEmpty() -> {
-                val todoResponseList = response.body()!!
-                Pair(NetworkResult.SUCCESS_200, todoResponseList)
+        val body = response.body()
+        val revision = body?.revision ?: 0
+
+        return when (response.code()) {
+            CODE_200 -> {
+                if (body != null && body.list.isNotEmpty()) {
+                    Pair(NetworkResult.SUCCESS_200, body)
+                } else {
+                    Pair(NetworkResult.SUCCESS_200, TodoResponseList(list = emptyList(), revision = revision))
+                }
             }
-            response.code() == CODE_200 && response.body() != null && response.body()!!.list.isEmpty() -> {
-                Pair(NetworkResult.SUCCESS_200, TodoResponseList(list = emptyList(), revision = response.body()!!.revision))
-            }
-            response.code() == CODE_400 -> {
-                Pair(NetworkResult.ERROR_UNSYNCHRONIZED_DATA_400, TodoResponseList(list = emptyList(), revision = response.body()!!.revision))
-            }
-            response.code() == CODE_401 -> {
-                Pair(NetworkResult.UNCORRECT_AUTHORIZATION_401, TodoResponseList(list = emptyList(), revision = response.body()!!.revision))
-            }
-            response.code() == CODE_404 -> {
-                Pair(NetworkResult.ID_TODO_NOT_FOUND_404, TodoResponseList(list = emptyList(), revision = response.body()!!.revision))
-            }
-            response.code() == CODE_500 -> {
-                Pair(NetworkResult.ERROR_SERVER_500, TodoResponseList(list = emptyList(), revision = response.body()!!.revision))
-            }
-            else -> {
-                Pair(NetworkResult.UNKNOWN_ERROR, TodoResponseList(list = emptyList(), revision = response.body()!!.revision))
-            }
+            CODE_400 -> Pair(NetworkResult.ERROR_UNSYNCHRONIZED_DATA_400, TodoResponseList(list = emptyList(), revision = revision))
+            CODE_401 -> Pair(NetworkResult.UNCORRECT_AUTHORIZATION_401, TodoResponseList(list = emptyList(), revision = revision))
+            CODE_404 -> Pair(NetworkResult.ID_TODO_NOT_FOUND_404, TodoResponseList(list = emptyList(), revision = revision))
+            CODE_500 -> Pair(NetworkResult.ERROR_SERVER_500, TodoResponseList(list = emptyList(), revision = revision))
+            else -> Pair(NetworkResult.UNKNOWN_ERROR, TodoResponseList(list = emptyList(), revision = revision))
         }
     }
 
-
     override suspend fun placeListToServer(list: TodoPostList, revision: Int) {
         withContext(Dispatchers.IO) {
-            apiService.placeList(revision = revision, list = list)
+        val result = apiService.placeList(revision = revision, list = list)
         }
     }
 
@@ -85,7 +56,8 @@ class NetworkClientImpl : NetworkClient {
         }
     }
 
-    companion object{
+    companion object {
+        const val ID_TOKEN = "Bearer conveyable"
         const val CODE_200 = 200
         const val CODE_400 = 400
         const val CODE_401 = 401

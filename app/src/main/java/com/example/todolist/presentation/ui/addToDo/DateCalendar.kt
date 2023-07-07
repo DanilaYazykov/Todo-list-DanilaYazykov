@@ -24,20 +24,16 @@ class DateCalendar(private val binding: FragmentAddToDoBinding) {
             { _, selectedYear, selectedMonth, selectedDay ->
                 val selectedDateCalendar = Calendar.getInstance()
                 selectedDateCalendar.set(selectedYear, selectedMonth, selectedDay)
-
                 val dateFormat = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
                 val formattedDate = dateFormat.format(selectedDateCalendar.time)
                 binding.tvDate.text = formattedDate
             }, year, month, day
         )
-
         datePickerDialog.setOnCancelListener {
             if (binding.tvDate.text.toString().isEmpty()) {
                 binding.switchCalendar.isChecked = false
             }
         }
-
         datePickerDialog.show()
     }
-
 }

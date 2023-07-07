@@ -10,7 +10,7 @@ import com.example.todolist.domain.api.TodoNetworkInteractor
 import com.example.todolist.domain.api.TodoStorageInteractor
 import com.example.todolist.domain.models.ListState
 import com.example.todolist.domain.models.TodoItem
-import com.example.todolist.presentation.ui.util.CheckingInternet
+import com.example.todolist.utils.CheckingInternet
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -22,7 +22,8 @@ import kotlinx.coroutines.launch
 class ListOfTodoViewModel(
     private val todoInteractor: TodoStorageInteractor,
     private val todoNetworkInteractor: TodoNetworkInteractor,
-    private val internet: CheckingInternet
+    private val internet: CheckingInternet,
+    private val dataParser: DataParser
 ) : ViewModel() {
 
     private var hideDoneItems = true
@@ -61,7 +62,7 @@ class ListOfTodoViewModel(
             todoNetworkInteractor.getListFromServer().collect { result ->
                 revision = result.second.revision
                 if (result.first == NetworkResult.SUCCESS_200) {
-                    val currentList = DataParser().parseData(result, todoInteractor, unfiltredTodo, hideDoneItems)
+                    val currentList = dataParser.parseData(result, todoInteractor, unfiltredTodo, hideDoneItems)
                     unfiltredTodo = currentList.second
                     _todoInfo.postValue(currentList)
                     _internetAndDoneVisibility.postValue(

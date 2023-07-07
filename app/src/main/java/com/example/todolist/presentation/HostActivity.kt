@@ -7,7 +7,7 @@ import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.todolist.databinding.ActivityHostBinding
-import com.example.todolist.presentation.ui.util.SyncWorkerManager
+import com.example.todolist.utils.SyncWorkerManager
 import java.util.concurrent.TimeUnit
 
 /**

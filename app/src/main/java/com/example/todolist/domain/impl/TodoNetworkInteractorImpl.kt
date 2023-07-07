@@ -10,7 +10,8 @@ import kotlinx.coroutines.flow.Flow
 /**
  * Domain класс. Содержит в себе бизнес-логику приложения.
  */
-class TodoNetworkInteractorImpl(private val todoItemsRepository: TodoNetworkInteractor) : TodoNetworkInteractor {
+class TodoNetworkInteractorImpl @javax.inject.Inject constructor
+    (private val todoItemsRepository: TodoNetworkInteractor) : TodoNetworkInteractor {
 
     override suspend fun getListFromServer(): Flow<Pair<NetworkResult, TodoResponseList>> {
         return todoItemsRepository.getListFromServer()
