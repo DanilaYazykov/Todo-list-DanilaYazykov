@@ -1,4 +1,4 @@
-package com.example.todolist.data.dataBase.api
+package com.example.todolist.data.dataBase.domain.api
 
 import androidx.room.Dao
 import androidx.room.Insert

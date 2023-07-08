@@ -2,8 +2,8 @@ package com.example.todolist.data.dataBase
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.example.todolist.data.dataBase.api.DeletedItemDao
-import com.example.todolist.data.dataBase.api.TodoLocalDao
+import com.example.todolist.data.dataBase.domain.api.DeletedItemDao
+import com.example.todolist.data.dataBase.domain.api.TodoLocalDao
 import com.example.todolist.data.dataBase.models.DeletedItems
 import com.example.todolist.domain.models.TodoItem
 

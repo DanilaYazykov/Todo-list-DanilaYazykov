@@ -6,8 +6,8 @@ import androidx.room.Room
 import com.example.todolist.data.network.network.NetworkClientImpl
 import com.example.todolist.data.network.network.TodoApi
 import com.example.todolist.data.dataBase.AppDatabase
-import com.example.todolist.data.dataBase.api.DeletedItemDao
-import com.example.todolist.data.dataBase.api.TodoLocalDao
+import com.example.todolist.data.dataBase.domain.api.DeletedItemDao
+import com.example.todolist.data.dataBase.domain.api.TodoLocalDao
 import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides

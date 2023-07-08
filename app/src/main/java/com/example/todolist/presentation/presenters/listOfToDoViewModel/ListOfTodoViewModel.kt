@@ -5,7 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.todolist.data.network.network.NetworkResult
-import com.example.todolist.data.dataBase.AppDatabase
+import com.example.todolist.data.dataBase.domain.impl.DeletedItemDaoImpl
+import com.example.todolist.data.dataBase.domain.impl.TodoLocalDaoImpl
 import com.example.todolist.data.dataBase.models.toUI
 import com.example.todolist.domain.models.TodoPostList
 import com.example.todolist.domain.api.TodoNetworkInteractor
@@ -25,7 +26,8 @@ class ListOfTodoViewModel(
     private val todoNetworkInteractor: TodoNetworkInteractor,
     private val internet: CheckingInternet,
     private val dataParser: DataParser,
-    private val database: AppDatabase,
+    private val database: TodoLocalDaoImpl,
+    private val databaseOffline: DeletedItemDaoImpl,
     private val calendar: Calendar
 ) : ViewModel() {
 
@@ -46,7 +48,7 @@ class ListOfTodoViewModel(
     fun loadTodoList() {
         viewModelScope.launch(Dispatchers.IO) {
             checkNetwork()
-            database.getTodoDao().getAllTodoItems().collect { result ->
+            database.getAllTodoItems().collect { result ->
                 val filteredList = if (hideDoneItems) {
                     result.filter { !it.done }
                 } else {
@@ -66,7 +68,7 @@ class ListOfTodoViewModel(
                 revision = result.second.revision
                 if (result.first == NetworkResult.SUCCESS_200) {
                     val currentList = dataParser
-                        .parseData(result, unfiltredTodo, hideDoneItems, database)
+                        .parseData(result, unfiltredTodo, hideDoneItems, database, databaseOffline)
                     unfiltredTodo = currentList.second
                     _todoInfo.postValue(currentList)
                     _internetAndDoneVisibility.postValue(
@@ -87,14 +89,14 @@ class ListOfTodoViewModel(
         replaceJob = viewModelScope.launch(Dispatchers.IO) {
             delay(DELAY_1000)
             try {
-                val itemsToDelete = database.getDeletedItemDao().getDeletedItems()
-                val unsyncedItems = database.getTodoDao().getUnsyncedItems()
+                val itemsToDelete = databaseOffline.getDeletedItems()
+                val unsyncedItems = database.getUnsyncedItems()
                 todoNetworkInteractor.placeListToServer(TodoPostList("ok", unfiltredTodo), revision)
                 itemsToDelete.forEach {
-                    database.getTodoDao().deleteTodoItem(it.toUI())
+                    database.deleteTodoItem(it.toUI())
                 }
                 unsyncedItems.forEach {
-                    database.getTodoDao().markSynced(it.id, true)
+                    database.markSynced(it.id, true)
                 }
             } catch (e: Exception) {
                 Log.e(TAG, "updateDataServer: ${e.message}")
@@ -113,8 +115,8 @@ class ListOfTodoViewModel(
     fun addDone(itemId: String, isChecked: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
             val modificationDate = calendar.timeInMillis
-            database.getTodoDao().updateCurrentItemDone(itemId, isChecked, modification = modificationDate)
-            database.getTodoDao().markSynced(itemId, false)
+            database.updateCurrentItemDone(itemId, isChecked, modification = modificationDate)
+            database.markSynced(itemId, false)
         }
         searchJob?.cancel()
         searchJob = viewModelScope.launch {
@@ -150,6 +152,6 @@ class ListOfTodoViewModel(
     companion object {
         private const val TAG = "Exception"
         private const val DELAY_300 = 300L
-        private const val DELAY_1000 = 500L
+        private const val DELAY_1000 = 1000L
     }
 }
