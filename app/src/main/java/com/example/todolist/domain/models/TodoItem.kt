@@ -1,11 +1,15 @@
 package com.example.todolist.domain.models
 
 import android.os.Parcelable
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
+@Entity(tableName = "todoItemsTable")
 @Parcelize
 data class TodoItem(
+    @PrimaryKey
     @SerializedName("id") val id: String,
     @SerializedName("text") val text: String,
     @SerializedName("importance") val importance: Importance = Importance.BASIC,
@@ -15,7 +19,8 @@ data class TodoItem(
     @SerializedName("created_at") val creationDate: Long? = null,
     @SerializedName("changed_at") val modificationDate: Long? = null,
     @SerializedName("last_updated_by") val lastUpdatedBy: String? = "unknown device",
-    @SerializedName("synced") val synced: Boolean = false
+    @SerializedName("synced") val synced: Boolean = false,
+    @SerializedName("deleted") val deleted: Boolean = false
 ) : Parcelable {
     enum class Importance {
         @SerializedName("basic")
