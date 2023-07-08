@@ -11,7 +11,7 @@ import com.example.todolist.presentation.presenters.listOfToDoViewModel.ListOfTo
 import javax.inject.Inject
 
 /**
- * SyncWorkerManager - класс, который отвечает за синхронизацию данных с сервером в офлайне.
+ * SyncWorkerManager - класс, который отвечает за синхронизацию данных с сервером в оффлайне.
  */
 class SyncWorkerManager(
     appContext: Context,

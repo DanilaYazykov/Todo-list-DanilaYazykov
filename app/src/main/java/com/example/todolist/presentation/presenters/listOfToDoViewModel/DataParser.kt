@@ -1,7 +1,7 @@
 package com.example.todolist.presentation.presenters.listOfToDoViewModel
 
 import com.example.todolist.data.network.network.NetworkResult
-import com.example.todolist.domain.api.TodoStorageInteractor
+import com.example.todolist.data.dataBase.AppDatabase
 import com.example.todolist.domain.models.TodoItem
 import com.example.todolist.domain.models.TodoResponseList
 
@@ -12,22 +12,22 @@ class DataParser {
 
     suspend fun parseData(
         result: Pair<NetworkResult, TodoResponseList>,
-        todoInteractor: TodoStorageInteractor,
         localList: List<TodoItem>,
-        hideDoneItems: Boolean
+        hideDoneItems: Boolean,
+        database: AppDatabase
     ): Pair<NetworkResult, List<TodoItem>> {
-        return syncronizingLocalAndNetwork(result, todoInteractor, localList, hideDoneItems)
+        return syncronizingLocalAndNetwork(result, localList, hideDoneItems, database)
     }
 
     private suspend fun syncronizingLocalAndNetwork(
         result: Pair<NetworkResult, TodoResponseList>,
-        todoInteractor: TodoStorageInteractor,
         localList: List<TodoItem>,
-        hideDoneItems: Boolean
+        hideDoneItems: Boolean,
+        database: AppDatabase
     ): Pair<NetworkResult, List<TodoItem>> {
         return when (result.first) {
             NetworkResult.SUCCESS_200 -> {
-                successData(result, todoInteractor, localList, hideDoneItems)
+                successData(result, localList, hideDoneItems, database)
             }
             else -> Pair(result.first, emptyList())
         }
@@ -35,23 +35,21 @@ class DataParser {
 
     private suspend fun successData(
         result: Pair<NetworkResult, TodoResponseList>,
-        todoInteractor: TodoStorageInteractor,
         localList: List<TodoItem>,
-        hideDoneItems: Boolean
+        hideDoneItems: Boolean,
+        database: AppDatabase
     ): Pair<NetworkResult, List<TodoItem>> {
-        val deletedList = todoInteractor.getDeletedItems()
-        val unsyncedItems = todoInteractor.getUnsyncedItems()
+        val deletedList = database.getDeletedItemDao().getDeletedItems()
+        val unsyncedItems = database.getTodoDao().getUnsyncedItems()
         val updatedItems = localList.filter { changedItem ->
             unsyncedItems.find { it.id == changedItem.id } != null
         }
         val updatedInternetList = result.second.list.map { internetItem ->
             updatedItems.find { it.id == internetItem.id } ?: internetItem
-        }.filter { updatedItem ->
-            deletedList.find { it.id == updatedItem.id } == null
-        }
-        todoInteractor.clearAll()
-        updatedInternetList.forEach { todoInteractor.addTodoItem(it) }
-        updatedItems.forEach { todoInteractor.addTodoItem(it) }
+        }.filter { updatedItem -> deletedList.find { it.id == updatedItem.id } == null }
+        database.getTodoDao().deleteAllTodoItems()
+        updatedInternetList.forEach { database.getTodoDao().insertTodoItem(it) }
+        updatedItems.forEach { database.getTodoDao().insertTodoItem(it) }
         val syncResult = updatedInternetList + unsyncedItems
         val filteredList = if (hideDoneItems) {
             syncResult.filter { !it.done }

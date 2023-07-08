@@ -1,7 +1,6 @@
 package com.example.todolist.di
 
-import com.example.todolist.data.sharedPreferences.TodoLocalStorageImpl
-import com.example.todolist.domain.impl.TodoStorageInteractorImpl
+import com.example.todolist.data.dataBase.impl.TodoLocalStorageImpl
 import dagger.Module
 import dagger.Provides
 
@@ -9,9 +8,9 @@ import dagger.Provides
 class DomainModule {
 
    @Provides
-    fun provideTodoInteractor(todoLocalStorage: TodoLocalStorageImpl
-   ): TodoStorageInteractorImpl {
-        return TodoStorageInteractorImpl(todoItemsRepository = todoLocalStorage)
-    }
+    fun provideTodoLocalStorage(todoLocalStorage: TodoLocalStorageImpl
+   ): TodoLocalStorageImpl {
+       return todoLocalStorage
+   }
 
 }

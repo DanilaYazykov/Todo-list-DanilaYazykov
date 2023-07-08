@@ -1,12 +1,12 @@
-package com.example.todolist.data.dataBase
+package com.example.todolist.data.dataBase.models
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.example.todolist.domain.models.TodoItem
 
 /**
- * DeletedItem - класс, который отвечает за хранение информации о том, был ли удален элемент.
- * Нужен для офлайн-режима
+ * DeletedItems - класс, представляющий собой модель данных для хранения удаленных элементов.
+ * Нужен для работы в оффлайн режиме.
  */
 @Entity(tableName = "deletedItemsTable")
 data class DeletedItems(

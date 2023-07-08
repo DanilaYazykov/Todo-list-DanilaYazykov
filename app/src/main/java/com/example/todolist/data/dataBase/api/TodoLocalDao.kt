@@ -1,4 +1,4 @@
-package com.example.todolist.data.dataBase
+package com.example.todolist.data.dataBase.api
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -9,6 +9,11 @@ import androidx.room.Update
 import com.example.todolist.domain.models.TodoItem
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * Несмотря на то, что находится в пакете dataBase(слоя data), является частью слоя domain.
+ * Не стал разделять на разные пакеты, для лучшей навигации.
+ * Представляет собой интерфейс для работы с базой данных.
+ */
 @Dao
 interface TodoLocalDao {
 

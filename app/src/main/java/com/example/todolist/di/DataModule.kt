@@ -2,9 +2,12 @@ package com.example.todolist.di
 
 import android.content.Context
 import android.content.SharedPreferences
+import androidx.room.Room
 import com.example.todolist.data.network.network.NetworkClientImpl
 import com.example.todolist.data.network.network.TodoApi
-import com.example.todolist.data.sharedPreferences.TodoLocalStorageImpl.Companion.TODO_PREFS
+import com.example.todolist.data.dataBase.AppDatabase
+import com.example.todolist.data.dataBase.api.DeletedItemDao
+import com.example.todolist.data.dataBase.api.TodoLocalDao
 import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
@@ -22,7 +25,7 @@ class DataModule {
     @Singleton
     @Provides
     fun provideSharedPreferences(context: Context): SharedPreferences {
-        return context.getSharedPreferences(TODO_PREFS, Context.MODE_PRIVATE)
+        return context.getSharedPreferences("todoPreferencesNames23", Context.MODE_PRIVATE)
     }
 
     @Provides
@@ -67,14 +70,36 @@ class DataModule {
 
     @Singleton
     @Provides
-    fun provideGson() : Gson {
+    fun provideGson(): Gson {
         return Gson()
     }
 
     @Singleton
     @Provides
-    fun provideCalendar() : Calendar {
+    fun provideCalendar(): Calendar {
         return Calendar.getInstance()
+    }
+
+    @Provides
+    fun provideDatabase(context: Context): AppDatabase {
+        return Room.databaseBuilder(
+            context = context,
+            AppDatabase::class.java,
+            "database.db"
+        ).fallbackToDestructiveMigration()
+            .build()
+    }
+
+    @Singleton
+    @Provides
+    fun provideTodoLocalDao(database: AppDatabase): TodoLocalDao {
+        return database.getTodoDao()
+    }
+
+    @Singleton
+    @Provides
+    fun provideDeletedItemDao(database: AppDatabase): DeletedItemDao {
+        return database.getDeletedItemDao()
     }
 
 }

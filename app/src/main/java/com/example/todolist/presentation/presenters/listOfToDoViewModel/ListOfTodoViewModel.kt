@@ -5,9 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.todolist.data.network.network.NetworkResult
+import com.example.todolist.data.dataBase.AppDatabase
+import com.example.todolist.data.dataBase.models.toUI
 import com.example.todolist.domain.models.TodoPostList
 import com.example.todolist.domain.api.TodoNetworkInteractor
-import com.example.todolist.domain.api.TodoStorageInteractor
 import com.example.todolist.domain.models.ListState
 import com.example.todolist.domain.models.TodoItem
 import com.example.todolist.utils.CheckingInternet
@@ -15,15 +16,17 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import java.util.Calendar
 
 /**
  * ListOfTodoViewModel - viewModel UI класса ListOfToDoFragment. Связывает слои Presentation и Domain.
  */
 class ListOfTodoViewModel(
-    private val todoInteractor: TodoStorageInteractor,
     private val todoNetworkInteractor: TodoNetworkInteractor,
     private val internet: CheckingInternet,
-    private val dataParser: DataParser
+    private val dataParser: DataParser,
+    private val database: AppDatabase,
+    private val calendar: Calendar
 ) : ViewModel() {
 
     private var hideDoneItems = true
@@ -41,9 +44,9 @@ class ListOfTodoViewModel(
     val getStateLiveData = _internetAndDoneVisibility
 
     fun loadTodoList() {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             checkNetwork()
-            todoInteractor.getTodoList().collect { result ->
+            database.getTodoDao().getAllTodoItems().collect { result ->
                 val filteredList = if (hideDoneItems) {
                     result.filter { !it.done }
                 } else {
@@ -62,7 +65,8 @@ class ListOfTodoViewModel(
             todoNetworkInteractor.getListFromServer().collect { result ->
                 revision = result.second.revision
                 if (result.first == NetworkResult.SUCCESS_200) {
-                    val currentList = dataParser.parseData(result, todoInteractor, unfiltredTodo, hideDoneItems)
+                    val currentList = dataParser
+                        .parseData(result, unfiltredTodo, hideDoneItems, database)
                     unfiltredTodo = currentList.second
                     _todoInfo.postValue(currentList)
                     _internetAndDoneVisibility.postValue(
@@ -80,12 +84,18 @@ class ListOfTodoViewModel(
     fun updateDataServer() {
         if (_internetAndDoneVisibility.value?.internet == false) return
         replaceJob?.cancel()
-        replaceJob = viewModelScope.launch {
+        replaceJob = viewModelScope.launch(Dispatchers.IO) {
             delay(DELAY_1000)
             try {
-                val unsyncedItems = todoInteractor.getUnsyncedItems()
+                val itemsToDelete = database.getDeletedItemDao().getDeletedItems()
+                val unsyncedItems = database.getTodoDao().getUnsyncedItems()
                 todoNetworkInteractor.placeListToServer(TodoPostList("ok", unfiltredTodo), revision)
-                unsyncedItems.forEach { todoInteractor.markAsSynced(it.id) }
+                itemsToDelete.forEach {
+                    database.getTodoDao().deleteTodoItem(it.toUI())
+                }
+                unsyncedItems.forEach {
+                    database.getTodoDao().markSynced(it.id, true)
+                }
             } catch (e: Exception) {
                 Log.e(TAG, "updateDataServer: ${e.message}")
             }
@@ -101,9 +111,10 @@ class ListOfTodoViewModel(
     }
 
     fun addDone(itemId: String, isChecked: Boolean) {
-        viewModelScope.launch {
-            todoInteractor.addDone(itemId, isChecked)
-            todoInteractor.markAsNotSynced(itemId)
+        viewModelScope.launch(Dispatchers.IO) {
+            val modificationDate = calendar.timeInMillis
+            database.getTodoDao().updateCurrentItemDone(itemId, isChecked, modification = modificationDate)
+            database.getTodoDao().markSynced(itemId, false)
         }
         searchJob?.cancel()
         searchJob = viewModelScope.launch {
@@ -139,6 +150,6 @@ class ListOfTodoViewModel(
     companion object {
         private const val TAG = "Exception"
         private const val DELAY_300 = 300L
-        private const val DELAY_1000 = 1000L
+        private const val DELAY_1000 = 500L
     }
 }

@@ -1,12 +1,18 @@
-package com.example.todolist.data.dataBase
+package com.example.todolist.data.dataBase.impl
 
+import com.example.todolist.data.dataBase.api.DeletedItemDao
+import com.example.todolist.data.dataBase.models.DeletedItems
+import com.example.todolist.data.dataBase.api.TodoLocalDao
 import com.example.todolist.domain.models.TodoItem
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
-
-class TodoLocalDaoImpl @Inject constructor(
+/**
+ * Класс, реализующий интерфейс [TodoLocalDao] и [DeletedItemDao].
+ * Отвечает за работу с локальной базой данных.
+ */
+class TodoLocalStorageImpl @Inject constructor(
     private val todoDao: TodoLocalDao,
     private val deletedItemDao: DeletedItemDao
 ) : TodoLocalDao, DeletedItemDao {

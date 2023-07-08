@@ -9,7 +9,7 @@ import androidx.viewbinding.ViewBinding
 
 /**
  * BindingFragment - класс, который отвечает за создание ViewBinding для фрагментов
- * и следит за его жизненным циклом.
+ * и следит за его(binding) жизненным циклом.
  */
 abstract class BindingFragment<T : ViewBinding> : Fragment() {
 
