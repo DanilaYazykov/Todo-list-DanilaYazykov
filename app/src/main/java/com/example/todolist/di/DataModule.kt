@@ -74,7 +74,6 @@ class DataModule {
         return Gson()
     }
 
-    @Singleton
     @Provides
     fun provideCalendar(): Calendar {
         return Calendar.getInstance()

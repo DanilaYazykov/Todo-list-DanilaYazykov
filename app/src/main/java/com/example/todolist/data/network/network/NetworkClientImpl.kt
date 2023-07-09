@@ -1,5 +1,8 @@
 package com.example.todolist.data.network.network
 
+import com.example.todolist.data.dataBase.domain.impl.DeletedItemDaoImpl
+import com.example.todolist.data.dataBase.domain.impl.TodoLocalDaoImpl
+import com.example.todolist.domain.models.TodoItem
 import com.example.todolist.domain.models.TodoPostList
 import com.example.todolist.domain.models.TodoResponseList
 import kotlinx.coroutines.Dispatchers
@@ -11,7 +14,9 @@ import javax.inject.Inject
  * Класс для взаимодействия с сервером. Непосредственно отправляет и принимает запросы.
  */
 class NetworkClientImpl @Inject constructor(
-    private val apiService: TodoApi
+    private val apiService: TodoApi,
+    private val databaseOffline: DeletedItemDaoImpl,
+    private val database: TodoLocalDaoImpl
 ) : NetworkClient {
 
     override suspend fun getListFromServer(): Pair<NetworkResult, TodoResponseList> =
@@ -24,14 +29,30 @@ class NetworkClientImpl @Inject constructor(
             }
         }
 
-    private fun showResult(response: Response<TodoResponseList>): Pair<NetworkResult, TodoResponseList> {
+    private suspend fun mainSync(localList: List<TodoItem>): List<TodoItem>  {
+        val deletedList = databaseOffline.getDeletedItems()
+        val unsyncedItems = database.getUnsyncedItems()
+        val updatedItems = localList.filter { changedItem ->
+            unsyncedItems.find { it.id == changedItem.id } != null
+        }
+        val updatedInternetList = localList.map { internetItem ->
+            updatedItems.find { it.id == internetItem.id } ?: internetItem
+        }.filter { item -> !deletedList.any { deletedItem -> deletedItem.id == item.id }  }
+        database.deleteAllTodoItems()
+        updatedInternetList.forEach { database.insertTodoItem(it) }
+        unsyncedItems.forEach { database.insertTodoItem(it) }
+        return updatedInternetList + unsyncedItems
+    }
+
+    private suspend fun showResult(response: Response<TodoResponseList>): Pair<NetworkResult, TodoResponseList> {
         val body = response.body()
         val revision = body?.revision ?: 0
 
         return when (response.code()) {
             CODE_200 -> {
                 if (body != null && body.list.isNotEmpty()) {
-                    Pair(NetworkResult.SUCCESS_200, body)
+                    val filteredList = mainSync(body.list)
+                    Pair(NetworkResult.SUCCESS_200, TodoResponseList(list = filteredList, revision = revision))
                 } else {
                     Pair(NetworkResult.SUCCESS_200, TodoResponseList(list = emptyList(), revision = revision))
                 }
@@ -46,7 +67,7 @@ class NetworkClientImpl @Inject constructor(
 
     override suspend fun placeListToServer(list: TodoPostList, revision: Int) {
         withContext(Dispatchers.IO) {
-        val result = apiService.placeList(revision = revision, list = list)
+        apiService.placeList(revision = revision, list = list)
         }
     }
 

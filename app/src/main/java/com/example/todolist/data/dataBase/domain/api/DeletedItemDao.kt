@@ -17,7 +17,7 @@ interface DeletedItemDao {
     @Insert(entity = DeletedItems::class ,onConflict = OnConflictStrategy.REPLACE)
     suspend fun addToDeletedList(deletedItem: DeletedItems)
 
-    @Query("SELECT * FROM deletedItemsTable WHERE deleted = 1")
+    @Query("SELECT * FROM deletedItemsTable WHERE deleted = 0")
     suspend fun getDeletedItems(): List<DeletedItems>
 
 }

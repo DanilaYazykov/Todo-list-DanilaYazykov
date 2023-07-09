@@ -15,10 +15,8 @@ import java.util.Calendar
 class ListOfTodoViewModelFactory @javax.inject.Inject constructor(
     private val todoNetworkInteractor: TodoNetworkInteractorImpl,
     private val internet: CheckingInternet,
-    private val dataParser: DataParser,
     private val database: TodoLocalDaoImpl,
     private val databaseOffline: DeletedItemDaoImpl,
-    private val calendar: Calendar
     ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
@@ -26,10 +24,8 @@ class ListOfTodoViewModelFactory @javax.inject.Inject constructor(
         return ListOfTodoViewModel(
             internet = internet,
             todoNetworkInteractor = todoNetworkInteractor,
-            dataParser = dataParser,
             database = database,
             databaseOffline = databaseOffline,
-            calendar = calendar
         ) as T
     }
 }

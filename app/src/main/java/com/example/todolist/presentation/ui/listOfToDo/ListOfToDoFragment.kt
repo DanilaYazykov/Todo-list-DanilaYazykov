@@ -45,11 +45,6 @@ class ListOfToDoFragment : BindingFragment<FragmentListOfToDoBinding>(), OnItemC
         adaptersInit()
         swipeToRefresh()
         viewModel.loadTodoList()
-        viewModel.todoInfo.observe(viewLifecycleOwner) { list ->
-            renderClass.renderList(list, binding)
-            adapter.submitList(list.second)
-            sumOfDoneTodos(list.second)
-        }
         viewModel.getStateLiveData.observe(viewLifecycleOwner) { result ->
             if (!result.internet) { showSnackBar() }
             else { viewModel.updateDataServer() }
@@ -57,6 +52,11 @@ class ListOfToDoFragment : BindingFragment<FragmentListOfToDoBinding>(), OnItemC
         }
         binding.addFragmentButton.setOnClickListener {
             findNavController().navigate(R.id.action_listOfToDoFragment_to_addToDoFragment)
+        }
+        viewModel.filteredTodoInfo.observe(viewLifecycleOwner) { list ->
+            renderClass.renderList(list, binding)
+            adapter.submitList(list.second)
+            sumOfDoneTodos(list.second)
         }
         binding.ivEyeVisibility.setOnClickListener {
             viewModel.changeVisibility()

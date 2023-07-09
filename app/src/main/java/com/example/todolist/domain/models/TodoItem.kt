@@ -17,7 +17,7 @@ data class TodoItem(
     @SerializedName("done") val done: Boolean,
     @SerializedName("color") val color: String? = "#FFFFFF",
     @SerializedName("created_at") val creationDate: Long? = null,
-    @SerializedName("changed_at") val modificationDate: Long? = null,
+    @SerializedName("changed_at") var modificationDate: Long? = null,
     @SerializedName("last_updated_by") val lastUpdatedBy: String? = "unknown device",
     @SerializedName("synced") val synced: Boolean = false,
     @SerializedName("deleted") val deleted: Boolean = false
