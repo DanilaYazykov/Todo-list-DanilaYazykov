@@ -1,6 +1,5 @@
 package com.example.todolist.domain.models
 
-import com.example.todolist.domain.models.TodoItem
 import com.google.gson.annotations.SerializedName
 
 data class TodoResponseList(

@@ -5,6 +5,10 @@ import com.example.todolist.domain.models.TodoResponseList
 import com.example.todolist.data.network.network.NetworkResult
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * Интерфейс, который связывает слои Presentation и Domain.
+ * Ввиду того, что имеет одинаковые методы, то также является интерфейсом для слоя Data.
+ */
 interface TodoNetworkInteractor {
 
     suspend fun getListFromServer(): Flow<Pair<NetworkResult, TodoResponseList>>

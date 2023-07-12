@@ -13,6 +13,9 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+/**
+ * ListToDoHolder - класс, который отвечает за создание шаблона списка.
+ */
 class ListToDoHolder(itemView: View, private val context: Context) :
     RecyclerView.ViewHolder(itemView) {
     private val binding = ItemOfToDoBinding.bind(itemView)

@@ -3,23 +3,22 @@ package com.example.todolist.presentation.presenters.addToDoViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.example.todolist.data.sharedPreferences.TodoLocalStorageImpl
-import com.example.todolist.domain.impl.TodoStorageInteractorImpl
+import com.example.todolist.data.dataBase.domain.impl.DeletedItemDaoImpl
+import com.example.todolist.data.dataBase.domain.impl.TodoLocalDaoImpl
 
-class AddTodoViewModelFactory : ViewModelProvider.Factory {
-    /**
-     * внедрение di в следующем спринте, временно не трогаю
-     */
+/**
+ * AddTodoViewModelFactory - класс(фабрика), который отвечает за создание ViewModel для AddTodoFragment.
+ */
+class AddTodoViewModelFactory @javax.inject.Inject constructor(
+    private val database: TodoLocalDaoImpl,
+    private val databaseOffline: DeletedItemDaoImpl,
+     ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
-        val application = checkNotNull(extras[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY])
-        val todoInteractor = TodoStorageInteractorImpl(
-            todoItemsRepository = TodoLocalStorageImpl(application)
-        )
-
         @Suppress("UNCHECKED_CAST")
         return AddTodoViewModel(
-            todoInteractor = todoInteractor
+            database = database,
+            databaseOffline = databaseOffline,
         ) as T
     }
 }

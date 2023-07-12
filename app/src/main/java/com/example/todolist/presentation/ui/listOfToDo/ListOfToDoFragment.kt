@@ -4,11 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.todolist.R
+import com.example.todolist.app.App
 import com.example.todolist.databinding.FragmentListOfToDoBinding
 import com.example.todolist.domain.models.TodoItem
 import com.example.todolist.presentation.presenters.listOfToDoViewModel.ListOfTodoViewModel
@@ -16,17 +16,21 @@ import com.example.todolist.presentation.presenters.listOfToDoViewModel.ListOfTo
 import com.example.todolist.presentation.ui.addToDo.AddToDoFragment
 import com.example.todolist.presentation.ui.api.OnCheckedClickListener
 import com.example.todolist.presentation.ui.api.OnItemClickListener
-import com.example.todolist.presentation.ui.util.BindingFragment
+import com.example.todolist.utils.BindingFragment
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import javax.inject.Inject
 
+/**
+ * ListOfToDoFragment - UI класс одного из фрагментов, который отвечает за отображение списка задач.
+ */
 class ListOfToDoFragment : BindingFragment<FragmentListOfToDoBinding>(), OnItemClickListener, OnCheckedClickListener {
 
-    private lateinit var adapter: ListToDoAdapter
-    private lateinit var viewModel: ListOfTodoViewModel
-    private val renderClass = RenderClass()
+    @Inject
+    lateinit var vmFactory: ListOfTodoViewModelFactory
+    @Inject
+    lateinit var renderClass: RenderClass
+    private val viewModel: ListOfTodoViewModel by viewModels { vmFactory }
+    private var adapter: ListToDoAdapter = ListToDoAdapter(this@ListOfToDoFragment, this@ListOfToDoFragment)
 
     override fun createBinding(
         inflater: LayoutInflater,
@@ -37,15 +41,10 @@ class ListOfToDoFragment : BindingFragment<FragmentListOfToDoBinding>(), OnItemC
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = ViewModelProvider(this, ListOfTodoViewModelFactory())[ListOfTodoViewModel::class.java]
+        (requireActivity().application as App).appComponent.fragmentComponentFactory().create().inject(this)
         adaptersInit()
         swipeToRefresh()
         viewModel.loadTodoList()
-        viewModel.todoInfo.observe(viewLifecycleOwner) { list ->
-            renderClass.renderList(list, binding)
-            adapter.submitList(list.second)
-            sumOfDoneTodos(list.second)
-        }
         viewModel.getStateLiveData.observe(viewLifecycleOwner) { result ->
             if (!result.internet) { showSnackBar() }
             else { viewModel.updateDataServer() }
@@ -53,6 +52,11 @@ class ListOfToDoFragment : BindingFragment<FragmentListOfToDoBinding>(), OnItemC
         }
         binding.addFragmentButton.setOnClickListener {
             findNavController().navigate(R.id.action_listOfToDoFragment_to_addToDoFragment)
+        }
+        viewModel.filteredTodoInfo.observe(viewLifecycleOwner) { list ->
+            renderClass.renderList(list, binding)
+            adapter.submitList(list.second)
+            sumOfDoneTodos(list.second)
         }
         binding.ivEyeVisibility.setOnClickListener {
             viewModel.changeVisibility()

@@ -1,5 +1,8 @@
 package com.example.todolist.data.network.network
 
+/**
+ * Enum класс, который содержит в себе возможные результаты запроса к серверу.
+ */
 enum class NetworkResult {
     SUCCESS_200,
     ID_TODO_NOT_FOUND_404,

@@ -7,12 +7,18 @@ import com.example.todolist.databinding.FragmentListOfToDoBinding
 import com.example.todolist.domain.models.TodoItem
 import com.google.android.material.snackbar.Snackbar
 
+/**
+ * RenderClass - класс, который отвечает за отрисовку списка задач.
+ */
 class RenderClass {
 
     fun renderList(list: Pair<NetworkResult, List<TodoItem>>, binding: FragmentListOfToDoBinding) =
         renderListPrivate(list, binding)
 
-    private fun renderListPrivate(list: Pair<NetworkResult, List<TodoItem>>, binding: FragmentListOfToDoBinding) {
+    private fun renderListPrivate(
+        list: Pair<NetworkResult, List<TodoItem>>,
+        binding: FragmentListOfToDoBinding
+    ) {
         binding.swipeRefreshLayout.isRefreshing = false
         when (list.first) {
             NetworkResult.SUCCESS_200 -> with(binding) {
@@ -28,6 +34,7 @@ class RenderClass {
                     tvAddFirstTask.visibility = View.GONE
                 }
             }
+
             else -> {
                 val errorMessage = getErrorMessage(list.first, binding)
                 showSnackBar(binding, errorMessage)
@@ -39,12 +46,16 @@ class RenderClass {
         Snackbar.make(binding.root, message, Snackbar.LENGTH_SHORT).show()
     }
 
-    private fun getErrorMessage(networkResult: NetworkResult, binding: FragmentListOfToDoBinding): String {
+    private fun getErrorMessage(
+        networkResult: NetworkResult,
+        binding: FragmentListOfToDoBinding
+    ): String {
         return when (networkResult) {
             NetworkResult.ERROR_SERVER_500 -> binding.root.context.getString(R.string.error_server_message)
             NetworkResult.ID_TODO_NOT_FOUND_404 -> binding.root.context.getString(R.string.id_not_found_message)
             NetworkResult.UNCORRECT_AUTHORIZATION_401 -> binding.root.context.getString(R.string.unauthorized_message)
-            NetworkResult.ERROR_UNSYNCHRONIZED_DATA_400 -> binding.root.context.getString(R.string.unsynchronized_data_message)
+            NetworkResult.ERROR_UNSYNCHRONIZED_DATA_400 ->
+                binding.root.context.getString(R.string.unsynchronized_data_message)
             NetworkResult.UNKNOWN_ERROR -> binding.root.context.getString(R.string.unknown_error_message)
             else -> binding.root.context.getString(R.string.unknown_error_message)
         }
