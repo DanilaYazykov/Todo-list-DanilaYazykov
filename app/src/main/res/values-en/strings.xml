@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">ToDo List</string>
+    <string name="tv_save">Save</string>
+    <string name="something_to_do">Something to do…</string>
+    <string name="text_important">Importance</string>
+    <string name="text_no">No</string>
+    <string name="text_time_to">Time to</string>
+    <string name="text_delete">Delete</string>
+    <string name="text_clean">Clear</string>
+    <string name="my_business">Todo list</string>
+    <string name="done_count">Done - %1$d</string>
+    <string name="add_first_task">Add a task</string>
+    <string name="data_not_sync">No internet connection. Local data loaded.</string>
+    <string name="error_server_message">Server error. Local data loaded.</string>
+    <string name="id_not_found_message">Error. Record with this ID not found.</string>
+    <string name="unauthorized_message">Authorization error.</string>
+    <string name="unsynchronized_data_message">Data synchronization error.</string>
+    <string name="unknown_error_message">Error. Try again.</string>
+    <string name="Settings">Settings</string>
+    <string name="MainScreen">Main screen</string>
+    <string name="Choose_theme">Choose a theme for the application</string>
+    <string name="dark_theme">Dark theme</string>
+    <string name="light_theme">Light theme</string>
+    <string name="system_theme">System theme</string>
+    <string name="settings_theme">Setting the theme</string>
+    <string name="importance_high">High</string>
+    <string name="importance_low">Low</string>
+    <string name="importance_basic">Basic</string>
+    <string name="сhoose_importance">Choose the level of importance</string>
+</resources>

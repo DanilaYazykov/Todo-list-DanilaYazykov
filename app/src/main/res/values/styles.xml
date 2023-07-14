@@ -1,36 +1,144 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <resources>
-    <style name="RadioButtonStyle" parent="@style/Widget.AppCompat.CompoundButton.RadioButton">
-        <item name="android:colorControlActivated">@color/white</item>
+
+    <style name="RadioButtonStyle">
+        <item name="android:textColor">@color/black</item>
+        <item name="fontFamily">@font/roboto_regular</item>
+        <item name="android:textSize">@dimen/date_size</item>
+        <item name="android:textStyle">bold</item>
     </style>
+
     <style name="CircularShapeAppearance" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
     </style>
-    <style name="MainTitleStyle" parent="">
+
+    <style name="H1_MainTitleStyle" parent="">
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">@dimen/main_title_text_size</item>
         <item name="android:textStyle">bold</item>
         <item name="android:fontFamily">@font/roboto_regular</item>
     </style>
-    <style name="SumOfDoneStyle" parent="">
+
+    <style name="H2_SumOfDoneStyle" parent="">
         <item name="android:textColor">@color/grey</item>
         <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:textSize">@dimen/date_size</item>
     </style>
-    <style name="BlankStyle" parent="">
+
+    <style name="Body_BlankStyle" parent="">
         <item name="android:backgroundTint">@color/white</item>
     </style>
+
     <style name="TextViewStyle">
         <item name="android:textColor">@color/black</item>
+        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:textSize">@dimen/first_task</item>
+        <item name="android:textStyle">bold</item>
     </style>
+
+    <style name="tvStyleTodoItem">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:textSize">@dimen/item_name</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:maxLines">3</item>
+    </style>
+
+
     <style name="ImageStyle" parent="">
         <item name="tint">@color/grey</item>
     </style>
-    <style name="TrashButtonStyle">
-        <item name="android:fontFamily">@font/roboto_regular</item>
-        <item name="android:textColor">@color/grey</item>
+
+    <style name="TextViewItemAddStyle">
+        <item name="android:textColor">@color/black</item>
+        <item name="fontFamily">@font/roboto_regular</item>
         <item name="android:textSize">@dimen/item_name</item>
         <item name="android:textStyle">bold</item>
-<!--        <item name="drawableTint">@color/grey</item>-->
     </style>
+
+    <style name="TrashButtonStyle">
+        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:text">@string/text_delete</item>
+        <item name="android:textColor">?attr/colorOnPrimary</item>
+        <item name="android:textSize">@dimen/item_name</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:background">@drawable/ripple_effect</item>
+    </style>
+
+    <style name="HintStyle">
+        <item name="android:textColorHint">@color/grey</item>
+        <item name="android:textSize">@dimen/item_name</item>
+        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:background">@drawable/edit_round_drawable</item>
+        <item name="android:hint">@string/something_to_do</item>
+        <item name="android:imeOptions">actionDone</item>
+        <item name="android:inputType">textMultiLine</item>
+        <item name="android:minLines">5</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
+
+    <style name="SaveButtonStyle">
+        <item name="android:text">@string/tv_save</item>
+        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="android:textSize">@dimen/date_size</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:letterSpacing">0.01</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
+    <style name="DateStyle">
+        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="android:textSize">@dimen/date_size</item>
+    </style>
+
+    <style name="BottomNavigation" parent="Widget.Design.BottomNavigationView">
+        <item name="android:background">@color/white</item>
+        <item name="itemIconTint">@drawable/bottom_navigation_icon_selector</item>
+        <item name="itemTextColor">@drawable/bottom_navigation_icon_selector</item>
+        <item name="fontFamily">@font/roboto_regular</item>
+        <item name="android:textSize">12sp</item>
+    </style>
+
+    <style name="BottomNavigationColor" parent="">
+        <item name="android:backgroundTint">@color/white</item>
+    </style>
+
+    <style name="SettingsSheetTextStyle" parent="">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:textSize">@dimen/date_size</item>
+        <item name="android:background">@drawable/edit_empty_drawable</item>
+        <item name="android:paddingHorizontal">@dimen/mmm_size</item>
+        <item name="android:paddingVertical">@dimen/s_size</item>
+    </style>
+
+    <style name="SettingsSheetTopTextStyle" parent="">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:textSize">@dimen/item_name</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="SettingsButtonStyle" parent="">
+        <item name="android:layout_marginStart">8dp</item>
+        <item name="android:layout_marginTop">26dp</item>
+        <item name="android:layout_marginEnd">8dp</item>
+        <item name="android:backgroundTint">@color/light_grey</item>
+        <item name="android:fontFamily">@font/roboto_regular</item>
+        <item name="android:inputType">textCapWords</item>
+        <item name="android:letterSpacing">0.0</item>
+        <item name="android:textAlignment">textStart</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/item_name</item>
+        <item name="icon">@drawable/ic_arrow_right</item>
+        <item name="iconGravity">end</item>
+        <item name="iconTint">@color/black</item>
+    </style>
+
 </resources>

@@ -1,12 +1,12 @@
 <resources>
-    <string name="app_name">Todo list</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="app_name">Список дел</string>
     <string name="tv_save">Сохранить</string>
     <string name="something_to_do">Что надо сделать…</string>
     <string name="text_important">Важность</string>
     <string name="text_no">Нет</string>
     <string name="text_time_to">Сделать до</string>
     <string name="text_delete">Удалить</string>
+    <string name="text_clean">Очистить</string>
     <string name="my_business">Мои дела</string>
     <string name="done_count">Выполнено - %1$d</string>
     <string name="add_first_task">Добавьте задачу</string>
@@ -16,4 +16,15 @@
     <string name="unauthorized_message">Ошибка авторизации.</string>
     <string name="unsynchronized_data_message">Ошибка синхронизации данных.</string>
     <string name="unknown_error_message">Ошибка. Попробуйте ещё раз.</string>
+    <string name="Settings">Настройки</string>
+    <string name="MainScreen">Главное меню</string>
+    <string name="Choose_theme">Выберите тему для приложения</string>
+    <string name="dark_theme">Темная тема</string>
+    <string name="light_theme">Светлая тема</string>
+    <string name="system_theme">Системная тема</string>
+    <string name="settings_theme">Настройка темы</string>
+    <string name="importance_high">Высокая</string>
+    <string name="importance_low">Низкая</string>
+    <string name="importance_basic">Обычная</string>
+    <string name="сhoose_importance">Выберите степень важности</string>
 </resources>

@@ -50,9 +50,6 @@ class ListOfToDoFragment : BindingFragment<FragmentListOfToDoBinding>(), OnItemC
             else { viewModel.updateDataServer() }
             eyeImageVisibility(result.doneVisibility)
         }
-        binding.addFragmentButton.setOnClickListener {
-            findNavController().navigate(R.id.action_listOfToDoFragment_to_addToDoFragment)
-        }
         viewModel.filteredTodoInfo.observe(viewLifecycleOwner) { list ->
             renderClass.renderList(list, binding)
             adapter.submitList(list.second)

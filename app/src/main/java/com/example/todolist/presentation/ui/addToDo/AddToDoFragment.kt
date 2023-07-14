@@ -1,19 +1,28 @@
 package com.example.todolist.presentation.ui.addToDo
 
+import android.content.Context
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
+import android.view.inputmethod.InputMethodManager
+import android.widget.LinearLayout
 import androidx.core.os.bundleOf
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.example.todolist.R
 import com.example.todolist.app.App
 import com.example.todolist.databinding.FragmentAddToDoBinding
 import com.example.todolist.domain.models.TodoItem
 import com.example.todolist.presentation.presenters.addToDoViewModel.AddTodoViewModel
 import com.example.todolist.presentation.presenters.addToDoViewModel.AddTodoViewModelFactory
 import com.example.todolist.utils.BindingFragment
+import com.google.android.material.bottomsheet.BottomSheetBehavior
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.time.Instant
 import java.util.Calendar
@@ -32,6 +41,7 @@ class AddToDoFragment : BindingFragment<FragmentAddToDoBinding>() {
     lateinit var calendar: Calendar
     private var currentId = EMPTY_STRING
     private val viewModel: AddTodoViewModel by viewModels { vmFactory }
+    private var importance = TodoItem.Importance.BASIC
 
     override fun createBinding(
         inflater: LayoutInflater,
@@ -48,6 +58,8 @@ class AddToDoFragment : BindingFragment<FragmentAddToDoBinding>() {
         deleteDataTodo()
         closeFragment()
         saveDataTodo()
+        bottomSheetManager()
+        getImportance()
         binding.editTextInputText.addTextChangedListener(ListTextWatcher(binding, this))
     }
 
@@ -60,16 +72,20 @@ class AddToDoFragment : BindingFragment<FragmentAddToDoBinding>() {
             }
             ListTextWatcher(binding, this).onTextChanged(todoItem.text, 0, 0, todoItem.text.length)
             todoItem.importance.let {
+                binding.tvImportanceBasic.visibility = View.GONE
+                binding.tvImportanceLow.visibility = View.GONE
+                binding.tvImportanceHigh.visibility = View.GONE
                 when (it) {
-                    TodoItem.Importance.LOW -> binding.radioButtonLow.isChecked = true
-                    TodoItem.Importance.BASIC -> binding.radioButtonNone.isChecked = true
-                    TodoItem.Importance.IMPORTANT -> binding.radioButtonHigh.isChecked = true
+                    TodoItem.Importance.LOW -> binding.tvImportanceLow.visibility = View.VISIBLE
+                    TodoItem.Importance.BASIC -> binding.tvImportanceBasic.visibility = View.VISIBLE
+                    TodoItem.Importance.IMPORTANT -> binding.tvImportanceHigh.visibility = View.VISIBLE
                 }
             }
             todoItem.deadline?.let {
                 binding.tvDate.text =
                     SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(Date(it))
             }
+            binding.tvDeleteToDo.setText(R.string.text_delete)
         }
     }
 
@@ -88,7 +104,7 @@ class AddToDoFragment : BindingFragment<FragmentAddToDoBinding>() {
     }
 
     private fun currentTodo(): TodoItem {
-        val importance = getImportance()
+        val importance = importance
         val currentTime = Instant.now().epochSecond
         val dateString = binding.tvDate.text.toString()
         val dateFormat = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
@@ -111,15 +127,75 @@ class AddToDoFragment : BindingFragment<FragmentAddToDoBinding>() {
         )
     }
 
-    private fun getImportance(): TodoItem.Importance {
-        val importance = when (binding.radioGroup.checkedRadioButtonId) {
-            binding.radioButtonLow.id -> TodoItem.Importance.LOW
-            binding.radioButtonNone.id -> TodoItem.Importance.BASIC
-            binding.radioButtonHigh.id -> TodoItem.Importance.IMPORTANT
-            else -> TodoItem.Importance.BASIC
+    private fun getImportance() = with(binding) {
+        binding.bottomLowImportance.setOnClickListener {
+            tvImportanceLow.visibility = View.VISIBLE
+            tvImportanceBasic.visibility = View.GONE
+            tvImportanceHigh.visibility = View.GONE
+            BottomSheetBehavior.from(standardBottomSheet).state = BottomSheetBehavior.STATE_HIDDEN
+            switchImportance.isChecked = false
+            importance = TodoItem.Importance.LOW
         }
-        return importance
+        binding.bottomBasicImportance.setOnClickListener {
+            tvImportanceLow.visibility = View.GONE
+            tvImportanceBasic.visibility = View.VISIBLE
+            tvImportanceHigh.visibility = View.GONE
+            BottomSheetBehavior.from(standardBottomSheet).state = BottomSheetBehavior.STATE_HIDDEN
+            switchImportance.isChecked = false
+            importance = TodoItem.Importance.BASIC
+        }
+        binding.bottomHighImportance.setOnClickListener {
+            tvImportanceLow.visibility = View.GONE
+            tvImportanceBasic.visibility = View.GONE
+            tvImportanceHigh.visibility = View.VISIBLE
+            tvImportanceHigh.startAnimation(AnimationUtils.loadAnimation(requireContext(), R.anim.highlight_animation))
+            BottomSheetBehavior.from(standardBottomSheet).state = BottomSheetBehavior.STATE_HIDDEN
+            switchImportance.isChecked = false
+            importance = TodoItem.Importance.IMPORTANT
+        }
     }
+
+    private fun hideKeyboard() {
+        val inputMethodManager =
+            requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
+        inputMethodManager?.hideSoftInputFromWindow(binding.editTextInputText.windowToken, 0)
+    }
+
+    private fun bottomSheetManager() {
+        val bottomSheetBehavior = BottomSheetBehavior.from(binding.standardBottomSheet).apply {
+            state = BottomSheetBehavior.STATE_HIDDEN
+            binding.dimView.visibility = View.GONE
+        }
+
+        binding.switchImportance.setOnClickListener {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+            hideKeyboard()
+            binding.dimView.visibility = View.VISIBLE
+        }
+
+        binding.dimView.setOnClickListener {
+            bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
+            binding.switchImportance.isChecked = false
+            binding.dimView.visibility = View.GONE
+        }
+        bottomSheetCallBack(bottomSheetBehavior)
+    }
+
+    private fun bottomSheetCallBack(bottomSheetBehavior: BottomSheetBehavior<LinearLayout>) {
+        bottomSheetBehavior.addBottomSheetCallback(object :
+            BottomSheetBehavior.BottomSheetCallback() {
+            override fun onStateChanged(bottomSheet: View, newState: Int) {
+                when (newState) {
+                    BottomSheetBehavior.STATE_EXPANDED -> Unit
+                    BottomSheetBehavior.STATE_COLLAPSED -> Unit
+                    BottomSheetBehavior.STATE_HIDDEN -> binding.dimView.visibility = View.GONE
+                    else -> Unit
+                }
+            }
+            override fun onSlide(bottomSheet: View, slideOffset: Float) = Unit
+        })
+    }
+
 
     private fun saveDataTodo() {
         binding.tvSave.setOnClickListener {
@@ -140,8 +216,12 @@ class AddToDoFragment : BindingFragment<FragmentAddToDoBinding>() {
 
     fun deleteDataTodo() {
         binding.tvDeleteToDo.setOnClickListener {
-            viewModel.deleteTodoItem(currentTodo())
-            findNavController().navigateUp()
+            binding.ivTodoAnim.visibility = View.VISIBLE
+            viewLifecycleOwner.lifecycleScope.launch {
+                delay(ANIMATION_PLAYING)
+                viewModel.deleteTodoItem(currentTodo())
+                findNavController().navigateUp()
+            }
         }
     }
 
@@ -161,6 +241,7 @@ class AddToDoFragment : BindingFragment<FragmentAddToDoBinding>() {
     companion object {
         private const val ID_TEXT = "id"
         private const val EMPTY_STRING = ""
+        private const val ANIMATION_PLAYING = 1500L
 
         fun createArgs(textId: TodoItem): Bundle =
             bundleOf(ID_TEXT to textId)

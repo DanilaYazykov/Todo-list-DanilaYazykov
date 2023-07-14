@@ -3,6 +3,7 @@ package com.example.todolist.presentation.ui.addToDo
 import android.graphics.drawable.Drawable
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import com.example.todolist.R
@@ -31,10 +32,11 @@ class ListTextWatcher(
 
     private fun resetTextView() {
         binding.apply {
+            tvDeleteToDo.setText(R.string.text_delete)
             val drawable = getDrawableWithColor(R.color.white)
             tvDeleteToDo.setCompoundDrawablesRelativeWithIntrinsicBounds(drawable, null, null, null)
             tvDeleteToDo.setOnClickListener(null)
-            tvDeleteToDo.setTextColor(ContextCompat.getColor(binding.root.context, R.color.grey))
+            tvDeleteToDo.setTextColor(ContextCompat.getColor(binding.root.context, R.color.white))
         }
     }
 
@@ -49,11 +51,14 @@ class ListTextWatcher(
     private fun setTextViewClickListener(text: String) {
         binding.apply {
             if (text.isNotEmpty()) {
+                tvDeleteToDo.setText(R.string.text_clean)
                 tvDeleteToDo.setOnClickListener {
                     editTextInputText.text.clear()
                     tvDate.text = ""
                     switchCalendar.isChecked = false
-                    radioGroup.check(R.id.radio_button_none)
+                    bottomBasicImportance.visibility = View.VISIBLE
+                    bottomHighImportance.visibility = View.GONE
+                    bottomLowImportance.visibility = View.GONE
                     addTodoFragment.deleteDataTodo()
                 }
             }

@@ -9,12 +9,12 @@
         android:id="@+id/addToDoFragment"
         android:name="com.example.todolist.presentation.ui.addToDo.AddToDoFragment"
         android:label="fragment_add_to_do"
-        tools:layout="@layout/fragment_add_to_do" />
+        tools:layout="@layout/fragment_add_to_do"/>
     <fragment
         android:id="@+id/listOfToDoFragment"
         android:name="com.example.todolist.presentation.ui.listOfToDo.ListOfToDoFragment"
         android:label="fragment_list_of_to_do"
-        tools:layout="@layout/fragment_list_of_to_do" >
+        tools:layout="@layout/fragment_list_of_to_do">
         <action
             android:id="@+id/action_listOfToDoFragment_to_addToDoFragment"
             app:destination="@id/addToDoFragment"
@@ -22,5 +22,11 @@
             app:exitAnim="@anim/slide_out_left"
             app:popEnterAnim="@anim/slide_in_left"
             app:popExitAnim="@anim/slide_out_right" />
+    </fragment>
+    <fragment
+        android:id="@+id/settingsFragment"
+        android:name="com.example.todolist.presentation.ui.settings.SettingsFragment"
+        android:label="fragment_settings"
+        tools:layout="@layout/fragment_settings">
     </fragment>
 </navigation>

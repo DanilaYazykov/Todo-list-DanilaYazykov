@@ -1,9 +1,7 @@
 package com.example.todolist.presentation.ui.listOfToDo
 
-import android.content.Context
 import android.graphics.Paint
 import android.view.View
-import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.todolist.R
 import com.example.todolist.databinding.ItemOfToDoBinding
@@ -16,7 +14,7 @@ import java.util.Locale
 /**
  * ListToDoHolder - класс, который отвечает за создание шаблона списка.
  */
-class ListToDoHolder(itemView: View, private val context: Context) :
+class ListToDoHolder(itemView: View) :
     RecyclerView.ViewHolder(itemView) {
     private val binding = ItemOfToDoBinding.bind(itemView)
 
@@ -64,11 +62,9 @@ class ListToDoHolder(itemView: View, private val context: Context) :
             ivCheckbox.setImageResource(R.drawable.ic_checkbox_checked)
             ivPriority.visibility = View.GONE
             tvTodoTitle.paintFlags = binding.tvTodoTitle.paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
-            tvTodoTitle.setTextColor(ContextCompat.getColor(context, R.color.grey))
         } else {
             ivCheckbox.setImageResource(R.drawable.ic_checkbox_empty)
             tvTodoTitle.paintFlags = binding.tvTodoTitle.paintFlags and Paint.STRIKE_THRU_TEXT_FLAG.inv()
-            tvTodoTitle.setTextColor(ContextCompat.getColor(context, R.color.black))
         }
     }
 }

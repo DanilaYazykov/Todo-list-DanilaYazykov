@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/addToDoFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".presentation.ui.addToDo.AddToDoFragment">
+
+<ScrollView
+    android:id="@+id/addToDoFragment2"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -13,26 +18,20 @@
 
         <ImageView
             android:id="@+id/iv_close_button"
+            style="@style/CheckButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/mll_size"
             android:src="@drawable/ic_close"
-            style="@style/CheckButtonStyle"
             app:layout_constraintStart_toStartOf="@+id/left_border"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
             android:id="@+id/tv_save"
+            style="@style/SaveButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/mll_size"
-            android:letterSpacing="0.01"
-            android:text="@string/tv_save"
-            android:fontFamily="@font/roboto_regular"
-            android:textAllCaps="true"
-            android:textColor="@color/blue"
-            android:textSize="@dimen/date_size"
-            android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/right_border"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -52,87 +51,90 @@
 
         <EditText
             android:id="@+id/edit_text_input_text"
+            style="@style/HintStyle"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/m_size"
-            android:background="@drawable/edit_round_drawable"
             android:gravity="start|top"
-            android:hint="@string/something_to_do"
-            style="@style/HintStyle"
-            android:imeOptions="actionDone"
-            android:inputType="textMultiLine"
-            android:fontFamily="@font/roboto_regular"
-            android:minLines="5"
             android:paddingLeft="@dimen/mm_size"
             android:paddingTop="@dimen/s_size"
             android:paddingRight="@dimen/mm_size"
             android:paddingBottom="@dimen/s_size"
-            android:textSize="@dimen/item_name"
             app:layout_constraintEnd_toStartOf="@+id/right_border"
             app:layout_constraintStart_toStartOf="@+id/left_border"
             app:layout_constraintTop_toBottomOf="@+id/tv_save" />
 
         <TextView
             android:id="@+id/tv_priority"
+            style="@style/TextViewItemAddStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/mll_size"
-            style="@style/TextViewItemAddStyle"
             android:text="@string/text_important"
             app:layout_constraintStart_toStartOf="@+id/left_border"
             app:layout_constraintTop_toBottomOf="@+id/edit_text_input_text" />
 
-        <RadioGroup
-            android:id="@+id/radio_group"
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/switch_importance"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:checkedButton="@id/radio_button_none"
-            android:orientation="horizontal"
+            android:thumb="@drawable/ic_knob"
+            android:track="@drawable/ic_track"
             app:layout_constraintBottom_toBottomOf="@+id/tv_priority"
             app:layout_constraintEnd_toStartOf="@+id/right_border"
-            app:layout_constraintHorizontal_bias="1.0"
-            app:layout_constraintStart_toEndOf="@+id/tv_priority"
-            app:layout_constraintTop_toTopOf="@+id/tv_priority">
+            app:layout_constraintTop_toTopOf="@+id/tv_priority"
+            app:thumbTint="@drawable/switch_thumb_selector"
+            app:trackTint="@drawable/switch_track_selector" />
 
-            <RadioButton
-                android:id="@+id/radio_button_low"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_priority_low" />
+        <TextView
+            android:id="@+id/tv_importance_basic"
+            style="@style/DateStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@+id/left_border"
+            app:layout_constraintTop_toBottomOf="@+id/tv_priority"
+            android:text="@string/importance_basic" />
 
-            <RadioButton
-                android:id="@+id/radio_button_none"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/text_no"
-                android:textSize="@dimen/date_size" />
+        <TextView
+            android:id="@+id/tv_importance_low"
+            style="@style/DateStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@+id/left_border"
+            app:layout_constraintTop_toBottomOf="@+id/tv_priority"
+            android:drawableStart="@drawable/ic_priority_low"
+            android:drawablePadding="4dp"
+            android:text="@string/importance_low" />
 
-            <RadioButton
-                android:id="@+id/radio_button_high"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:drawableStart="@drawable/ic_priority_high" />
-        </RadioGroup>
+        <TextView
+            android:id="@+id/tv_importance_high"
+            style="@style/DateStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            app:layout_constraintStart_toStartOf="@+id/left_border"
+            app:layout_constraintTop_toBottomOf="@+id/tv_priority"
+            android:drawableStart="@drawable/ic_priority_high"
+            android:drawablePadding="4dp"
+            android:text="@string/importance_high" />
 
         <TextView
             android:id="@+id/tv_to_do_until"
+            style="@style/TextViewItemAddStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/lm_size"
             android:text="@string/text_time_to"
-            style="@style/TextViewItemAddStyle"
             app:layout_constraintStart_toStartOf="@+id/left_border"
             app:layout_constraintTop_toBottomOf="@+id/tv_priority" />
 
         <TextView
             android:id="@+id/tv_date"
+            style="@style/DateStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/blue"
-            android:fontFamily="@font/roboto_regular"
-            android:textSize="@dimen/date_size"
             android:visibility="visible"
             app:layout_constraintStart_toStartOf="@+id/left_border"
             app:layout_constraintTop_toBottomOf="@+id/tv_to_do_until"
@@ -143,27 +145,98 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:thumb="@drawable/ic_knob"
-            app:thumbTint="@drawable/switch_thumb_selector"
             android:track="@drawable/ic_track"
-            app:trackTint="@drawable/switch_track_selector"
             app:layout_constraintBottom_toBottomOf="@+id/tv_date"
             app:layout_constraintEnd_toStartOf="@+id/right_border"
-            app:layout_constraintTop_toTopOf="@+id/tv_to_do_until" />
+            app:layout_constraintTop_toTopOf="@+id/tv_to_do_until"
+            app:thumbTint="@drawable/switch_thumb_selector"
+            app:trackTint="@drawable/switch_track_selector" />
 
         <TextView
             android:id="@+id/tv_delete_to_do"
+            style="@style/TrashButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/lm_size"
             android:layout_marginBottom="@dimen/lm_size"
             android:drawablePadding="@dimen/mm_size"
-            style="@style/TrashButtonStyle"
-            android:text="@string/text_delete"
             app:drawableStartCompat="@drawable/ic_delete"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/left_border"
             app:layout_constraintTop_toTopOf="@+id/tv_date" />
 
+        <com.airbnb.lottie.LottieAnimationView
+            android:id="@+id/iv_todo_anim"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_centerInParent="true"
+            android:visibility="gone"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:lottie_autoPlay="true"
+            app:lottie_loop="true"
+            app:lottie_speed="3"
+            app:lottie_rawRes="@raw/delete_animation" />
     </androidx.constraintlayout.widget.ConstraintLayout>
-
 </ScrollView>
+
+    <View
+        android:id="@+id/dimView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000"
+        android:visibility="visible" />
+
+    <LinearLayout
+        android:id="@+id/standard_bottom_sheet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/edit_round_drawable"
+        android:orientation="vertical"
+        android:paddingHorizontal="@dimen/mm_size"
+        app:behavior_hideable="true"
+        app:behavior_peekHeight="300dp"
+        app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
+
+        <View
+            android:layout_width="40dp"
+            android:layout_height="4dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/edit_round_drawable_small" />
+
+        <TextView
+            style="@style/SettingsSheetTopTextStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/сhoose_importance" />
+
+        <TextView
+            android:id="@+id/bottom_low_importance"
+            style="@style/SettingsSheetTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:text="@string/importance_low" />
+
+        <TextView
+            android:id="@+id/bottom_basic_importance"
+            style="@style/SettingsSheetTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/importance_basic" />
+
+        <TextView
+            android:id="@+id/bottom_high_importance"
+            style="@style/SettingsSheetTextStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:text="@string/importance_high" />
+
+    </LinearLayout>
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

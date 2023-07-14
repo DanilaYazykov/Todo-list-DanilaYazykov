@@ -1,22 +1,45 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.TodoList" parent="Theme.Material3.DayNight.NoActionBar">
+    <style name="Base.Theme.TodoList" parent="Theme.MaterialComponents.Light">
         <!-- Customize your light theme here. -->
-        <item name="colorPrimary">#007AFF</item>
-        <item name="colorPrimaryVariant">#4EF321</item>
-        <item name="colorOnPrimary">#FFFFFF</item>
-        <item name="android:windowBackground">#E5E5E5</item>
+        <item name="colorPrimary">@color/blue</item>
+        <item name="colorPrimaryVariant">@color/salad</item>
+        <item name="colorPrimaryDark">@color/black</item>
+        <item name="colorOnPrimarySurface">@color/white</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="android:windowBackground">@color/light_grey</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">#007AFF</item>
-        <item name="colorSecondaryVariant">#FF2196F3</item>
-        <item name="colorOnSecondary">#151515</item>
+        <item name="colorSecondary">@color/blue</item>
+        <item name="colorSecondaryVariant">@color/light_blue</item>
+        <item name="colorOnSecondary">@color/light_black</item>
         <item name="windowActionBar">true</item>
         <item name="windowNoTitle">true</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">#E5E5E5</item>
+        <item name="android:statusBarColor">@color/light_grey</item>
         <item name="android:windowLightStatusBar">true</item>
-
-        <item name="android:colorControlActivated">#FFFFFF</item>
-
     </style>
 </resources>
+
+
+<!--
+<resources xmlns:tools="http://schemas.android.com/tools">
+&lt;!&ndash; Base application theme. &ndash;&gt;
+<style name="Base.Theme.TodoList" parent="Theme.Material3.DayNight.NoActionBar">
+    &lt;!&ndash; Customize your light theme here. &ndash;&gt;
+    <item name="colorPrimary">@color/blue</item>
+    <item name="colorPrimaryVariant">@color/salad</item>
+    <item name="colorPrimaryDark">@color/black</item>
+    <item name="colorOnPrimarySurface">@color/white</item>
+    <item name="colorOnPrimary">@color/white</item>
+    <item name="android:windowBackground">@color/light_grey</item>
+    &lt;!&ndash; Secondary brand color. &ndash;&gt;
+    <item name="colorSecondary">@color/blue</item>
+    <item name="colorSecondaryVariant">@color/light_blue</item>
+    <item name="colorOnSecondary">@color/light_black</item>
+    <item name="windowActionBar">true</item>
+    <item name="windowNoTitle">true</item>
+    &lt;!&ndash; Status bar color. &ndash;&gt;
+    <item name="android:statusBarColor">@color/light_grey</item>
+    <item name="android:windowLightStatusBar">true</item>
+</style>
+</resources>-->
