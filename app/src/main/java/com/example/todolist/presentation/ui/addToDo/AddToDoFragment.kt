@@ -161,22 +161,22 @@ class AddToDoFragment : BindingFragment<FragmentAddToDoBinding>() {
         inputMethodManager?.hideSoftInputFromWindow(binding.editTextInputText.windowToken, 0)
     }
 
-    private fun bottomSheetManager() {
-        val bottomSheetBehavior = BottomSheetBehavior.from(binding.standardBottomSheet).apply {
+    private fun bottomSheetManager() = with(binding) {
+        val bottomSheetBehavior = BottomSheetBehavior.from(standardBottomSheet).apply {
             state = BottomSheetBehavior.STATE_HIDDEN
-            binding.dimView.visibility = View.GONE
+            dimView.visibility = View.GONE
         }
 
-        binding.switchImportance.setOnClickListener {
+        switchImportance.setOnClickListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
             hideKeyboard()
-            binding.dimView.visibility = View.VISIBLE
+            dimView.visibility = View.VISIBLE
         }
 
-        binding.dimView.setOnClickListener {
+        dimView.setOnClickListener {
             bottomSheetBehavior.state = BottomSheetBehavior.STATE_HIDDEN
-            binding.switchImportance.isChecked = false
-            binding.dimView.visibility = View.GONE
+            switchImportance.isChecked = false
+            dimView.visibility = View.GONE
         }
         bottomSheetCallBack(bottomSheetBehavior)
     }
