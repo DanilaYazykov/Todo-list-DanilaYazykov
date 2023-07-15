@@ -204,8 +204,8 @@ class AddToDoFragment : BindingFragment<FragmentAddToDoBinding>() {
         if (result.deadline == null) return
         val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager?
         val alarmIntent = Intent(requireContext(), AlarmReceiver::class.java).let { intent ->
-            intent.putExtra("text", result.text)
-            intent.putExtra("importance", result.importance.toString())
+            intent.putExtra(AlarmReceiver.TITLE, result.text)
+            intent.putExtra(AlarmReceiver.IMPORTANCE, result.importance.toString())
             PendingIntent.getBroadcast(requireContext(), result.id.toInt(), intent, PendingIntent.FLAG_IMMUTABLE)
         }
         val calendar = Calendar.getInstance().apply {
@@ -219,6 +219,17 @@ class AddToDoFragment : BindingFragment<FragmentAddToDoBinding>() {
             calendar.timeInMillis,
             alarmIntent
         )
+    }
+
+    private fun deleteNotification(result: TodoItem) {
+        val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager?
+        val alarmIntent = Intent(requireContext(), AlarmReceiver::class.java)
+        val pendingIntent = PendingIntent
+            .getBroadcast(requireContext(), result.id.toInt(), alarmIntent, PendingIntent.FLAG_IMMUTABLE)
+        pendingIntent?.let {
+            alarmManager?.cancel(it)
+            it.cancel()
+        }
     }
 
     private fun saveDataTodo() {
@@ -241,6 +252,7 @@ class AddToDoFragment : BindingFragment<FragmentAddToDoBinding>() {
 
     fun deleteDataTodo() {
         binding.tvDeleteToDo.setOnClickListener {
+            deleteNotification(currentTodo())
             binding.ivTodoAnim.visibility = View.VISIBLE
             viewLifecycleOwner.lifecycleScope.launch {
                 delay(ANIMATION_PLAYING)
