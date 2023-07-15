@@ -80,14 +80,21 @@ class AddToDoFragment : BindingFragment<FragmentAddToDoBinding>() {
                 binding.tvImportanceLow.visibility = View.GONE
                 binding.tvImportanceHigh.visibility = View.GONE
                 when (it) {
-                    TodoItem.Importance.LOW -> binding.tvImportanceLow.visibility = View.VISIBLE
+                    TodoItem.Importance.LOW -> {
+                        binding.tvImportanceLow.visibility = View.VISIBLE
+                        binding.switchImportance.isChecked = true
+                    }
                     TodoItem.Importance.BASIC -> binding.tvImportanceBasic.visibility = View.VISIBLE
-                    TodoItem.Importance.IMPORTANT -> binding.tvImportanceHigh.visibility = View.VISIBLE
+                    TodoItem.Importance.IMPORTANT -> {
+                        binding.tvImportanceHigh.visibility = View.VISIBLE
+                        binding.switchImportance.isChecked = true
+                    }
                 }
             }
             todoItem.deadline?.let {
                 binding.tvDate.text =
                     SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(Date(it))
+                binding.switchCalendar.isChecked = true
             }
             binding.tvDeleteToDo.setText(R.string.text_delete)
         }
@@ -137,7 +144,6 @@ class AddToDoFragment : BindingFragment<FragmentAddToDoBinding>() {
             tvImportanceBasic.visibility = View.GONE
             tvImportanceHigh.visibility = View.GONE
             BottomSheetBehavior.from(standardBottomSheet).state = BottomSheetBehavior.STATE_HIDDEN
-            switchImportance.isChecked = false
             importance = TodoItem.Importance.LOW
         }
         binding.bottomBasicImportance.setOnClickListener {
@@ -145,7 +151,6 @@ class AddToDoFragment : BindingFragment<FragmentAddToDoBinding>() {
             tvImportanceBasic.visibility = View.VISIBLE
             tvImportanceHigh.visibility = View.GONE
             BottomSheetBehavior.from(standardBottomSheet).state = BottomSheetBehavior.STATE_HIDDEN
-            switchImportance.isChecked = false
             importance = TodoItem.Importance.BASIC
         }
         binding.bottomHighImportance.setOnClickListener {
@@ -154,7 +159,6 @@ class AddToDoFragment : BindingFragment<FragmentAddToDoBinding>() {
             tvImportanceHigh.visibility = View.VISIBLE
             tvImportanceHigh.startAnimation(AnimationUtils.loadAnimation(requireContext(), R.anim.highlight_animation))
             BottomSheetBehavior.from(standardBottomSheet).state = BottomSheetBehavior.STATE_HIDDEN
-            switchImportance.isChecked = false
             importance = TodoItem.Importance.IMPORTANT
         }
     }
@@ -172,9 +176,15 @@ class AddToDoFragment : BindingFragment<FragmentAddToDoBinding>() {
         }
 
         switchImportance.setOnClickListener {
-            bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
-            hideKeyboard()
-            dimView.visibility = View.VISIBLE
+            if(switchImportance.isChecked) {
+                bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
+                hideKeyboard()
+                dimView.visibility = View.VISIBLE
+            } else {
+                binding.tvImportanceBasic.visibility = View.GONE
+                binding.tvImportanceLow.visibility = View.GONE
+                binding.tvImportanceHigh.visibility = View.GONE
+            }
         }
 
         dimView.setOnClickListener {
