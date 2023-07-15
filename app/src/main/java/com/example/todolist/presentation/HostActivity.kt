@@ -13,6 +13,7 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.todolist.R
 import com.example.todolist.databinding.ActivityHostBinding
+import com.example.todolist.utils.CheckingPermission
 import com.example.todolist.utils.SyncWorkerManager
 import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -30,6 +31,11 @@ class HostActivity : AppCompatActivity() {
         setContentView(binding.root)
         settingsOfWorkerManager()
         navigation()
+        val permissionChecker = CheckingPermission(this)
+        if (!permissionChecker.checkPermissions()) {
+            permissionChecker.requestPermissions()
+        }
+
     }
 
     private fun navigation() {

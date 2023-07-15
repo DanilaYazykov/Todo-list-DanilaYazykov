@@ -27,4 +27,8 @@
     <string name="importance_low">Низкая</string>
     <string name="importance_basic">Обычная</string>
     <string name="сhoose_importance">Выберите степень важности</string>
+    <string name="permission_request">Запрос разрешения</string>
+    <string name="permission_information">"Мы бы хотели отправлять вас уведомления о событиях с предстоящими дедлайнами. Предоставить разрешение?"</string>
+    <string name="ok">Да</string>
+    <string name="cancel">Отмена</string>
 </resources>

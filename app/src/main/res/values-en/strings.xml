@@ -28,4 +28,8 @@
     <string name="importance_low">Low</string>
     <string name="importance_basic">Basic</string>
     <string name="сhoose_importance">Choose the level of importance</string>
+    <string name="permission_request">Permission Request</string>
+    <string name="permission_information">"We would like to send you notifications about events with upcoming deadlines. Grant permission?"</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
 </resources>
