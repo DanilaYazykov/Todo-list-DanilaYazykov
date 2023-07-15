@@ -23,14 +23,17 @@ import javax.inject.Inject
 /**
  * ListOfToDoFragment - UI класс одного из фрагментов, который отвечает за отображение списка задач.
  */
-class ListOfToDoFragment : BindingFragment<FragmentListOfToDoBinding>(), OnItemClickListener, OnCheckedClickListener {
+class ListOfToDoFragment : BindingFragment<FragmentListOfToDoBinding>(), OnItemClickListener,
+    OnCheckedClickListener {
 
     @Inject
     lateinit var vmFactory: ListOfTodoViewModelFactory
+
     @Inject
     lateinit var renderClass: RenderClass
     private val viewModel: ListOfTodoViewModel by viewModels { vmFactory }
-    private var adapter: ListToDoAdapter = ListToDoAdapter(this@ListOfToDoFragment, this@ListOfToDoFragment)
+    private var adapter: ListToDoAdapter =
+        ListToDoAdapter(this@ListOfToDoFragment, this@ListOfToDoFragment)
 
     override fun createBinding(
         inflater: LayoutInflater,
@@ -43,11 +46,15 @@ class ListOfToDoFragment : BindingFragment<FragmentListOfToDoBinding>(), OnItemC
         super.onViewCreated(view, savedInstanceState)
         (requireActivity().application as App).appComponent.fragmentComponentFactory().create().inject(this)
         adaptersInit()
-        swipeToRefresh()
         viewModel.loadTodoList()
+        swipeToRefresh()
         viewModel.getStateLiveData.observe(viewLifecycleOwner) { result ->
-            if (!result.internet) { showSnackBar() }
-            else { viewModel.updateDataServer() }
+            if (!result.internet) {
+                showSnackBar()
+                binding.swipeRefreshLayout.isEnabled = false
+            } else {
+                viewModel.updateDataServer()
+            }
             eyeImageVisibility(result.doneVisibility)
         }
         viewModel.filteredTodoInfo.observe(viewLifecycleOwner) { list ->

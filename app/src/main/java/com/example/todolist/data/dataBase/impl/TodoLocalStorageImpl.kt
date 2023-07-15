@@ -55,4 +55,8 @@ class TodoLocalStorageImpl @Inject constructor(
     override suspend fun getDeletedItems(): List<DeletedItems> {
         return deletedItemDao.getDeletedItems()
     }
+
+    override suspend fun deleteAllDeletedItems() {
+        deletedItemDao.deleteAllDeletedItems()
+    }
 }

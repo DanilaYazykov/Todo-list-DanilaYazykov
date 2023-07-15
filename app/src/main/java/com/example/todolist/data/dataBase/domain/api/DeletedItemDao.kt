@@ -20,4 +20,7 @@ interface DeletedItemDao {
     @Query("SELECT * FROM deletedItemsTable WHERE deleted = 0")
     suspend fun getDeletedItems(): List<DeletedItems>
 
+    @Query("DELETE FROM deletedItemsTable")
+    suspend fun deleteAllDeletedItems()
+
 }
