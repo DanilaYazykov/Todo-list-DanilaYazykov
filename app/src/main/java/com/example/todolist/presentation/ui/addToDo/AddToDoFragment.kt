@@ -1,6 +1,9 @@
 package com.example.todolist.presentation.ui.addToDo
 
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -19,6 +22,7 @@ import com.example.todolist.databinding.FragmentAddToDoBinding
 import com.example.todolist.domain.models.TodoItem
 import com.example.todolist.presentation.presenters.addToDoViewModel.AddTodoViewModel
 import com.example.todolist.presentation.presenters.addToDoViewModel.AddTodoViewModelFactory
+import com.example.todolist.presentation.presenters.settingsViewModel.AlarmReceiver
 import com.example.todolist.utils.BindingFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.coroutines.delay
@@ -196,12 +200,33 @@ class AddToDoFragment : BindingFragment<FragmentAddToDoBinding>() {
         })
     }
 
+    private fun sendNotification(result: TodoItem) {
+        if (result.deadline == null) return
+        val alarmManager = requireContext().getSystemService(Context.ALARM_SERVICE) as AlarmManager?
+        val alarmIntent = Intent(requireContext(), AlarmReceiver::class.java).let { intent ->
+            intent.putExtra("text", result.text)
+            intent.putExtra("importance", result.importance.toString())
+            PendingIntent.getBroadcast(requireContext(), result.id.toInt(), intent, PendingIntent.FLAG_IMMUTABLE)
+        }
+        val calendar = Calendar.getInstance().apply {
+            timeInMillis = result.deadline
+            set(Calendar.HOUR_OF_DAY, 0)
+            set(Calendar.MINUTE, 0)
+        }
+
+        alarmManager?.setExact(
+            AlarmManager.RTC_WAKEUP,
+            calendar.timeInMillis,
+            alarmIntent
+        )
+    }
 
     private fun saveDataTodo() {
         binding.tvSave.setOnClickListener {
             val result = currentTodo()
             when {
                 result.text.isNotEmpty() -> {
+                    sendNotification(result)
                     viewModel.markAsNotSynced(result.id)
                     viewModel.addTodoItem(result)
                     findNavController().navigateUp()
