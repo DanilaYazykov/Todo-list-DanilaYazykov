@@ -22,7 +22,7 @@ import com.example.todolist.databinding.FragmentAddToDoBinding
 import com.example.todolist.domain.models.TodoItem
 import com.example.todolist.presentation.presenters.addToDoViewModel.AddTodoViewModel
 import com.example.todolist.presentation.presenters.addToDoViewModel.AddTodoViewModelFactory
-import com.example.todolist.presentation.presenters.settingsViewModel.AlarmReceiver
+import com.example.todolist.utils.AlarmReceiver
 import com.example.todolist.utils.BindingFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.coroutines.delay

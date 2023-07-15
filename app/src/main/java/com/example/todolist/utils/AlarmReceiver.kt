@@ -1,4 +1,4 @@
-package com.example.todolist.presentation.presenters.settingsViewModel
+package com.example.todolist.utils
 
 import android.app.NotificationManager
 import android.content.BroadcastReceiver
