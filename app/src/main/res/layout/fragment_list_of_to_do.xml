@@ -2,24 +2,25 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/listOfToDoFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".presentation.ui.listOfToDo.ListOfToDoFragment">
 
     <TextView
         android:id="@+id/tv_name"
-        style="@style/MainTitleStyle"
+        style="@style/H1_MainTitleStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/l_size"
-        android:layout_marginTop="@dimen/xl_size"
+        android:layout_marginTop="@dimen/sl_size"
         android:text="@string/my_business"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tv_sum_of_done"
-        style="@style/SumOfDoneStyle"
+        style="@style/H2_SumOfDoneStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/s_size"
@@ -39,7 +40,7 @@
         app:layout_constraintTop_toTopOf="@+id/tv_sum_of_done"
         app:tint="@color/blue" />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
+<!--    <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/addFragmentButton"
         android:layout_width="@dimen/sl_size"
         android:layout_height="@dimen/sl_size"
@@ -53,7 +54,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:shapeAppearanceOverlay="@style/CircularShapeAppearance"
-        app:tint="@color/white" />
+        app:tint="@color/white" />-->
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
@@ -62,7 +63,7 @@
         android:layout_marginStart="@dimen/s_size"
         android:layout_marginTop="@dimen/ml_size"
         android:layout_marginEnd="@dimen/s_size"
-        android:layout_marginBottom="@dimen/mm_size"
+        android:layout_marginBottom="60dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -74,10 +75,10 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rc_view_to_do_list"
-                style="@style/BlankStyle"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/edit_round_drawable"
+                android:textColor="?attr/colorPrimaryDark"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -107,11 +108,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/xxl_size"
-        android:fontFamily="@font/roboto_regular"
         android:gravity="center"
         android:text="@string/add_first_task"
-        android:textSize="@dimen/first_task"
-        android:textStyle="bold"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

@@ -18,7 +18,7 @@ class ListToDoAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ListToDoHolder {
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.item_of_to_do, parent, false)
-        return ListToDoHolder(itemView = view, context = parent.context)
+        return ListToDoHolder(itemView = view)
     }
 
     override fun onBindViewHolder(holder: ListToDoHolder, position: Int) {

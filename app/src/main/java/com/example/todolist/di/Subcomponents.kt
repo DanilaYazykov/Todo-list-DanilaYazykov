@@ -2,6 +2,7 @@ package com.example.todolist.di
 
 import com.example.todolist.presentation.ui.addToDo.AddToDoFragment
 import com.example.todolist.presentation.ui.listOfToDo.ListOfToDoFragment
+import com.example.todolist.presentation.ui.settings.SettingsFragment
 import com.example.todolist.utils.SyncWorkerManager
 import dagger.Subcomponent
 import javax.inject.Scope
@@ -13,6 +14,8 @@ interface FragmentComponent {
     fun inject(fragment: AddToDoFragment)
 
     fun inject(fragment: ListOfToDoFragment)
+
+    fun inject(fragment: SettingsFragment)
 
     @Subcomponent.Factory
     interface Factory {

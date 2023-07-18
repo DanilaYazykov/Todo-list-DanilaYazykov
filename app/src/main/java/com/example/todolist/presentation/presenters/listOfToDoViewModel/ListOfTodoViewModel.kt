@@ -66,9 +66,7 @@ class ListOfTodoViewModel(
                 val syncResult = result.second.list
                 if (result.first == NetworkResult.SUCCESS_200) {
                     _todoInfo.postValue(Pair(result.first, syncResult))
-                    _internetAndDoneVisibility.postValue(
-                        _internetAndDoneVisibility.value?.copy(doneVisibility = false)
-                    )
+                    hideDoneItems = !hideDoneItems
                     changeVisibility()
                 } else {
                     _todoInfo.postValue(Pair(result.first, result.second.list))

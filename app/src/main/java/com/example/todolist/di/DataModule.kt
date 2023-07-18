@@ -8,6 +8,7 @@ import com.example.todolist.data.network.network.TodoApi
 import com.example.todolist.data.dataBase.AppDatabase
 import com.example.todolist.data.dataBase.domain.api.DeletedItemDao
 import com.example.todolist.data.dataBase.domain.api.TodoLocalDao
+import com.example.todolist.data.sharedPreferences.ThemeStatus
 import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
@@ -25,7 +26,12 @@ class DataModule {
     @Singleton
     @Provides
     fun provideSharedPreferences(context: Context): SharedPreferences {
-        return context.getSharedPreferences("todoPreferencesNames23", Context.MODE_PRIVATE)
+        return context.getSharedPreferences("theme", Context.MODE_PRIVATE)
+    }
+
+    @Provides
+    fun provideThemeStatus(sharedPrefs: SharedPreferences): ThemeStatus {
+        return ThemeStatus(sharedPrefs)
     }
 
     @Provides

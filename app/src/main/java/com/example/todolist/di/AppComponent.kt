@@ -1,5 +1,6 @@
 package com.example.todolist.di
 
+import com.example.todolist.app.App
 import dagger.Component
 import javax.inject.Singleton
 
@@ -18,5 +19,7 @@ interface AppComponent {
     fun fragmentComponentFactory(): FragmentComponent.Factory
 
     fun syncWorkerComponentFactory(): SyncWorkerComponent.Factory
+
+    fun inject(app: App)
 
 }
