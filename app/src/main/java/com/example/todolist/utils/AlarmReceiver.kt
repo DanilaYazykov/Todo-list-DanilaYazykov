@@ -4,9 +4,7 @@ import android.app.NotificationManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.provider.Settings.System.getString
 import androidx.core.app.NotificationCompat
-import androidx.core.content.ContextCompat.getColorStateList
 import androidx.core.content.ContextCompat.getSystemService
 import com.example.todolist.R
 import com.example.todolist.app.App

@@ -39,9 +39,9 @@ class NetworkClientImpl @Inject constructor(
             updatedItems.find { it.id == internetItem.id } ?: internetItem
         }.filter { item -> !deletedList.any { deletedItem -> deletedItem.id == item.id }  }
         database.deleteAllTodoItems()
-        updatedInternetList.forEach { database.insertTodoItem(it) }
-        unsyncedItems.forEach { database.insertTodoItem(it) }
-        return updatedInternetList + unsyncedItems
+        val allItems = updatedInternetList + unsyncedItems
+        database.insertListTodoItem(allItems)
+        return allItems
     }
 
     private suspend fun showResult(response: Response<TodoResponseList>): Pair<NetworkResult, TodoResponseList> {
@@ -52,6 +52,7 @@ class NetworkClientImpl @Inject constructor(
             CODE_200 -> {
                 if (body != null && body.list.isNotEmpty()) {
                     val filteredList = mainSync(body.list)
+                    databaseOffline.deleteAllDeletedItems()
                     Pair(NetworkResult.SUCCESS_200, TodoResponseList(list = filteredList, revision = revision))
                 } else {
                     Pair(NetworkResult.SUCCESS_200, TodoResponseList(list = emptyList(), revision = revision))

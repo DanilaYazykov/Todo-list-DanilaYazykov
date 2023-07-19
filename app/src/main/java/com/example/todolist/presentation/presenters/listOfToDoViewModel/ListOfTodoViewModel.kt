@@ -25,7 +25,7 @@ class ListOfTodoViewModel(
     private val todoNetworkInteractor: TodoNetworkInteractor,
     private val internet: CheckingInternet,
     private val database: TodoLocalDaoImpl,
-    private val databaseOffline: DeletedItemDaoImpl,
+    private val databaseOffline: DeletedItemDaoImpl
 ) : ViewModel() {
 
     private var hideDoneItems = true
@@ -66,6 +66,10 @@ class ListOfTodoViewModel(
                 val syncResult = result.second.list
                 if (result.first == NetworkResult.SUCCESS_200) {
                     _todoInfo.postValue(Pair(result.first, syncResult))
+                    database.apply {
+                        deleteAllTodoItems()
+                        insertListTodoItem(syncResult)
+                    }
                     hideDoneItems = !hideDoneItems
                     changeVisibility()
                 } else {
@@ -75,7 +79,6 @@ class ListOfTodoViewModel(
             sync = true
         }
     }
-    
 
     fun updateDataServer() {
         if (_internetAndDoneVisibility.value?.internet == false) return

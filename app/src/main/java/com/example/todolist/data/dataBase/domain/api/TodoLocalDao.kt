@@ -20,6 +20,9 @@ interface TodoLocalDao {
     @Insert(entity = TodoItem::class ,onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTodoItem(todoItem: TodoItem)
 
+    @Insert(entity = TodoItem::class ,onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertListTodoItem(todoItem: List<TodoItem>)
+
     @Update(entity = TodoItem::class ,onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateTodoItem(todoItem: TodoItem)
 

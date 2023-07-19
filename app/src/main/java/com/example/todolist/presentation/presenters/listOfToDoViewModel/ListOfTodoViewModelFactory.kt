@@ -7,7 +7,6 @@ import com.example.todolist.data.dataBase.domain.impl.DeletedItemDaoImpl
 import com.example.todolist.data.dataBase.domain.impl.TodoLocalDaoImpl
 import com.example.todolist.domain.impl.TodoNetworkInteractorImpl
 import com.example.todolist.utils.CheckingInternet
-import java.util.Calendar
 
 /**
  * ListOfTodoViewModelFactory - класс(фабрика), который отвечает за создание ViewModel для ListOfToDoFragment.

@@ -20,6 +20,10 @@ class TodoLocalStorageImpl @Inject constructor(
         todoDao.insertTodoItem(todoItem)
     }
 
+    override suspend fun insertListTodoItem(todoItem: List<TodoItem>) {
+        todoDao.insertListTodoItem(todoItem)
+    }
+
     override suspend fun updateTodoItem(todoItem: TodoItem) {
         todoDao.updateTodoItem(todoItem)
     }
