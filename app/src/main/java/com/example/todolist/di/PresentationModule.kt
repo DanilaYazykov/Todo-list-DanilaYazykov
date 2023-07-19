@@ -21,4 +21,10 @@ class PresentationModule {
     fun provideRender(): RenderClass {
         return RenderClass()
     }
+
+    @Singleton
+    @Provides
+    fun provideCheckPermission(context: Context) : CheckingPermission {
+        return CheckingPermission(context = context)
+    }
 }

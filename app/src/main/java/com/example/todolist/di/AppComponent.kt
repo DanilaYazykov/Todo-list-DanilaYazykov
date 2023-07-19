@@ -1,6 +1,7 @@
 package com.example.todolist.di
 
 import com.example.todolist.app.App
+import com.example.todolist.presentation.HostActivity
 import dagger.Component
 import javax.inject.Singleton
 
@@ -22,4 +23,5 @@ interface AppComponent {
 
     fun inject(app: App)
 
+    fun inject(hostActivity: HostActivity)
 }
