@@ -11,7 +11,7 @@ import com.example.todolist.domain.models.TodoPostList
 import com.example.todolist.domain.api.TodoNetworkInteractor
 import com.example.todolist.domain.models.ListState
 import com.example.todolist.domain.models.TodoItem
-import com.example.todolist.utils.CheckingInternet
+import com.example.todolist.utils.NetworkStateReceiver
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -23,7 +23,7 @@ import java.util.Calendar
  */
 class ListOfTodoViewModel(
     private val todoNetworkInteractor: TodoNetworkInteractor,
-    private val internet: CheckingInternet,
+    private val internetReceive: NetworkStateReceiver,
     private val database: TodoLocalDaoImpl,
     private val databaseOffline: DeletedItemDaoImpl
 ) : ViewModel() {
@@ -42,6 +42,10 @@ class ListOfTodoViewModel(
 
     private val _internetAndDoneVisibility = MutableLiveData(ListState.default())
     val getStateLiveData = _internetAndDoneVisibility
+
+    init {
+        internetReceive.register()
+    }
 
     fun loadTodoList() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -121,18 +125,13 @@ class ListOfTodoViewModel(
         }
     }
 
-    private fun checkNetwork() {
+    fun checkNetwork() {
         networkCheckJob?.cancel()
         networkCheckJob = viewModelScope.launch(Dispatchers.IO) {
-            val result = internet.isNetworkAvailable()
-            if (result) {
-                syncTodoListFromNetwork()
+            internetReceive.isNetworkAvailable().collect { result ->
+                if (result) { syncTodoListFromNetwork() }
+                _internetAndDoneVisibility.postValue(_internetAndDoneVisibility.value?.copy(internet = result))
             }
-            _internetAndDoneVisibility.postValue(
-                _internetAndDoneVisibility.value?.copy(
-                    internet = result
-                )
-            )
         }
     }
 
@@ -145,6 +144,7 @@ class ListOfTodoViewModel(
         searchJob?.cancel()
         networkCheckJob?.cancel()
         replaceJob?.cancel()
+        internetReceive.unregister()
     }
 
     companion object {

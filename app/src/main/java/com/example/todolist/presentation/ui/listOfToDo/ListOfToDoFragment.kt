@@ -53,6 +53,7 @@ class ListOfToDoFragment : BindingFragment<FragmentListOfToDoBinding>(), OnItemC
                 showSnackBar()
                 binding.swipeRefreshLayout.isEnabled = false
             } else {
+                binding.swipeRefreshLayout.isEnabled = true
                 viewModel.updateDataServer()
             }
             eyeImageVisibility(result.doneVisibility)
@@ -69,6 +70,7 @@ class ListOfToDoFragment : BindingFragment<FragmentListOfToDoBinding>(), OnItemC
 
     private fun swipeToRefresh() {
         binding.swipeRefreshLayout.setOnRefreshListener {
+            viewModel.checkNetwork()
             viewModel.resetSyncFlag()
             viewModel.syncTodoListFromNetwork()
         }
