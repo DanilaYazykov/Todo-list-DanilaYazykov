@@ -93,7 +93,7 @@ class AddToDoFragment : BindingFragment<FragmentAddToDoBinding>() {
             }
             todoItem.deadline?.let {
                 binding.tvDate.text =
-                    SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(Date(it))
+                    SimpleDateFormat("dd MMMM yyyy HH:mm", Locale.getDefault()).format(Date(it))
                 binding.switchCalendar.isChecked = true
             }
             binding.tvDeleteToDo.setText(R.string.text_delete)
@@ -118,7 +118,7 @@ class AddToDoFragment : BindingFragment<FragmentAddToDoBinding>() {
         val importance = importance
         val currentTime = Instant.now().epochSecond
         val dateString = binding.tvDate.text.toString()
-        val dateFormat = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
+        val dateFormat = SimpleDateFormat("dd MMMM yyyy HH:mm", Locale.getDefault())
         val deadline = if (dateString.isNotEmpty()) {
             val date = dateFormat.parse(dateString)
             date?.time
@@ -220,8 +220,6 @@ class AddToDoFragment : BindingFragment<FragmentAddToDoBinding>() {
         }
         val calendar = Calendar.getInstance().apply {
             timeInMillis = result.deadline
-            set(Calendar.HOUR_OF_DAY, 0)
-            set(Calendar.MINUTE, 0)
         }
 
         alarmManager?.setExact(
