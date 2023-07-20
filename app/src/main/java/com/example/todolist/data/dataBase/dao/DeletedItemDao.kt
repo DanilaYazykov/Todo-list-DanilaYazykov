@@ -1,10 +1,10 @@
-package com.example.todolist.data.dataBase.domain.api
+package com.example.todolist.data.dataBase.dao
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.todolist.data.dataBase.models.DeletedItems
+import com.example.todolist.data.dataBase.DeletedItemsEntity
 
 /**
  * Несмотря на то, что находится в пакете dataBase(слоя data), является частью слоя domain.
@@ -14,11 +14,11 @@ import com.example.todolist.data.dataBase.models.DeletedItems
 @Dao
 interface DeletedItemDao {
 
-    @Insert(entity = DeletedItems::class ,onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addToDeletedList(deletedItem: DeletedItems)
+    @Insert(entity = DeletedItemsEntity::class ,onConflict = OnConflictStrategy.REPLACE)
+    suspend fun addToDeletedList(deletedItem: DeletedItemsEntity)
 
     @Query("SELECT * FROM deletedItemsTable WHERE deleted = 0")
-    suspend fun getDeletedItems(): List<DeletedItems>
+    suspend fun getDeletedItems(): List<DeletedItemsEntity>
 
     @Query("DELETE FROM deletedItemsTable")
     suspend fun deleteAllDeletedItems()

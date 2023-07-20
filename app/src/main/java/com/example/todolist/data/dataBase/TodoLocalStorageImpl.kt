@@ -1,21 +1,19 @@
-package com.example.todolist.data.dataBase.impl
+package com.example.todolist.data.dataBase
 
-import com.example.todolist.data.dataBase.domain.api.DeletedItemDao
-import com.example.todolist.data.dataBase.models.DeletedItems
-import com.example.todolist.data.dataBase.domain.api.TodoLocalDao
+import com.example.todolist.data.dataBase.dao.DeletedItemDao
+import com.example.todolist.data.dataBase.dao.TodoLocalDao
+import com.example.todolist.domain.dataBase.TodoLocalStorage
 import com.example.todolist.domain.models.TodoItem
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 import javax.inject.Inject
 
 /**
- * Класс отвечает за работу с локальной базой данных.
+ * Domain класс. Содержит в себе бизнес-логику приложения.
  */
 class TodoLocalStorageImpl @Inject constructor(
     private val todoDao: TodoLocalDao,
     private val deletedItemDao: DeletedItemDao
-) : TodoLocalDao, DeletedItemDao {
-
+) : TodoLocalStorage {
     override suspend fun insertTodoItem(todoItem: TodoItem) {
         todoDao.insertTodoItem(todoItem)
     }
@@ -32,8 +30,8 @@ class TodoLocalStorageImpl @Inject constructor(
         todoDao.deleteTodoItem(todoItem)
     }
 
-    override fun getAllTodoItems(): Flow<List<TodoItem>> = flow {
-        todoDao.getAllTodoItems()
+    override fun getAllTodoItems(): Flow<List<TodoItem>> {
+        return todoDao.getAllTodoItems()
     }
 
     override suspend fun deleteAllTodoItems() {
@@ -52,11 +50,11 @@ class TodoLocalStorageImpl @Inject constructor(
         todoDao.markSynced(id, synced)
     }
 
-    override suspend fun addToDeletedList(deletedItem: DeletedItems) {
+    override suspend fun addToDeletedList(deletedItem: DeletedItemsEntity) {
         deletedItemDao.addToDeletedList(deletedItem)
     }
 
-    override suspend fun getDeletedItems(): List<DeletedItems> {
+    override suspend fun getDeletedItems(): List<DeletedItemsEntity> {
         return deletedItemDao.getDeletedItems()
     }
 

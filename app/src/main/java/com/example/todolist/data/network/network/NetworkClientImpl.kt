@@ -1,7 +1,6 @@
 package com.example.todolist.data.network.network
 
-import com.example.todolist.data.dataBase.domain.impl.DeletedItemDaoImpl
-import com.example.todolist.data.dataBase.domain.impl.TodoLocalDaoImpl
+import com.example.todolist.data.dataBase.TodoLocalStorageImpl
 import com.example.todolist.domain.models.TodoItem
 import com.example.todolist.domain.models.TodoPostList
 import com.example.todolist.domain.models.TodoResponseList
@@ -15,8 +14,8 @@ import javax.inject.Inject
  */
 class NetworkClientImpl @Inject constructor(
     private val apiService: TodoApi,
-    private val databaseOffline: DeletedItemDaoImpl,
-    private val database: TodoLocalDaoImpl
+  //  private val databaseOffline: DeletedItemDaoImpl,
+    private val database: TodoLocalStorageImpl
 ) : NetworkClient {
 
     override suspend fun getListFromServer(): Pair<NetworkResult, TodoResponseList> =
@@ -30,7 +29,7 @@ class NetworkClientImpl @Inject constructor(
         }
 
     private suspend fun mainSync(localList: List<TodoItem>): List<TodoItem>  {
-        val deletedList = databaseOffline.getDeletedItems()
+        val deletedList = database.getDeletedItems()
         val unsyncedItems = database.getUnsyncedItems()
         val updatedItems = localList.filter { changedItem ->
             unsyncedItems.find { it.id == changedItem.id } != null
@@ -52,7 +51,7 @@ class NetworkClientImpl @Inject constructor(
             CODE_200 -> {
                 if (body != null && body.list.isNotEmpty()) {
                     val filteredList = mainSync(body.list)
-                    databaseOffline.deleteAllDeletedItems()
+                    database.deleteAllDeletedItems()
                     Pair(NetworkResult.SUCCESS_200, TodoResponseList(list = filteredList, revision = revision))
                 } else {
                     Pair(NetworkResult.SUCCESS_200, TodoResponseList(list = emptyList(), revision = revision))

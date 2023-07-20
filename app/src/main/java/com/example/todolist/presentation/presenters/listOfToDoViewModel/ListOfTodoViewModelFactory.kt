@@ -3,8 +3,7 @@ package com.example.todolist.presentation.presenters.listOfToDoViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.CreationExtras
-import com.example.todolist.data.dataBase.domain.impl.DeletedItemDaoImpl
-import com.example.todolist.data.dataBase.domain.impl.TodoLocalDaoImpl
+import com.example.todolist.domain.impl.TodoLocalInteractorImpl
 import com.example.todolist.domain.impl.TodoNetworkInteractorImpl
 import com.example.todolist.utils.NetworkStateReceiver
 
@@ -14,8 +13,7 @@ import com.example.todolist.utils.NetworkStateReceiver
 class ListOfTodoViewModelFactory @javax.inject.Inject constructor(
     private val todoNetworkInteractor: TodoNetworkInteractorImpl,
     private val internetReceive: NetworkStateReceiver,
-    private val database: TodoLocalDaoImpl,
-    private val databaseOffline: DeletedItemDaoImpl,
+    private val database: TodoLocalInteractorImpl
     ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>, extras: CreationExtras): T {
@@ -23,8 +21,7 @@ class ListOfTodoViewModelFactory @javax.inject.Inject constructor(
         return ListOfTodoViewModel(
             internetReceive = internetReceive,
             todoNetworkInteractor = todoNetworkInteractor,
-            database = database,
-            databaseOffline = databaseOffline,
+            database = database
         ) as T
     }
 }

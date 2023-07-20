@@ -139,16 +139,6 @@
             app:layout_constraintStart_toStartOf="@+id/left_border"
             app:layout_constraintTop_toBottomOf="@+id/tv_to_do_until"
             tools:text="02 июня 2025" />
-<!--
-        <TextView
-            android:id="@+id/tv_time"
-            style="@style/DateStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="visible"
-            app:layout_constraintStart_toStartOf="@+id/left_border"
-            app:layout_constraintTop_toBottomOf="@+id/tv_date"
-            tools:text="00:00" />-->
 
         <androidx.appcompat.widget.SwitchCompat
             android:id="@+id/switch_calendar"

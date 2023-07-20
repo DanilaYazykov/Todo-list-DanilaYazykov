@@ -2,9 +2,8 @@ package com.example.todolist.data.dataBase
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
-import com.example.todolist.data.dataBase.domain.api.DeletedItemDao
-import com.example.todolist.data.dataBase.domain.api.TodoLocalDao
-import com.example.todolist.data.dataBase.models.DeletedItems
+import com.example.todolist.data.dataBase.dao.DeletedItemDao
+import com.example.todolist.data.dataBase.dao.TodoLocalDao
 import com.example.todolist.domain.models.TodoItem
 
 /**
@@ -13,7 +12,7 @@ import com.example.todolist.domain.models.TodoItem
 @Database(
     version = 3,
     entities = [
-        TodoItem::class, DeletedItems::class
+        TodoItem::class, DeletedItemsEntity::class
     ]
 )
 abstract class AppDatabase : RoomDatabase() {

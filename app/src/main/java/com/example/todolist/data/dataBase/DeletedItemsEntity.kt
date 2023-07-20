@@ -1,4 +1,4 @@
-package com.example.todolist.data.dataBase.models
+package com.example.todolist.data.dataBase
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -9,7 +9,7 @@ import com.example.todolist.domain.models.TodoItem
  * Нужен для работы в оффлайн режиме.
  */
 @Entity(tableName = "deletedItemsTable")
-data class DeletedItems(
+data class DeletedItemsEntity(
     @PrimaryKey
     val id: String,
     val text: String,
@@ -24,8 +24,8 @@ data class DeletedItems(
     val deleted: Boolean = false
 )
 
-fun DeletedItems.toUI(): TodoItem =
-    TodoItem(
+/*fun TodoItem.toDeleted(): DeletedItemsEntity =
+    DeletedItemsEntity(
         id = id,
         text = text,
         importance = importance,
@@ -37,19 +37,4 @@ fun DeletedItems.toUI(): TodoItem =
         lastUpdatedBy = lastUpdatedBy,
         synced = synced,
         deleted = deleted
-    )
-
-fun TodoItem.toDeleted(): DeletedItems =
-    DeletedItems(
-        id = id,
-        text = text,
-        importance = importance,
-        deadline = deadline,
-        done = done,
-        color = color,
-        creationDate = creationDate,
-        modificationDate = modificationDate,
-        lastUpdatedBy = lastUpdatedBy,
-        synced = synced,
-        deleted = deleted
-    )
+    )*/

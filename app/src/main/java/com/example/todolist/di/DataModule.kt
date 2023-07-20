@@ -6,8 +6,9 @@ import androidx.room.Room
 import com.example.todolist.data.network.network.NetworkClientImpl
 import com.example.todolist.data.network.network.TodoApi
 import com.example.todolist.data.dataBase.AppDatabase
-import com.example.todolist.data.dataBase.domain.api.DeletedItemDao
-import com.example.todolist.data.dataBase.domain.api.TodoLocalDao
+import com.example.todolist.data.dataBase.converters.DeleteItemDbConverter
+import com.example.todolist.data.dataBase.dao.DeletedItemDao
+import com.example.todolist.data.dataBase.dao.TodoLocalDao
 import com.example.todolist.data.sharedPreferences.ThemeStatus
 import com.google.gson.Gson
 import dagger.Module
@@ -105,6 +106,12 @@ class DataModule {
     @Provides
     fun provideDeletedItemDao(database: AppDatabase): DeletedItemDao {
         return database.getDeletedItemDao()
+    }
+
+    @Singleton
+    @Provides
+    fun provideDeleteItemDbConverter(): DeleteItemDbConverter {
+        return DeleteItemDbConverter()
     }
 
 }

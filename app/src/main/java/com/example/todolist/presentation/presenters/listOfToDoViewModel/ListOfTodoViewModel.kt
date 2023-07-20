@@ -4,11 +4,10 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.todolist.data.dataBase.domain.impl.DeletedItemDaoImpl
 import com.example.todolist.data.network.network.NetworkResult
-import com.example.todolist.data.dataBase.domain.impl.TodoLocalDaoImpl
 import com.example.todolist.domain.models.TodoPostList
 import com.example.todolist.domain.api.TodoNetworkInteractor
+import com.example.todolist.domain.dataBase.TodoLocalInteractor
 import com.example.todolist.domain.models.ListState
 import com.example.todolist.domain.models.TodoItem
 import com.example.todolist.utils.NetworkStateReceiver
@@ -24,8 +23,7 @@ import java.util.Calendar
 class ListOfTodoViewModel(
     private val todoNetworkInteractor: TodoNetworkInteractor,
     private val internetReceive: NetworkStateReceiver,
-    private val database: TodoLocalDaoImpl,
-    private val databaseOffline: DeletedItemDaoImpl
+    private val database: TodoLocalInteractor
 ) : ViewModel() {
 
     private var hideDoneItems = true
@@ -89,7 +87,7 @@ class ListOfTodoViewModel(
         replaceJob?.cancel()
         replaceJob = viewModelScope.launch(Dispatchers.IO) {
             val unsyncedItems = database.getUnsyncedItems()
-            val deletedList = databaseOffline.getDeletedItems()
+            val deletedList = database.getDeletedItems()
             if (unsyncedItems.isEmpty() && deletedList.isEmpty()) return@launch
             val placeToServer = _todoInfo.value?.second ?: emptyList()
             delay(DELAY_1000)
