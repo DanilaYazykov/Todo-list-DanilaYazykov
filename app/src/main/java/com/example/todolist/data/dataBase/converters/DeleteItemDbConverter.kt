@@ -3,6 +3,9 @@ package com.example.todolist.data.dataBase.converters
 import com.example.todolist.data.dataBase.DeletedItemsEntity
 import com.example.todolist.domain.models.TodoItem
 
+/**
+ * Конвертер для преобразования [TodoItem] в [DeletedItemsEntity]
+ */
 class DeleteItemDbConverter {
 
     fun map (deletedItem: TodoItem): DeletedItemsEntity {

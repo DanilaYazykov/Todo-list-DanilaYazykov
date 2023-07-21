@@ -23,18 +23,3 @@ data class DeletedItemsEntity(
     val synced: Boolean = false,
     val deleted: Boolean = false
 )
-
-/*fun TodoItem.toDeleted(): DeletedItemsEntity =
-    DeletedItemsEntity(
-        id = id,
-        text = text,
-        importance = importance,
-        deadline = deadline,
-        done = done,
-        color = color,
-        creationDate = creationDate,
-        modificationDate = modificationDate,
-        lastUpdatedBy = lastUpdatedBy,
-        synced = synced,
-        deleted = deleted
-    )*/

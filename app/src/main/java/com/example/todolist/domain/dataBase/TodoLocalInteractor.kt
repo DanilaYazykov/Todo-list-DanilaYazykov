@@ -4,6 +4,9 @@ import com.example.todolist.data.dataBase.DeletedItemsEntity
 import com.example.todolist.domain.models.TodoItem
 import kotlinx.coroutines.flow.Flow
 
+/**
+ * Интерфейс, который связывает слои Presentation и Domain.
+ */
 interface TodoLocalInteractor {
 
     suspend fun insertTodoItem(todoItem: TodoItem)

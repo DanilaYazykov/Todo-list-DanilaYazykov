@@ -8,9 +8,9 @@ import dagger.Provides
 @Module
 class DomainModule {
 
-        @Provides
-        fun provideTodoLocalInteractor(todoLocalInteractor: TodoLocalInteractorImpl): TodoLocalInteractor {
-            return todoLocalInteractor
-        }
+    @Provides
+    fun provideTodoLocalInteractor(todoLocalInteractor: TodoLocalInteractorImpl): TodoLocalInteractor {
+        return todoLocalInteractor
+    }
 
 }

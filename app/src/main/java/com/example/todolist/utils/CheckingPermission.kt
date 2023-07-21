@@ -10,6 +10,9 @@ import android.os.Build
 import com.example.todolist.R
 import javax.inject.Inject
 
+/**
+ * CheckingPermission - класс, который отвечает за проверку и запрос разрешений.
+ */
 class CheckingPermission @Inject constructor(private val context: Context) {
 
     fun checkPermissions(): Boolean {

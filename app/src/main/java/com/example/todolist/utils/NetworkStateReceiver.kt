@@ -11,6 +11,9 @@ import android.os.Build
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flowOf
 
+/**
+ * NetworkStateReceiver - класс, который отвечает за получение данных о состоянии сети.
+ */
 class NetworkStateReceiver(private val context: Context) : BroadcastReceiver() {
 
     private var isNetworkAvailable = false

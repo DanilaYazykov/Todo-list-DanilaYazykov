@@ -7,8 +7,6 @@ import androidx.room.Query
 import com.example.todolist.data.dataBase.DeletedItemsEntity
 
 /**
- * Несмотря на то, что находится в пакете dataBase(слоя data), является частью слоя domain.
- * Не стал разделять на разные пакеты, для лучшей навигации.
  * Представляет собой интерфейс для работы с базой данных.
  */
 @Dao

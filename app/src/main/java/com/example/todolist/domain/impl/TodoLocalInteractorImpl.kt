@@ -7,6 +7,9 @@ import com.example.todolist.domain.models.TodoItem
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
+/**
+ * Domain класс. Содержит в себе бизнес-логику приложения.
+ */
 class TodoLocalInteractorImpl @Inject constructor
     (private val todoLocal: TodoLocalStorage) : TodoLocalInteractor {
     override suspend fun insertTodoItem(todoItem: TodoItem) {

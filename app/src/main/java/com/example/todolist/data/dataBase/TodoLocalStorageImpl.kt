@@ -8,7 +8,7 @@ import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 /**
- * Domain класс. Содержит в себе бизнес-логику приложения.
+ * Класс для взаимодействия с локальной базой данных(ROOM).
  */
 class TodoLocalStorageImpl @Inject constructor(
     private val todoDao: TodoLocalDao,

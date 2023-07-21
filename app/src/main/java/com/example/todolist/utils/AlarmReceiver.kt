@@ -9,6 +9,9 @@ import androidx.core.content.ContextCompat.getSystemService
 import com.example.todolist.R
 import com.example.todolist.app.App
 
+/**
+ * AlarmReceiver - класс, который отвечает за получение данных из AlarmManager и создание уведомления.
+ */
 class AlarmReceiver : BroadcastReceiver() {
 
     override fun onReceive(context: Context, intent: Intent) {

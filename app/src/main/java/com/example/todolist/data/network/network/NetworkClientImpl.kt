@@ -14,7 +14,6 @@ import javax.inject.Inject
  */
 class NetworkClientImpl @Inject constructor(
     private val apiService: TodoApi,
-  //  private val databaseOffline: DeletedItemDaoImpl,
     private val database: TodoLocalStorageImpl
 ) : NetworkClient {
 
