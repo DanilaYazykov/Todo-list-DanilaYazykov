@@ -40,22 +40,6 @@
         app:layout_constraintTop_toTopOf="@+id/tv_sum_of_done"
         app:tint="@color/blue" />
 
-<!--    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/addFragmentButton"
-        android:layout_width="@dimen/sl_size"
-        android:layout_height="@dimen/sl_size"
-        android:layout_marginEnd="@dimen/mm_size"
-        android:layout_marginBottom="@dimen/ssl_size"
-        android:clickable="true"
-        android:focusable="true"
-        android:importantForAccessibility="no"
-        android:src="@drawable/ic_plus_add"
-        app:backgroundTint="@color/blue"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:shapeAppearanceOverlay="@style/CircularShapeAppearance"
-        app:tint="@color/white" />-->
-
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="0dp"

@@ -19,7 +19,7 @@ class ListToDoHolder(itemView: View) :
     private val binding = ItemOfToDoBinding.bind(itemView)
 
     fun bind(itemView: TodoItem, onCheckedChangeListener: OnCheckedClickListener) = with(binding) {
-        val dateFormat = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
+        val dateFormat = SimpleDateFormat("dd MMMM yyyy HH:mm", Locale.getDefault())
         val dateString = itemView.deadline?.let { Date(it) }?.let { dateFormat.format(it) }
         tvTodoTitle.text = itemView.text
         if (itemView.deadline != null) {

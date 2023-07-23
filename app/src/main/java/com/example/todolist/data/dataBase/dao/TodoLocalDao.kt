@@ -1,4 +1,4 @@
-package com.example.todolist.data.dataBase.domain.api
+package com.example.todolist.data.dataBase.dao
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -10,8 +10,6 @@ import com.example.todolist.domain.models.TodoItem
 import kotlinx.coroutines.flow.Flow
 
 /**
- * Несмотря на то, что находится в пакете dataBase(слоя data), является частью слоя domain.
- * Не стал разделять на разные пакеты, для лучшей навигации.
  * Представляет собой интерфейс для работы с базой данных.
  */
 @Dao
@@ -19,6 +17,9 @@ interface TodoLocalDao {
 
     @Insert(entity = TodoItem::class ,onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTodoItem(todoItem: TodoItem)
+
+    @Insert(entity = TodoItem::class ,onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertListTodoItem(todoItem: List<TodoItem>)
 
     @Update(entity = TodoItem::class ,onConflict = OnConflictStrategy.REPLACE)
     suspend fun updateTodoItem(todoItem: TodoItem)

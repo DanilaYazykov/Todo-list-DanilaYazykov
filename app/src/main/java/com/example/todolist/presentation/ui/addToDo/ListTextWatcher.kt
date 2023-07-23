@@ -56,6 +56,7 @@ class ListTextWatcher(
                     editTextInputText.text.clear()
                     tvDate.text = ""
                     switchCalendar.isChecked = false
+                    switchImportance.isChecked = false
                     tvImportanceBasic.visibility = View.GONE
                     tvImportanceHigh.visibility = View.GONE
                     tvImportanceLow.visibility = View.GONE

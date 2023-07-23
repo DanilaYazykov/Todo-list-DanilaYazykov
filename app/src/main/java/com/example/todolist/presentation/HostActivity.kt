@@ -12,6 +12,7 @@ import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.todolist.R
+import com.example.todolist.app.App
 import com.example.todolist.databinding.ActivityHostBinding
 import com.example.todolist.utils.CheckingPermission
 import com.example.todolist.utils.SyncWorkerManager
@@ -19,11 +20,15 @@ import com.google.android.material.bottomappbar.BottomAppBar
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 /**
  * HostActivity - главная(root) Activity приложения.
  */
 class HostActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var permissionChecker: CheckingPermission
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,11 +36,10 @@ class HostActivity : AppCompatActivity() {
         setContentView(binding.root)
         settingsOfWorkerManager()
         navigation()
-        val permissionChecker = CheckingPermission(this)
+        permissionChecker = CheckingPermission(context = this)
         if (!permissionChecker.checkPermissions()) {
             permissionChecker.requestPermissions()
         }
-
     }
 
     private fun navigation() {

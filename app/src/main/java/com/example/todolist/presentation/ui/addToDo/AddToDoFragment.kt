@@ -43,6 +43,7 @@ class AddToDoFragment : BindingFragment<FragmentAddToDoBinding>() {
     lateinit var vmFactory: AddTodoViewModelFactory
     @Inject
     lateinit var calendar: Calendar
+    private val setVisibility by lazy { VisibilityAddTodo(binding) }
     private var currentId = EMPTY_STRING
     private val viewModel: AddTodoViewModel by viewModels { vmFactory }
     private var importance = TodoItem.Importance.BASIC
@@ -76,24 +77,16 @@ class AddToDoFragment : BindingFragment<FragmentAddToDoBinding>() {
             }
             ListTextWatcher(binding, this).onTextChanged(todoItem.text, 0, 0, todoItem.text.length)
             todoItem.importance.let {
-                binding.tvImportanceBasic.visibility = View.GONE
-                binding.tvImportanceLow.visibility = View.GONE
-                binding.tvImportanceHigh.visibility = View.GONE
+                setVisibility.setVisibility(VisibilityAddTodo.SHOW_NOTHING)
                 when (it) {
-                    TodoItem.Importance.LOW -> {
-                        binding.tvImportanceLow.visibility = View.VISIBLE
-                        binding.switchImportance.isChecked = true
-                    }
-                    TodoItem.Importance.BASIC -> binding.tvImportanceBasic.visibility = View.VISIBLE
-                    TodoItem.Importance.IMPORTANT -> {
-                        binding.tvImportanceHigh.visibility = View.VISIBLE
-                        binding.switchImportance.isChecked = true
-                    }
+                    TodoItem.Importance.LOW -> setVisibility.setVisibility(VisibilityAddTodo.SHOW_IMPORTANCE_LOW)
+                    TodoItem.Importance.BASIC -> setVisibility.setVisibility(VisibilityAddTodo.SHOW_IMPORTANCE_BASIC)
+                    TodoItem.Importance.IMPORTANT -> setVisibility.setVisibility(VisibilityAddTodo.SHOW_IMPORTANCE_HIGH)
                 }
             }
             todoItem.deadline?.let {
                 binding.tvDate.text =
-                    SimpleDateFormat("dd MMMM yyyy", Locale.getDefault()).format(Date(it))
+                    SimpleDateFormat("dd MMMM yyyy HH:mm", Locale.getDefault()).format(Date(it))
                 binding.switchCalendar.isChecked = true
             }
             binding.tvDeleteToDo.setText(R.string.text_delete)
@@ -118,7 +111,7 @@ class AddToDoFragment : BindingFragment<FragmentAddToDoBinding>() {
         val importance = importance
         val currentTime = Instant.now().epochSecond
         val dateString = binding.tvDate.text.toString()
-        val dateFormat = SimpleDateFormat("dd MMMM yyyy", Locale.getDefault())
+        val dateFormat = SimpleDateFormat("dd MMMM yyyy HH:mm", Locale.getDefault())
         val deadline = if (dateString.isNotEmpty()) {
             val date = dateFormat.parse(dateString)
             date?.time
@@ -140,25 +133,16 @@ class AddToDoFragment : BindingFragment<FragmentAddToDoBinding>() {
 
     private fun getImportance() = with(binding) {
         binding.bottomLowImportance.setOnClickListener {
-            tvImportanceLow.visibility = View.VISIBLE
-            tvImportanceBasic.visibility = View.GONE
-            tvImportanceHigh.visibility = View.GONE
-            BottomSheetBehavior.from(standardBottomSheet).state = BottomSheetBehavior.STATE_HIDDEN
+            setVisibility.setVisibility(VisibilityAddTodo.SHOW_IMPORTANCE_LOW)
             importance = TodoItem.Importance.LOW
         }
         binding.bottomBasicImportance.setOnClickListener {
-            tvImportanceLow.visibility = View.GONE
-            tvImportanceBasic.visibility = View.VISIBLE
-            tvImportanceHigh.visibility = View.GONE
-            BottomSheetBehavior.from(standardBottomSheet).state = BottomSheetBehavior.STATE_HIDDEN
+            setVisibility.setVisibility(VisibilityAddTodo.SHOW_IMPORTANCE_BASIC)
             importance = TodoItem.Importance.BASIC
         }
         binding.bottomHighImportance.setOnClickListener {
-            tvImportanceLow.visibility = View.GONE
-            tvImportanceBasic.visibility = View.GONE
-            tvImportanceHigh.visibility = View.VISIBLE
+            setVisibility.setVisibility(VisibilityAddTodo.SHOW_IMPORTANCE_HIGH)
             tvImportanceHigh.startAnimation(AnimationUtils.loadAnimation(requireContext(), R.anim.highlight_animation))
-            BottomSheetBehavior.from(standardBottomSheet).state = BottomSheetBehavior.STATE_HIDDEN
             importance = TodoItem.Importance.IMPORTANT
         }
     }
@@ -180,11 +164,7 @@ class AddToDoFragment : BindingFragment<FragmentAddToDoBinding>() {
                 bottomSheetBehavior.state = BottomSheetBehavior.STATE_COLLAPSED
                 hideKeyboard()
                 dimView.visibility = View.VISIBLE
-            } else {
-                binding.tvImportanceBasic.visibility = View.GONE
-                binding.tvImportanceLow.visibility = View.GONE
-                binding.tvImportanceHigh.visibility = View.GONE
-            }
+            } else setVisibility.setVisibility(VisibilityAddTodo.SHOW_NOTHING)
         }
 
         dimView.setOnClickListener {
@@ -220,8 +200,6 @@ class AddToDoFragment : BindingFragment<FragmentAddToDoBinding>() {
         }
         val calendar = Calendar.getInstance().apply {
             timeInMillis = result.deadline
-            set(Calendar.HOUR_OF_DAY, 0)
-            set(Calendar.MINUTE, 0)
         }
 
         alarmManager?.setExact(

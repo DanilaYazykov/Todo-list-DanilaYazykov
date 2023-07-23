@@ -238,5 +238,4 @@
             android:text="@string/importance_high" />
 
     </LinearLayout>
-
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

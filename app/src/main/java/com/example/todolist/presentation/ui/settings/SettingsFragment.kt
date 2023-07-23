@@ -14,6 +14,9 @@ import com.example.todolist.utils.BindingFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import javax.inject.Inject
 
+/**
+ * SettingsFragment - UI класс одного из фрагментов, который отвечает за отображение настроек.
+ */
 class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
 
     @Inject

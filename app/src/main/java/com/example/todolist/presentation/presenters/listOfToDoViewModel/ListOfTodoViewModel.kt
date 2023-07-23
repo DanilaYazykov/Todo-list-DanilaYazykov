@@ -4,14 +4,13 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.todolist.data.dataBase.domain.impl.DeletedItemDaoImpl
 import com.example.todolist.data.network.network.NetworkResult
-import com.example.todolist.data.dataBase.domain.impl.TodoLocalDaoImpl
 import com.example.todolist.domain.models.TodoPostList
 import com.example.todolist.domain.api.TodoNetworkInteractor
+import com.example.todolist.domain.dataBase.TodoLocalInteractor
 import com.example.todolist.domain.models.ListState
 import com.example.todolist.domain.models.TodoItem
-import com.example.todolist.utils.CheckingInternet
+import com.example.todolist.utils.NetworkStateReceiver
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -23,9 +22,8 @@ import java.util.Calendar
  */
 class ListOfTodoViewModel(
     private val todoNetworkInteractor: TodoNetworkInteractor,
-    private val internet: CheckingInternet,
-    private val database: TodoLocalDaoImpl,
-    private val databaseOffline: DeletedItemDaoImpl,
+    private val internetReceive: NetworkStateReceiver,
+    private val database: TodoLocalInteractor
 ) : ViewModel() {
 
     private var hideDoneItems = true
@@ -42,6 +40,10 @@ class ListOfTodoViewModel(
 
     private val _internetAndDoneVisibility = MutableLiveData(ListState.default())
     val getStateLiveData = _internetAndDoneVisibility
+
+    init {
+        internetReceive.register()
+    }
 
     fun loadTodoList() {
         viewModelScope.launch(Dispatchers.IO) {
@@ -66,6 +68,10 @@ class ListOfTodoViewModel(
                 val syncResult = result.second.list
                 if (result.first == NetworkResult.SUCCESS_200) {
                     _todoInfo.postValue(Pair(result.first, syncResult))
+                    database.apply {
+                        deleteAllTodoItems()
+                        insertListTodoItem(syncResult)
+                    }
                     hideDoneItems = !hideDoneItems
                     changeVisibility()
                 } else {
@@ -75,14 +81,13 @@ class ListOfTodoViewModel(
             sync = true
         }
     }
-    
 
     fun updateDataServer() {
         if (_internetAndDoneVisibility.value?.internet == false) return
         replaceJob?.cancel()
         replaceJob = viewModelScope.launch(Dispatchers.IO) {
             val unsyncedItems = database.getUnsyncedItems()
-            val deletedList = databaseOffline.getDeletedItems()
+            val deletedList = database.getDeletedItems()
             if (unsyncedItems.isEmpty() && deletedList.isEmpty()) return@launch
             val placeToServer = _todoInfo.value?.second ?: emptyList()
             delay(DELAY_1000)
@@ -118,18 +123,13 @@ class ListOfTodoViewModel(
         }
     }
 
-    private fun checkNetwork() {
+    fun checkNetwork() {
         networkCheckJob?.cancel()
         networkCheckJob = viewModelScope.launch(Dispatchers.IO) {
-            val result = internet.isNetworkAvailable()
-            if (result) {
-                syncTodoListFromNetwork()
+            internetReceive.isNetworkAvailable().collect { result ->
+                if (result) { syncTodoListFromNetwork() }
+                _internetAndDoneVisibility.postValue(_internetAndDoneVisibility.value?.copy(internet = result))
             }
-            _internetAndDoneVisibility.postValue(
-                _internetAndDoneVisibility.value?.copy(
-                    internet = result
-                )
-            )
         }
     }
 
@@ -142,6 +142,7 @@ class ListOfTodoViewModel(
         searchJob?.cancel()
         networkCheckJob?.cancel()
         replaceJob?.cancel()
+        internetReceive.unregister()
     }
 
     companion object {
