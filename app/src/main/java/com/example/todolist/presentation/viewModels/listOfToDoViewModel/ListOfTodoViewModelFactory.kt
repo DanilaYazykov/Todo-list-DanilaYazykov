@@ -1,4 +1,4 @@
-package com.example.todolist.presentation.presenters.listOfToDoViewModel
+package com.example.todolist.presentation.viewModels.listOfToDoViewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

@@ -5,8 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.example.todolist.R
 import com.example.todolist.domain.models.TodoItem
-import com.example.todolist.presentation.ui.api.OnCheckedClickListener
-import com.example.todolist.presentation.ui.api.OnItemClickListener
+import com.example.todolist.presentation.ui.listOfToDo.api.OnCheckedClickListener
+import com.example.todolist.presentation.ui.listOfToDo.api.OnItemClickListener
 
 /**
  * ListToDoAdapter - класс, который отвечает за создание, управление и переиспользование ViewHolder'ов.

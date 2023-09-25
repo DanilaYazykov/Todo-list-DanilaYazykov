@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.todolist.R
 import com.example.todolist.databinding.ItemOfToDoBinding
 import com.example.todolist.domain.models.TodoItem
-import com.example.todolist.presentation.ui.api.OnCheckedClickListener
+import com.example.todolist.presentation.ui.listOfToDo.api.OnCheckedClickListener
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale

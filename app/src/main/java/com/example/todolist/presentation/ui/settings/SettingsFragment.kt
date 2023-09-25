@@ -8,8 +8,9 @@ import android.widget.LinearLayout
 import androidx.fragment.app.viewModels
 import com.example.todolist.app.App
 import com.example.todolist.databinding.FragmentSettingsBinding
-import com.example.todolist.presentation.presenters.settingsViewModel.SettingsViewModel
-import com.example.todolist.presentation.presenters.settingsViewModel.SettingsViewModelFactory
+import com.example.todolist.presentation.viewModels.settingsViewModel.SettingsViewModel
+import com.example.todolist.presentation.viewModels.settingsViewModel.SettingsViewModelFactory
+import com.example.todolist.presentation.viewModels.settingsViewModel.SwitchEvent
 import com.example.todolist.utils.BindingFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import javax.inject.Inject
@@ -40,13 +41,13 @@ class SettingsFragment : BindingFragment<FragmentSettingsBinding>() {
 
     private fun switchTheme() {
         binding.lightTheme.setOnClickListener {
-            viewModel.switchTheme(2)
+            viewModel.action(SwitchEvent(2))
         }
         binding.darkTheme.setOnClickListener {
-            viewModel.switchTheme(1)
+            viewModel.action(SwitchEvent(1))
         }
         binding.systemTheme.setOnClickListener {
-            viewModel.switchTheme(-1)
+            viewModel.action(SwitchEvent(-1))
         }
     }
 

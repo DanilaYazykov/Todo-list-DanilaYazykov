@@ -11,11 +11,18 @@ import com.example.todolist.R
 import com.example.todolist.app.App
 import com.example.todolist.databinding.FragmentListOfToDoBinding
 import com.example.todolist.domain.models.TodoItem
-import com.example.todolist.presentation.presenters.listOfToDoViewModel.ListOfTodoViewModel
-import com.example.todolist.presentation.presenters.listOfToDoViewModel.ListOfTodoViewModelFactory
+import com.example.todolist.presentation.viewModels.listOfToDoViewModel.ListOfTodoViewModel
+import com.example.todolist.presentation.viewModels.listOfToDoViewModel.ListOfTodoViewModelFactory
 import com.example.todolist.presentation.ui.addToDo.AddToDoFragment
-import com.example.todolist.presentation.ui.api.OnCheckedClickListener
-import com.example.todolist.presentation.ui.api.OnItemClickListener
+import com.example.todolist.presentation.ui.listOfToDo.api.OnCheckedClickListener
+import com.example.todolist.presentation.ui.listOfToDo.api.OnItemClickListener
+import com.example.todolist.presentation.viewModels.listOfToDoViewModel.AddDoneEvent
+import com.example.todolist.presentation.viewModels.listOfToDoViewModel.ChangeVisibilityEvent
+import com.example.todolist.presentation.viewModels.listOfToDoViewModel.CheckNetworkEvent
+import com.example.todolist.presentation.viewModels.listOfToDoViewModel.LoadTodoListEvent
+import com.example.todolist.presentation.viewModels.listOfToDoViewModel.ResetSyncFlagEvent
+import com.example.todolist.presentation.viewModels.listOfToDoViewModel.SyncTodoListFromNetworkEvent
+import com.example.todolist.presentation.viewModels.listOfToDoViewModel.UpdateDataServerEvent
 import com.example.todolist.utils.BindingFragment
 import com.google.android.material.snackbar.Snackbar
 import javax.inject.Inject
@@ -46,7 +53,7 @@ class ListOfToDoFragment : BindingFragment<FragmentListOfToDoBinding>(), OnItemC
         super.onViewCreated(view, savedInstanceState)
         (requireActivity().application as App).appComponent.fragmentComponentFactory().create().inject(this)
         adaptersInit()
-        viewModel.loadTodoList()
+        viewModel.action(LoadTodoListEvent())
         swipeToRefresh()
         viewModel.getStateLiveData.observe(viewLifecycleOwner) { result ->
             if (!result.internet) {
@@ -54,7 +61,7 @@ class ListOfToDoFragment : BindingFragment<FragmentListOfToDoBinding>(), OnItemC
                 binding.swipeRefreshLayout.isEnabled = false
             } else {
                 binding.swipeRefreshLayout.isEnabled = true
-                viewModel.updateDataServer()
+                viewModel.action(UpdateDataServerEvent())
             }
             eyeImageVisibility(result.doneVisibility)
         }
@@ -64,15 +71,15 @@ class ListOfToDoFragment : BindingFragment<FragmentListOfToDoBinding>(), OnItemC
             sumOfDoneTodos(list.second)
         }
         binding.ivEyeVisibility.setOnClickListener {
-            viewModel.changeVisibility()
+            viewModel.action(ChangeVisibilityEvent())
         }
     }
 
     private fun swipeToRefresh() {
         binding.swipeRefreshLayout.setOnRefreshListener {
-            viewModel.checkNetwork()
-            viewModel.resetSyncFlag()
-            viewModel.syncTodoListFromNetwork()
+            viewModel.action(CheckNetworkEvent())
+            viewModel.action(ResetSyncFlagEvent())
+            viewModel.action(SyncTodoListFromNetworkEvent())
         }
     }
 
@@ -108,11 +115,11 @@ class ListOfToDoFragment : BindingFragment<FragmentListOfToDoBinding>(), OnItemC
     }
 
     override fun onCheckedChange(todoItem: String, isChecked: Boolean) {
-        viewModel.addDone(todoItem, isChecked)
+        viewModel.action(AddDoneEvent(todoItem, isChecked))
     }
 
     override fun onStop() {
         super.onStop()
-        viewModel.updateDataServer()
+        viewModel.action(UpdateDataServerEvent())
     }
 }

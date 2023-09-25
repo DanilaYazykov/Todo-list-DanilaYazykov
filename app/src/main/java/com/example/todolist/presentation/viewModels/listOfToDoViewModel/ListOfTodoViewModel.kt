@@ -1,4 +1,4 @@
-package com.example.todolist.presentation.presenters.listOfToDoViewModel
+package com.example.todolist.presentation.viewModels.listOfToDoViewModel
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
@@ -17,9 +17,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
-/**
- * ListOfTodoViewModel - viewModel UI класса ListOfToDoFragment. Связывает слои Presentation и Domain.
- */
+/** ListOfTodoViewModel - viewModel UI класса ListOfToDoFragment. Связывает слои Presentation и Domain */
 class ListOfTodoViewModel(
     private val todoNetworkInteractor: TodoNetworkInteractor,
     private val internetReceive: NetworkStateReceiver,
@@ -45,7 +43,19 @@ class ListOfTodoViewModel(
         internetReceive.register()
     }
 
-    fun loadTodoList() {
+    fun action(event: ListOfTodoEvent) {
+        when(event) {
+            is LoadTodoListEvent -> loadTodoList()
+            is SyncTodoListFromNetworkEvent -> syncTodoListFromNetwork()
+            is UpdateDataServerEvent -> updateDataServer()
+            is ChangeVisibilityEvent -> changeVisibility()
+            is AddDoneEvent -> addDone(event.itemId, event.isChecked)
+            is CheckNetworkEvent -> checkNetwork()
+            is ResetSyncFlagEvent -> resetSyncFlag()
+        }
+    }
+
+    private fun loadTodoList() {
         viewModelScope.launch(Dispatchers.IO) {
             checkNetwork()
             database.getAllTodoItems().collect { result ->
@@ -59,7 +69,7 @@ class ListOfTodoViewModel(
         }
     }
 
-    fun syncTodoListFromNetwork() {
+    private fun syncTodoListFromNetwork() {
         if (sync) return
         if (_internetAndDoneVisibility.value?.internet == false) return
         viewModelScope.launch {
@@ -82,7 +92,7 @@ class ListOfTodoViewModel(
         }
     }
 
-    fun updateDataServer() {
+    private fun updateDataServer() {
         if (_internetAndDoneVisibility.value?.internet == false) return
         replaceJob?.cancel()
         replaceJob = viewModelScope.launch(Dispatchers.IO) {
@@ -102,7 +112,7 @@ class ListOfTodoViewModel(
         }
     }
 
-    fun changeVisibility() {
+    private fun changeVisibility() {
         viewModelScope.launch {
             hideDoneItems = !hideDoneItems
             _internetAndDoneVisibility.value = _internetAndDoneVisibility.value?.copy(doneVisibility = hideDoneItems)
@@ -110,7 +120,7 @@ class ListOfTodoViewModel(
         }
     }
 
-    fun addDone(itemId: String, isChecked: Boolean) {
+    private fun addDone(itemId: String, isChecked: Boolean) {
         viewModelScope.launch(Dispatchers.IO) {
             val modificationDate = Calendar.getInstance().timeInMillis
             database.updateCurrentItemDone(itemId, isChecked, modification = modificationDate)
@@ -123,7 +133,7 @@ class ListOfTodoViewModel(
         }
     }
 
-    fun checkNetwork() {
+    private fun checkNetwork() {
         networkCheckJob?.cancel()
         networkCheckJob = viewModelScope.launch(Dispatchers.IO) {
             internetReceive.isNetworkAvailable().collect { result ->
@@ -133,7 +143,7 @@ class ListOfTodoViewModel(
         }
     }
 
-    fun resetSyncFlag() {
+    private fun resetSyncFlag() {
         sync = false
     }
 
