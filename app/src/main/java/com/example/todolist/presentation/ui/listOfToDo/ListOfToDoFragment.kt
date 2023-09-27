@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.todolist.R
@@ -19,17 +20,17 @@ import com.example.todolist.presentation.ui.listOfToDo.api.OnItemClickListener
 import com.example.todolist.presentation.viewModels.listOfToDoViewModel.AddDoneEvent
 import com.example.todolist.presentation.viewModels.listOfToDoViewModel.ChangeVisibilityEvent
 import com.example.todolist.presentation.viewModels.listOfToDoViewModel.CheckNetworkEvent
+import com.example.todolist.presentation.viewModels.listOfToDoViewModel.ListOfTodoScreenState
 import com.example.todolist.presentation.viewModels.listOfToDoViewModel.LoadTodoListEvent
 import com.example.todolist.presentation.viewModels.listOfToDoViewModel.ResetSyncFlagEvent
 import com.example.todolist.presentation.viewModels.listOfToDoViewModel.SyncTodoListFromNetworkEvent
 import com.example.todolist.presentation.viewModels.listOfToDoViewModel.UpdateDataServerEvent
 import com.example.todolist.utils.BindingFragment
-import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-/**
- * ListOfToDoFragment - UI класс одного из фрагментов, который отвечает за отображение списка задач.
- */
+/** ListOfToDoFragment - UI класс одного из фрагментов, который отвечает за отображение списка задач */
 class ListOfToDoFragment : BindingFragment<FragmentListOfToDoBinding>(), OnItemClickListener,
     OnCheckedClickListener {
 
@@ -55,23 +56,25 @@ class ListOfToDoFragment : BindingFragment<FragmentListOfToDoBinding>(), OnItemC
         adaptersInit()
         viewModel.action(LoadTodoListEvent())
         swipeToRefresh()
-        viewModel.getStateLiveData.observe(viewLifecycleOwner) { result ->
-            if (!result.internet) {
-                showSnackBar()
-                binding.swipeRefreshLayout.isEnabled = false
-            } else {
-                binding.swipeRefreshLayout.isEnabled = true
-                viewModel.action(UpdateDataServerEvent())
-            }
-            eyeImageVisibility(result.doneVisibility)
-        }
-        viewModel.filteredTodoInfo.observe(viewLifecycleOwner) { list ->
-            renderClass.renderList(list, binding)
-            adapter.submitList(list.second)
-            sumOfDoneTodos(list.second)
-        }
+        observeViewModel()
         binding.ivEyeVisibility.setOnClickListener {
             viewModel.action(ChangeVisibilityEvent())
+        }
+    }
+
+    private fun observeViewModel() {
+        viewLifecycleOwner.lifecycleScope.launch(Dispatchers.Main) {
+            viewModel.uiState.collect { screenState ->
+                when (screenState) {
+                    is ListOfTodoScreenState.TodoInfo -> Unit
+                    is ListOfTodoScreenState.FilteredTodoInfo ->
+                        renderClass.showFilteredInfo(screenState.filteredTodoInfo, binding, adapter)
+                    is ListOfTodoScreenState.DoneVisibility ->
+                        renderClass.showDoneStatus(screenState.doneStatus, binding)
+                    is ListOfTodoScreenState.InternetVisibility ->
+                        renderClass.showInternetStatus(screenState.internetStatus, binding, viewModel)
+                }
+            }
         }
     }
 
@@ -87,24 +90,6 @@ class ListOfToDoFragment : BindingFragment<FragmentListOfToDoBinding>(), OnItemC
         rcViewToDoList.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         adapter = ListToDoAdapter(this@ListOfToDoFragment, this@ListOfToDoFragment)
         rcViewToDoList.adapter = adapter
-    }
-
-    private fun showSnackBar() {
-        Snackbar.make(binding.root, getString(R.string.data_not_sync), Snackbar.LENGTH_SHORT).show()
-    }
-
-    private fun sumOfDoneTodos(list: List<TodoItem>) {
-        val doneCount = list.count { it.done }
-        if (doneCount == 0) binding.tvSumOfDone.text = ""
-        else binding.tvSumOfDone.text = getString(R.string.done_count, doneCount)
-    }
-
-    private fun eyeImageVisibility(visibility: Boolean) {
-        if (visibility) {
-            binding.ivEyeVisibility.setImageResource(R.drawable.ic_eye_visibility_gone)
-        } else {
-            binding.ivEyeVisibility.setImageResource(R.drawable.ic_eye_visibility)
-        }
     }
 
     override fun onItemClick(todo: TodoItem) {

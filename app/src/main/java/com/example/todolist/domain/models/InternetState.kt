@@ -1,12 +1,10 @@
 package com.example.todolist.domain.models
 
-data class ListState (
-    val doneVisibility: Boolean,
+data class InternetState(
     val internet: Boolean
 ) {
     companion object {
-        fun default() = ListState(
-            doneVisibility = false,
+        fun default() = InternetState(
             internet = true
         )
     }
