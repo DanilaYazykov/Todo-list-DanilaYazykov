@@ -1,9 +1,8 @@
-package com.example.todolist.presentation.presenters.addToDoViewModel
+package com.example.todolist.presentation.viewModels.addToDoViewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.todolist.data.dataBase.converters.DeleteItemDbConverter
-//import com.example.todolist.data.dataBase.toDeleted
 import com.example.todolist.domain.dataBase.TodoLocalInteractor
 import com.example.todolist.domain.models.TodoItem
 import kotlinx.coroutines.Dispatchers
@@ -17,14 +16,21 @@ class AddTodoViewModel(
     private val converter: DeleteItemDbConverter
 ) : ViewModel() {
 
+    fun action(event: AddTodoEvent) {
+        when (event) {
+            is AddTodoItemEvent -> addTodoItem(event.todoItem)
+            is DeleteTodoItemEvent -> deleteTodoItem(event.todoItem)
+            is MarkAsNotSyncedEvent -> markAsNotSynced(event.todoItemId)
+        }
+    }
 
-    fun addTodoItem(todoItem: TodoItem) {
+    private fun addTodoItem(todoItem: TodoItem) {
         viewModelScope.launch(Dispatchers.IO) {
             database.insertTodoItem(todoItem)
         }
     }
 
-    fun deleteTodoItem(todoItem: TodoItem) {
+    private fun deleteTodoItem(todoItem: TodoItem) {
         viewModelScope.launch(Dispatchers.IO) {
             todoItem.let {
                 database.deleteTodoItem(todoItem)
@@ -33,7 +39,7 @@ class AddTodoViewModel(
         }
     }
 
-   fun markAsNotSynced(todoItemId: String) {
+    private fun markAsNotSynced(todoItemId: String) {
         viewModelScope.launch(Dispatchers.IO) {
             todoItemId.let {
                 database.markSynced(todoItemId, false)

@@ -1,4 +1,4 @@
-package com.example.todolist.presentation.ui.api
+package com.example.todolist.presentation.ui.listOfToDo.api
 
 /**
  * OnCheckedClickListener - интерфейс, который отвечает за обработку нажатия на чекбокс.

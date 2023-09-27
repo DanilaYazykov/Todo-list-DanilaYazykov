@@ -5,9 +5,7 @@ import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatDelegate
 import javax.inject.Inject
 
-/**
- * Класс для работы с темой приложения.
- */
+/** Класс для работы с темой приложения. */
 class ThemeStatus @Inject constructor
     (private var sharedPrefs: SharedPreferences) : Application() {
 

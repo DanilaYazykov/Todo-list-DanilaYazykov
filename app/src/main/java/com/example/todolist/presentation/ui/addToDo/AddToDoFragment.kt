@@ -20,8 +20,11 @@ import com.example.todolist.R
 import com.example.todolist.app.App
 import com.example.todolist.databinding.FragmentAddToDoBinding
 import com.example.todolist.domain.models.TodoItem
-import com.example.todolist.presentation.presenters.addToDoViewModel.AddTodoViewModel
-import com.example.todolist.presentation.presenters.addToDoViewModel.AddTodoViewModelFactory
+import com.example.todolist.presentation.viewModels.addToDoViewModel.AddTodoItemEvent
+import com.example.todolist.presentation.viewModels.addToDoViewModel.AddTodoViewModel
+import com.example.todolist.presentation.viewModels.addToDoViewModel.AddTodoViewModelFactory
+import com.example.todolist.presentation.viewModels.addToDoViewModel.DeleteTodoItemEvent
+import com.example.todolist.presentation.viewModels.addToDoViewModel.MarkAsNotSyncedEvent
 import com.example.todolist.utils.AlarmReceiver
 import com.example.todolist.utils.BindingFragment
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -226,12 +229,12 @@ class AddToDoFragment : BindingFragment<FragmentAddToDoBinding>() {
             when {
                 result.text.isNotEmpty() -> {
                     sendNotification(result)
-                    viewModel.markAsNotSynced(result.id)
-                    viewModel.addTodoItem(result)
+                    viewModel.action(MarkAsNotSyncedEvent(result.id))
+                    viewModel.action(AddTodoItemEvent(result))
                     findNavController().navigateUp()
                 }
                 else -> {
-                    viewModel.deleteTodoItem(result)
+                    viewModel.action(DeleteTodoItemEvent(result))
                     findNavController().navigateUp()
                 }
             }
@@ -244,7 +247,7 @@ class AddToDoFragment : BindingFragment<FragmentAddToDoBinding>() {
             binding.ivTodoAnim.visibility = View.VISIBLE
             viewLifecycleOwner.lifecycleScope.launch {
                 delay(ANIMATION_PLAYING)
-                viewModel.deleteTodoItem(currentTodo())
+                viewModel.action(DeleteTodoItemEvent(currentTodo()))
                 findNavController().navigateUp()
             }
         }

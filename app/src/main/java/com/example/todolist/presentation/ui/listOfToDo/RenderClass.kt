@@ -4,7 +4,11 @@ import android.view.View
 import com.example.todolist.R
 import com.example.todolist.data.network.network.NetworkResult
 import com.example.todolist.databinding.FragmentListOfToDoBinding
+import com.example.todolist.domain.models.DoneState
+import com.example.todolist.domain.models.InternetState
 import com.example.todolist.domain.models.TodoItem
+import com.example.todolist.presentation.viewModels.listOfToDoViewModel.ListOfTodoViewModel
+import com.example.todolist.presentation.viewModels.listOfToDoViewModel.UpdateDataServerEvent
 import com.google.android.material.snackbar.Snackbar
 
 /**
@@ -12,7 +16,7 @@ import com.google.android.material.snackbar.Snackbar
  */
 class RenderClass {
 
-    fun renderList(list: Pair<NetworkResult, List<TodoItem>>, binding: FragmentListOfToDoBinding) =
+    private fun renderList(list: Pair<NetworkResult, List<TodoItem>>, binding: FragmentListOfToDoBinding) =
         renderListPrivate(list, binding)
 
     private fun renderListPrivate(
@@ -60,4 +64,57 @@ class RenderClass {
             else -> binding.root.context.getString(R.string.unknown_error_message)
         }
     }
+
+    fun showFilteredInfo(
+        list: Pair<NetworkResult, List<TodoItem>>, binding: FragmentListOfToDoBinding,
+        adapter: ListToDoAdapter
+    ) {
+        renderList(list, binding)
+        adapter.submitList(list.second)
+        sumOfDoneTodos(list.second, binding)
+    }
+
+    fun showInternetStatus(
+        internetAndDoneStatus: InternetState,
+        binding: FragmentListOfToDoBinding,
+        viewModel: ListOfTodoViewModel
+    ) {
+        if (!internetAndDoneStatus.internet) {
+            showSnackBar(binding)
+            binding.swipeRefreshLayout.isEnabled = false
+        } else {
+            binding.swipeRefreshLayout.isEnabled = true
+            viewModel.action(UpdateDataServerEvent())
+        }
+    }
+
+    fun showDoneStatus(
+        internetAndDoneStatus: DoneState,
+        binding: FragmentListOfToDoBinding
+    ) {
+        eyeImageVisibility(internetAndDoneStatus.doneVisibility, binding)
+    }
+
+    private fun sumOfDoneTodos(list: List<TodoItem>, binding: FragmentListOfToDoBinding) {
+        val doneCount = list.count { it.done }
+        if (doneCount == 0) binding.tvSumOfDone.text = ""
+        else binding.tvSumOfDone.text = binding.root.context.getString(R.string.done_count, doneCount)
+    }
+
+    private fun showSnackBar(binding: FragmentListOfToDoBinding) {
+        Snackbar.make(
+            binding.root,
+            binding.root.context.getString(R.string.data_not_sync),
+            Snackbar.LENGTH_SHORT
+        ).show()
+    }
+
+    private fun eyeImageVisibility(visibility: Boolean, binding: FragmentListOfToDoBinding) {
+        if (visibility) {
+            binding.ivEyeVisibility.setImageResource(R.drawable.ic_eye_visibility_gone)
+        } else {
+            binding.ivEyeVisibility.setImageResource(R.drawable.ic_eye_visibility)
+        }
+    }
+
 }
